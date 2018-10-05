@@ -7,7 +7,7 @@ import Text from '../../components/Text';
 import Button from '../../components/Button';
 import ProfilePicker from '../../components/ProfilePicker';
 
-import { updateProfile } from '../../actions/auth';
+import PictureUpload from '../../libs/pictureUpload';
 
 import { colors, fonts } from '../../constants/parameters';
 
@@ -21,15 +21,18 @@ class Profile extends Component {
     super(props);
 
     this.state = {
-      picture: {},
+      picture: null,
     };
   }
 
   onUpdateProfilePress = () => {
     const { picture } = this.state;
 
-    this.props.dispatch(updateProfile({ picture: picture.path }));
-    this.onSkipButton();
+    PictureUpload.upload(picture, (url) => {
+      console.log('url', url);
+    }, (err) => {
+      console.log('err', err);
+    });
   }
 
   onPictureSelected = picture => this.setState({ picture });
@@ -37,7 +40,7 @@ class Profile extends Component {
   onSkipButton = () => this.props.navigation.dispatch('App');
 
   render() {
-    const { picture: { uri } } = this.state;
+    const { picture } = this.state;
 
     return (
       <View style={styles.container}>
@@ -50,7 +53,7 @@ class Profile extends Component {
           </Text>
           <ProfilePicker
             style={styles.profilePicker}
-            uri={uri}
+            uri={picture}
             onPictureSelected={this.onPictureSelected}
           />
         </View>
@@ -58,7 +61,7 @@ class Profile extends Component {
         <View style={styles.actionWrapper}>
           <Button
             light
-            disabled={!uri}
+            disabled={!picture}
             onPress={this.onUpdateProfilePress}
           >
             <Text style={styles.mainText}>Enter to Nowmad</Text>

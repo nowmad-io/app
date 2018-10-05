@@ -5,9 +5,9 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import ProfileScreen from '../screens/auth/ProfileScreen';
 
 export default createStackNavigator({
+  ProfileScreen,
   RegisterScreen,
   LoginScreen,
-  ProfileScreen,
 }, {
   navigationOptions: {
     header: null,

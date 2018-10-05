@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TouchableOpacity, View, StyleSheet, Platform,
+  TouchableOpacity, View, StyleSheet,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import Config from 'react-native-config';
@@ -48,15 +48,12 @@ export default class ProfilePicker extends PureComponent {
     this.setState({ addingImage: true });
 
     ImagePicker.showImagePicker(options, ({
-      didCancel, error, path, uri,
+      didCancel, error, uri,
     }) => {
       this.setState({ addingImage: false });
 
       if (!didCancel && !error) {
-        const newImage = {
-          uri,
-          path: Platform.OS === 'android' ? path : { path: uri },
-        };
+        const newImage = uri;
 
         this.props.onPictureSelected(newImage);
       }
