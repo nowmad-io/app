@@ -4,8 +4,6 @@ import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import FastImage from 'react-native-fast-image';
 
-import Api from '../../libs/requests';
-
 import Content from '../../components/Content';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
@@ -13,25 +11,17 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiLogin, apiRegister, authenticate } from '../../actions/auth';
+import { apiLogin, authenticate } from '../../actions/auth';
 
-import {
-  loginFailed, loginNoNetwork, registerFailed, registerNoNetwork,
-} from '../../modals';
+import { loginFailed, loginNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
 
 const logo = require('../../../assets/images/logos/logo_white.png');
 
-class AuthScreen extends Component {
-  static navigationOptions = {
-    header: null,
-  };
-
+class LoginScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
-    token: PropTypes.string,
-    me: PropTypes.object,
     isConnected: PropTypes.bool,
   };
 
@@ -43,128 +33,58 @@ class AuthScreen extends Component {
     this.state = {
       email: params && params.email || 'j@j.com',
       password: 'j',
-      firstName: 'julien',
-      lastName: 'rougeron',
       loading: false,
       error: null,
     };
 
     this._passwordField = React.createRef();
-
-    if (props.token) {
-      Api.setAuthorisation(props.token);
-      props.navigation.navigate('App');
-    }
   }
 
-  mainButtonPress = () => {
-    const {
-      email, password, firstName, lastName,
-    } = this.state;
+  loginPress = () => {
+    const { email, password } = this.state;
     const { navigation, dispatch, isConnected } = this.props;
-    const { params } = this.props.navigation.state;
-    const login = params && params.login;
 
     if (!isConnected) {
-      this.setState({
-        error: login ? loginNoNetwork : registerNoNetwork,
-      });
+      this.setState({ error: loginNoNetwork });
       return;
     }
 
     this.setState({ loading: true });
 
-    if (login) {
-      apiLogin({
-        email,
-        password,
-      }).then(({ auth_token: authToken }) => {
-        dispatch(authenticate(authToken));
-        navigation.navigate('App');
-      }).catch(() => {
-        this.setState({
-          loading: false,
-          error: loginFailed,
-        });
+    apiLogin({
+      email,
+      password,
+    }).then(({ auth_token: authToken }) => {
+      dispatch(authenticate(authToken));
+      navigation.navigate('App');
+    }).catch(() => {
+      this.setState({
+        loading: false,
+        error: loginFailed,
       });
-    } else {
-      const credentials = {
-        email,
-        first_name: firstName,
-        last_name: lastName,
-      };
-
-      apiRegister({
-        ...credentials,
-        password,
-      }).then(({ auth_token: authToken }) => {
-        dispatch(authenticate(authToken));
-        navigation.navigate('ProfileScreen');
-        this.setState({ loading: false });
-      }).catch(() => {
-        this.setState({
-          loading: false,
-          error: registerFailed,
-        });
-      });
-    }
+    });
   }
 
-  secondButtonPress = () => {
-    const { email, password } = this.state;
-    const { params } = this.props.navigation.state;
-    const login = params && params.login;
+  registerPress = () => {
+    const { email } = this.state;
 
-    if (!login) {
-      this.setState(
-        { error: null },
-        () => {
-          this.props.navigation.navigate('LoginScreen', {
-            login: true,
-            email,
-            password,
-            setEmail: this.setEmail,
-          });
-        },
-      );
-    } else {
-      this.setState(
-        { error: null },
-        () => {
-          this.props.navigation.state.params.setEmail(this.state.email);
-          this.props.navigation.goBack();
-        },
-      );
-    }
-  }
-
-  secondaryActionPress = () => {
-    const { params } = this.props.navigation.state;
-    const login = params && params.login;
-
-    if (login) {
-      this.setState({ error: null });
-      this._passwordField.current.onShowPasswordPress();
-    } else {
-      this.secondButtonPress();
-    }
-  }
-
-  setEmail = (email) => {
-    this.setState({ email });
+    this.setState(
+      { error: null },
+      () => {
+        this.props.navigation.state.params.setEmail(email);
+        this.props.navigation.goBack();
+      },
+    );
   }
 
   closeModal = () => this.setState({ error: null });
 
-
   render() {
     const {
-      email, password, firstName, lastName, loading, error,
+      email, password, loading, error,
     } = this.state;
 
-    const { params } = this.props.navigation.state;
-    const login = params && params.login;
-    const valid = email && password && (login || (firstName.replace(/\s/g, '') && lastName.replace(/\s/g, '')));
+    const valid = email && password;
 
     return (
       <Content>
@@ -185,28 +105,6 @@ class AuthScreen extends Component {
             </View>
           </View>
           <View style={styles.formWrapper}>
-            {!login && (
-              <View>
-                <FormInput
-                  style={styles.formField}
-                  inputStyle={styles.formFieldInput}
-                  underlineColor={colors.white}
-                  selectionColor={colors.white}
-                  placeholderColor={colors.primaryLight}
-                  placeholder="First name"
-                  onChangeText={text => this.setState({ firstName: text })}
-                />
-                <FormInput
-                  style={styles.formField}
-                  inputStyle={styles.formFieldInput}
-                  underlineColor={colors.white}
-                  selectionColor={colors.white}
-                  placeholderColor={colors.primaryLight}
-                  placeholder="Last name"
-                  onChangeText={text => this.setState({ lastName: text })}
-                />
-              </View>
-            )}
             <FormInput
               style={styles.formField}
               inputStyle={styles.formFieldInput}
@@ -236,19 +134,17 @@ class AuthScreen extends Component {
 
           <View style={styles.actionsWrapper}>
             <Button
-              disabled={!login && !valid}
-              light={!login}
-              onPress={!login ? this.mainButtonPress : this.secondButtonPress}
+              onPress={this.registerPress}
             >
-              <Text style={!login && styles.mainText}>Create an account</Text>
+              <Text>Create an account</Text>
             </Button>
             <Button
-              disabled={login && !valid}
-              light={login}
+              disabled={!valid}
+              light
               style={styles.loginButton}
-              onPress={login ? this.mainButtonPress : this.secondButtonPress}
+              onPress={this.loginPress}
             >
-              <Text style={login && styles.mainText}>Log in</Text>
+              <Text style={styles.mainText}>Log in</Text>
             </Button>
           </View>
           <Spinner overlay visible={loading} />
@@ -258,20 +154,18 @@ class AuthScreen extends Component {
           visible={!!error}
           onRequestClose={this.closeModal}
           onPrimaryAction={this.closeModal}
-          onSecondaryAction={this.secondaryActionPress}
+          onSecondaryAction={this.registerPress}
         />
       </Content>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  token: state.auth.token,
-  me: state.auth.me,
+const mapStateToProps = () => ({
   isConnected: true,
 });
 
-export default connect(mapStateToProps)(AuthScreen);
+export default connect(mapStateToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {

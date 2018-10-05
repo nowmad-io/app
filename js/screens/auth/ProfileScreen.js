@@ -12,10 +12,6 @@ import { updateProfile } from '../../actions/auth';
 import { colors, fonts } from '../../constants/parameters';
 
 class Profile extends Component {
-  static navigationOptions = {
-    header: null,
-  };
-
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
