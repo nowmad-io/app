@@ -1,4 +1,4 @@
-import { AUTHENTICATE, LOGOUT } from '../constants/auth';
+import { AUTHENTICATE, UPDATE_PROFILE, LOGOUT } from '../constants/auth';
 import Api from '../libs/requests';
 
 const initialState = {
@@ -17,6 +17,14 @@ const authReducer = (state = initialState, action) => {
         token,
       };
     }
+    case UPDATE_PROFILE:
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          ...action.data,
+        },
+      };
     case LOGOUT:
       Api.setAuthorisation();
       return initialState;

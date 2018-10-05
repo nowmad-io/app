@@ -71,7 +71,10 @@ class RegisterScreen extends Component {
       password,
     }).then(({ auth_token: authToken }) => {
       dispatch(authenticate(authToken));
-      navigation.navigate('ProfileScreen');
+      navigation.navigate('ProfileScreen', {
+        firstName,
+        lastName,
+      });
       this.setState({ loading: false });
     }).catch(() => {
       this.setState({

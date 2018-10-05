@@ -33,4 +33,5 @@ class PictureUpload {
       .catch(error);
   })
 }
+
 export default new PictureUpload();

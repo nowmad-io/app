@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
+import { uploadProfilePicture } from '../../actions/auth';
+
 import Text from '../../components/Text';
 import Button from '../../components/Button';
 import ProfilePicker from '../../components/ProfilePicker';
-
-import PictureUpload from '../../libs/pictureUpload';
 
 import { colors, fonts } from '../../constants/parameters';
 
@@ -20,24 +20,29 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
+    const { firstName, lastName } = props.navigation.state.params;
+
     this.state = {
       picture: null,
+      firstName,
+      lastName,
     };
   }
 
   onUpdateProfilePress = () => {
-    const { picture } = this.state;
+    const { firstName, lastName, picture } = this.state;
 
-    PictureUpload.upload(picture, (url) => {
-      console.log('url', url);
-    }, (err) => {
-      console.log('err', err);
-    });
+    this.props.dispatch(uploadProfilePicture({
+      firstName,
+      lastName,
+      picture,
+    }));
+    this.onSkipButton();
   }
 
   onPictureSelected = picture => this.setState({ picture });
 
-  onSkipButton = () => this.props.navigation.dispatch('App');
+  onSkipButton = () => this.props.navigation.navigate('App');
 
   render() {
     const { picture } = this.state;
