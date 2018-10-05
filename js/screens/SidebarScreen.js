@@ -24,6 +24,7 @@ class SidebarScreen extends React.Component {
   }
 
   static propTypes = {
+    dispatch: PropTypes.func,
     navigation: PropTypes.object,
     me: PropTypes.object,
   };
@@ -38,8 +39,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   onLogoutPress = () => {
-    apiLogout();
-    this.props.navigation.navigate('LoginScreen');
+    apiLogout(this.props.dispatch);
+    this.props.navigation.navigate('Auth');
   }
 
   render() {
