@@ -6,7 +6,8 @@ import Config from 'react-native-config';
 
 import Api from './libs/requests';
 import MainNavigator from './navigation/MainNavigator';
-import colors from './constants/colors';
+import SplashScreen from './screens/SplashScreen';
+import { colors } from './constants/parameters';
 
 import configureStore from './configureStore';
 
@@ -16,7 +17,7 @@ const { persistor, store } = configureStore();
 
 export default () => (
   <Provider store={store}>
-    <PersistGate persistor={persistor}>
+    <PersistGate persistor={persistor} loading={<SplashScreen />}>
       <SafeAreaView style={styles.container}>
         <MainNavigator />
       </SafeAreaView>

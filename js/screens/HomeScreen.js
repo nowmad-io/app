@@ -7,6 +7,8 @@ import {
   View,
 } from 'react-native';
 
+import Icon from '../components/Icon';
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
@@ -16,6 +18,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <Icon name="home" />
           <View style={styles.getStartedContainer}>
 
             <Text style={styles.getStartedText}>Get started by opening</Text>

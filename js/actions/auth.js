@@ -10,6 +10,10 @@ export function apiRegister(data) {
   return Api.post('auth/register/', { params: data });
 }
 
+export function apiLogout() {
+  return Api.get('auth/token/destroy/');
+}
+
 export function authenticate(token) {
   return {
     type: AUTHENTICATE,
