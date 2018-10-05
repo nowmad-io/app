@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   fab_icon: {
-    color: colors.greyButton,
+    color: colors.blackTransparent,
   },
   rounded: {
     borderRadius: 40,

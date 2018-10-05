@@ -10,13 +10,27 @@ function rgba(hex, a = null) {
   return `rgba(${red}, ${green}, ${blue}, ${a !== null ? a : alpha})`;
 }
 
-const primary = '#1DA07F';
-const white = '#fff';
+const plain = {
+  primary: '#1DA07F',
+  primaryLight: '#BBE2D8',
+  white: '#fff',
+  black: '#000',
+  grey: '#BCB9B9',
+  greyDark: '#5E5D5D',
+};
 
 export const colors = {
-  primary,
-  white,
-  lightWhite: rgba(white, 0.8),
+  ...plain,
+  whiteTransparent: rgba(plain.white, 0.8),
+  blackTransparentLight: rgba(plain.black, 0.2),
+  blackTransparent: rgba(plain.black, 0.6),
+  blackShadow: {
+    elevation: 2,
+    shadowColor: plain.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+  },
 };
 
 export const fonts = {

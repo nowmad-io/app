@@ -1,6 +1,6 @@
 import Api from '../libs/requests';
 
-import { AUTHENTICATE, LOGOUT } from '../constants/auth';
+import { AUTHENTICATE, LOGOUT, UPDATE_PROFILE } from '../constants/auth';
 
 export function apiLogin(data) {
   return Api.post('auth/token/create/', { params: data });
@@ -19,5 +19,12 @@ export function authenticate(token) {
   return {
     type: AUTHENTICATE,
     token,
+  };
+}
+
+export function updateProfile(data) {
+  return {
+    type: UPDATE_PROFILE,
+    data,
   };
 }
