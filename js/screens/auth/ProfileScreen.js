@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   skipText: {
-    color: colors.whiteTransparentLight,
+    color: colors.whiteTransparent,
   },
   actionWrapper: {
     marginHorizontal: 24,

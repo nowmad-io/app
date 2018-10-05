@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import FastImage from 'react-native-fast-image';
 
@@ -49,6 +49,7 @@ class LoginScreen extends Component {
       return;
     }
 
+    Keyboard.dismiss();
     this.setState({ loading: true });
 
     apiLogin({
