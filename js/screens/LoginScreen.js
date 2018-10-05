@@ -45,7 +45,7 @@ class LoginScreen extends React.Component {
     this.setState({ loading: true });
 
     apiLogin({ email, password })
-      .then(({ token, ...user }) => {
+      .then(({ auth_token: token }) => {
         Api.setAuthorisation(token);
         dispatch(authenticate(token));
         navigation.navigate('App');

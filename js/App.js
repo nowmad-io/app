@@ -9,7 +9,7 @@ import MainNavigator from './navigation/MainNavigator';
 import colors from './constants/colors';
 
 import configureStore from './configureStore';
-  console.log('yo', Config.API_URL);
+
 Api.initialize(Config.API_URL);
 
 const { persistor, store } = configureStore();
@@ -27,6 +27,6 @@ export default () => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
   },
 });

@@ -16,7 +16,7 @@ class Api {
 
     methods.forEach((method) => {
       this[method] = (path = '', {
-        params = {}, data = {}, options = {}, schema, parser,
+        params = {}, data = {}, options = {},
       } = {}) => {
         const config = {
           ...this.baseConfig,
@@ -49,8 +49,7 @@ class Api {
         return fetch(requestPath, fetchOptions)
           .then(response => ({ response, format }))
           .then(Api.handleErrors)
-          .then(response => response[format]())
-          .then(response => (parser ? parser(response) : response));
+          .then(response => response[format]());
       };
     });
   }

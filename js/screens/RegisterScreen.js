@@ -12,7 +12,7 @@ import Api from '../libs/requests';
 import { apiLogin, authenticate } from '../actions/auth';
 import Spinner from '../components/Spinner';
 
-class LoginScreen extends React.Component {
+class RegisterScreen extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
@@ -45,7 +45,7 @@ class LoginScreen extends React.Component {
     this.setState({ loading: true });
 
     apiLogin({ email, password })
-      .then(({ token, ...user }) => {
+      .then(({ auth_token: token }) => {
         Api.setAuthorisation(token);
         dispatch(authenticate(token));
         navigation.navigate('App');
@@ -76,7 +76,7 @@ class LoginScreen extends React.Component {
           onChangeText={text => this.setState({ password: text })}
           value={password}
         />
-      <Text onPress={this.onLoginPress}>Register</Text>
+        <Text onPress={this.onLoginPress}>Register</Text>
         { error && (
           <Text>{error}</Text>
         )}
@@ -90,7 +90,7 @@ const mapStateToProps = state => ({
   token: state.auth.token,
 });
 
-export default connect(mapStateToProps)(LoginScreen);
+export default connect(mapStateToProps)(RegisterScreen);
 
 const styles = StyleSheet.create({
   container: {

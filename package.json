@@ -13,6 +13,7 @@
     "android": "ENVFILE=.env.development react-native run-android -- --reset-cache",
     "android:release": "cd android && ENVFILE=.env.release ./gradlew assembleRelease",
     "ios": "ENVFILE=.env.development react-native run-ios -- --reset-cache",
+    "lint": "eslint js --fix",
     "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all",
     "reset": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build/ModuleCache/* && rm -rf node_modules/ && rm -f package-lock.json && yarn install",
     "bumpVersion": "node scripts/release.js",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "hex-rgb": "^3.0.0",
+    "prop-types": "^15.6.2",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-config": "0.11.5",

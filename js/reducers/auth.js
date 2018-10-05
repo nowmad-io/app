@@ -10,7 +10,7 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTHENTICATE: {
       const { token } = action;
-      
+
       Api.setAuthorisation(token);
       return {
         ...state,
