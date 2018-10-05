@@ -1,0 +1,51 @@
+{
+  "name": "Nowmad",
+  "version": "0.0.21",
+  "description": "Share your travel experiences with your friends",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nowmad-io/app.git"
+  },
+  "scripts": {
+    "avd": "~/Library/Android/sdk/tools/emulator -avd nowmad_avd &",
+    "start": "react-native start",
+    "android": "ENVFILE=.env.development react-native run-android -- --reset-cache",
+    "android:release": "cd android && ENVFILE=.env.release ./gradlew assembleRelease",
+    "ios": "ENVFILE=.env.development react-native run-ios -- --reset-cache",
+    "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all",
+    "reset": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build/ModuleCache/* && rm -rf node_modules/ && rm -f package-lock.json && yarn install",
+    "bumpVersion": "node scripts/release.js",
+    "workarounds": "node scripts/workarounds.js"
+  },
+  "dependencies": {
+    "hex-rgb": "^3.0.0",
+    "react": "16.5.0",
+    "react-native": "0.57.1",
+    "react-native-config": "0.11.5",
+    "react-navigation": "^2.17.0",
+    "react-redux": "5.0.7",
+    "redux": "4.0.0",
+    "redux-persist": "5.10.0",
+    "remote-redux-devtools": "^0.5.13"
+  },
+  "devDependencies": {
+    "@babel/runtime": "7.1.2",
+    "babel-eslint": "8.2.6",
+    "eslint": "5.4.0",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-jsx-a11y": "6.1.1",
+    "eslint-plugin-react": "7.11.1",
+    "eslint-plugin-react-native": "3.2.1",
+    "metro-react-native-babel-preset": "0.47.1",
+    "read-json": "1.0.3",
+    "rimraf": "2.6.2",
+    "simple-git": "1.96.0"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
+  }
+}
