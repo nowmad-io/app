@@ -18,7 +18,7 @@ import { apiLogin, apiRegister, authenticate } from '../../actions/auth';
 import {
   loginFailed, loginNoNetwork, registerFailed, registerNoNetwork,
 } from '../../modals';
-import { colors, fonts } from '../../constants/parameters';
+import { colors, fonts, sizes } from '../../constants/parameters';
 
 const logo = require('../../../assets/images/logos/logo_white.png');
 
@@ -41,10 +41,10 @@ class AuthScreen extends Component {
     const { params } = this.props.navigation.state;
 
     this.state = {
-      email: params && params.email || '',
-      password: '',
-      firstName: '',
-      lastName: '',
+      email: params && params.email || 'j@j.com',
+      password: 'j',
+      firstName: 'julien',
+      lastName: 'rougeron',
       loading: false,
       error: null,
     };
@@ -275,6 +275,7 @@ export default connect(mapStateToProps)(AuthScreen);
 
 const styles = StyleSheet.create({
   container: {
+    height: sizes.height,
     flex: 1,
     paddingTop: 48,
     paddingBottom: 52,

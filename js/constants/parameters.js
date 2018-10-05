@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform, StatusBar } from 'react-native';
 import hexRgb from 'hex-rgb';
 
 const { width, height } = Dimensions.get('window');
@@ -50,8 +50,8 @@ export const fonts = {
 };
 
 export const sizes = {
+  height: Platform.OS === 'ios' ? height : height - StatusBar.currentHeight,
   width,
-  height,
   headerHeight: 56,
   drawerWidth: 304,
 };

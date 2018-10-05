@@ -81,8 +81,8 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  isConnected: state.network.isConnected,
+const mapStateToProps = () => ({
+  isConnected: true,
 });
 
 export default connect(mapStateToProps)(Profile);
