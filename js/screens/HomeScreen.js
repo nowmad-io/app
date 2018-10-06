@@ -41,7 +41,7 @@ export default class HomeScreen extends React.Component {
                   width: 30,
                 }}
                 resizeMethod="scale"
-                source={{ uri: 'https://picsum.photos/100/100/?image=' + i }}
+                source={{ uri: `https://picsum.photos/100/100/?image=${i}` }}
               />
             </MapView.Marker>
           ))}
