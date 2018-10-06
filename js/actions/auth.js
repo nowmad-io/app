@@ -17,7 +17,6 @@ export function updateProfile(user) {
 }
 
 export function apiUpdateProfile(profile) {
-  console.log('user here', Firebase.auth().currentUser);
   return Firebase.auth().currentUser.updateProfile(profile)
     .then(() => Firebase.auth().currentUser);
 }

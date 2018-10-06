@@ -41,7 +41,7 @@ class RegisterScreen extends Component {
     };
 
     this._passwordField = React.createRef();
-    console.log('logged', props.logged);
+
     if (props.logged) {
       props.navigation.navigate('App');
     }

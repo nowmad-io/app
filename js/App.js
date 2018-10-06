@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Config from 'react-native-config';
 
-import Api from './libs/requests';
 import Firebase from './libs/firebase';
 import MainNavigator from './navigation/MainNavigator';
 import SplashScreen from './screens/SplashScreen';
@@ -15,8 +14,6 @@ const { polyfill } = require('rn-fetch-blob').default;
 const { Blob, XMLHttpRequest } = polyfill;
 window.XMLHttpRequest = XMLHttpRequest;
 window.Blob = Blob;
-
-Api.initialize(Config.API_URL);
 
 Firebase.initialize({
   apiKey: Config.FIREBASE_APIKEY,

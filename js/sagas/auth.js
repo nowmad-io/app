@@ -33,8 +33,7 @@ function* profileFlow(action) {
 
   if (photoURL) {
     const { uri, error } = yield uploadSaga(photoURL);
-    console.log('error', error);
-    console.log('uri', uri);
+
     photoURL = !error ? uri : null;
   }
 
