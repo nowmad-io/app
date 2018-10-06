@@ -12,14 +12,14 @@ class Firebase {
 
   database;
 
-  constructor() {
+  initialize(config) {
+    this.instance.initializeApp(config);
     this.auth = this.instance.auth;
     this.storage = this.instance.storage;
     this.database = this.instance.database;
-  }
 
-  initialize(config) {
-    this.instance.initializeApp(config);
+    this.users = this.instance.database().ref('users');
+    this.messages = this.instance.database().ref('messages');
   }
 }
 

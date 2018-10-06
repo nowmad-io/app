@@ -64,14 +64,12 @@ class RegisterScreen extends Component {
     apiRegister({
       email,
       password,
-    }, {
-      displayName: `${firstName} ${lastName}`,
+      displayName: firstName,
+      firstName,
+      lastName,
     }).then((user) => {
       dispatch(sessionSuccess(user));
-      navigation.navigate('ProfileScreen', {
-        firstName,
-        lastName,
-      });
+      navigation.navigate('ProfileScreen');
       this.setState({ loading: false });
     }).catch(() => {
       this.setState({

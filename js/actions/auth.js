@@ -18,7 +18,8 @@ export function updateProfile(user) {
 
 export function apiUpdateProfile(profile) {
   return Firebase.auth().currentUser.updateProfile(profile)
-    .then(() => Firebase.auth().currentUser);
+    .then(() => Firebase.users.child(Firebase.auth().currentUser.uid).update(profile))
+    .then(() => profile);
 }
 
 export function restoreSession() {
@@ -32,9 +33,9 @@ export function apiLogin(email, password) {
     .then(() => Firebase.auth().currentUser);
 }
 
-export function apiRegister(auth, profile) {
+export function apiRegister({ password, ...profile }) {
   return Firebase.auth()
-    .createUserWithEmailAndPassword(auth.email, auth.password)
+    .createUserWithEmailAndPassword(profile.email, password)
     .then(() => apiUpdateProfile(profile));
 }
 
