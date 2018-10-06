@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Image } from 'react-native';
 import MapView from 'react-native-maps';
-import FastImage from 'react-native-fast-image';
 
 import Header from '../components/Header';
 import Map from '../components/Map';

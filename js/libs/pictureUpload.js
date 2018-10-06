@@ -1,4 +1,5 @@
-import firebase from 'firebase';
+import firebase from '@firebase/app';
+import '@firebase/storage';
 
 const { polyfill, fs } = require('rn-fetch-blob').default;
 

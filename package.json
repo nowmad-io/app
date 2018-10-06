@@ -20,6 +20,8 @@
     "workarounds": "node scripts/workarounds.js"
   },
   "dependencies": {
+    "@firebase/app": "^0.3.4",
+    "@firebase/storage": "^0.2.3",
     "firebase": "^5.5.3",
     "hex-rgb": "3.0.0",
     "lodash": "4.17.11",

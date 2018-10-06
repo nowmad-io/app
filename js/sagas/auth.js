@@ -35,9 +35,7 @@ function* profileFlow(action) {
   if (picture) {
     const { uri, error } = yield uploadSaga(picture);
 
-    if (!error) {
-      picture = uri;
-    }
+    picture = !error ? uri : null;
   }
 
   const user = yield call(apiUpdateProfile, {
