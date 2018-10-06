@@ -1,8 +1,13 @@
 import Firebase from '../libs/firebase';
 
-import { SESSION_SUCCESS, UPDATE_PROFILE, LOGOUT } from '../constants/auth';
+import {
+  SESSION_SUCCESS,
+  UPDATE_PROFILE,
+  FETCH_USERS_SUCCESS,
+  LOGOUT,
+} from '../constants/users';
 
-export function sessionSuccess(user) {
+export function updateProfileSuccess(user) {
   return {
     type: SESSION_SUCCESS,
     user,
@@ -22,15 +27,17 @@ export function apiUpdateProfile(profile) {
     .then(() => profile);
 }
 
-export function restoreSession() {
-  return Firebase.auth().onAuthStateChanged();
-}
-
 export function apiLogin(email, password) {
   return Firebase.auth()
     .setPersistence('local')
     .then(() => Firebase.auth().signInWithEmailAndPassword(email, password))
-    .then(() => Firebase.auth().currentUser);
+    .then(() => Firebase.users.child(Firebase.auth().currentUser.uid).once('value'))
+    .then((user) => {
+      const me = {};
+      me[Firebase.auth().currentUser.uid] = user.val();
+
+      return me;
+    });
 }
 
 export function apiRegister({ password, ...profile }) {
@@ -39,11 +46,23 @@ export function apiRegister({ password, ...profile }) {
     .then(() => apiUpdateProfile(profile));
 }
 
-export function logout() {
+export function fetchUsersSuccess(users) {
+  return {
+    type: FETCH_USERS_SUCCESS,
+    users,
+  };
+}
+
+export function fetchUsers() {
+  return Firebase.users.once('value')
+    .then(users => users.val());
+}
+
+export function logoutSuccess() {
   return { type: LOGOUT };
 }
 
 export function apiLogout(dispatch) {
   return Firebase.auth().signOut()
-    .then(() => dispatch(logout()));
+    .then(() => dispatch(logoutSuccess()));
 }

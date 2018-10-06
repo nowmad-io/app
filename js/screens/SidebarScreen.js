@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Share } from 'react-native';
 import { connect } from 'react-redux';
 
+import { apiLogout } from '../actions/users';
+import { runSagas } from '../actions/utils';
+
 import Icon from '../components/Icon';
 import Text from '../components/Text';
 import Button from '../components/Button';
-
-import { apiLogout } from '../actions/auth';
 
 import { colors, fonts } from '../constants/parameters';
 
@@ -26,8 +27,12 @@ class SidebarScreen extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
-    user: PropTypes.object,
+    me: PropTypes.object,
   };
+
+  componentDidMount() {
+    this.props.dispatch(runSagas());
+  }
 
   onSharePress = () => {
     Share.share({
@@ -46,7 +51,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   render() {
-    const { user } = this.props;
+    const { me } = this.props;
 
     return (
       <View style={styles.container}>
@@ -55,7 +60,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
         >
           <View style={styles.info}>
             <Text style={styles.title}>
-              {user.displayName}
+              {me.displayName}
             </Text>
           </View>
         </View>
@@ -91,7 +96,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 }
 
 const mapStateToProps = state => ({
-  user: state.auth.user,
+  me: state.users.all[state.users.me],
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);

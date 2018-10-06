@@ -11,7 +11,7 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiRegister, sessionSuccess } from '../../actions/auth';
+import { apiRegister, updateProfileSuccess } from '../../actions/users';
 
 import { registerFailed, registerNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
@@ -68,7 +68,7 @@ class RegisterScreen extends Component {
       firstName,
       lastName,
     }).then((user) => {
-      dispatch(sessionSuccess(user));
+      dispatch(updateProfileSuccess(user));
       navigation.navigate('ProfileScreen');
       this.setState({ loading: false });
     }).catch(() => {
@@ -200,7 +200,7 @@ class RegisterScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  logged: state.auth.logged,
+  logged: state.users.logged,
   isConnected: true,
 });
 

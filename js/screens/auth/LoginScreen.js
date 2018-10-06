@@ -11,7 +11,7 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiLogin, sessionSuccess } from '../../actions/auth';
+import { apiLogin, updateProfileSuccess } from '../../actions/users';
 
 import { loginFailed, loginNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
@@ -54,7 +54,7 @@ class LoginScreen extends Component {
 
     apiLogin(email, password)
       .then((user) => {
-        dispatch(sessionSuccess(user));
+        dispatch(updateProfileSuccess(user));
         navigation.navigate('App');
       }).catch(() => {
         this.setState({

@@ -1,5 +1,7 @@
-import auth from './auth';
+import users from './users';
+import home from './home';
 
 export default [
-  auth,
+  users,
+  home,
 ];

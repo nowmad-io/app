@@ -42,6 +42,7 @@
     "redux-persist": "5.10.0",
     "redux-saga": "^0.16.0",
     "remote-redux-devtools": "0.5.13",
+    "reselect": "^4.0.0",
     "rn-fetch-blob": "^0.10.13"
   },
   "devDependencies": {

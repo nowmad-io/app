@@ -8,10 +8,10 @@ import PictureUpload from '../libs/pictureUpload';
 import {
   LOGOUT,
   UPDATE_PROFILE,
-} from '../constants/auth';
-import { STOP_SAGAS } from '../constants/utils';
+} from '../constants/users';
 
-import { apiUpdateProfile, sessionSuccess } from '../actions/auth';
+import { apiUpdateProfile, updateProfileSuccess } from '../actions/users';
+import { stopSagas } from '../actions/utils';
 
 function* uploadSaga(path) {
   const channel = yield call(() => eventChannel((emit) => {
@@ -41,11 +41,11 @@ function* profileFlow(action) {
     photoURL,
   });
 
-  yield put(sessionSuccess(user));
+  yield put(updateProfileSuccess(user));
 }
 
 export function* logoutFlow() {
-  yield put({ type: STOP_SAGAS });
+  yield put(stopSagas());
 }
 
 // Bootstrap sagas

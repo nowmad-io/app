@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-import { updateProfile } from '../../actions/auth';
+import { updateProfile } from '../../actions/users';
 
 import Text from '../../components/Text';
 import Button from '../../components/Button';
