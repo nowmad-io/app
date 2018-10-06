@@ -27,7 +27,8 @@ export function restoreSession() {
 
 export function apiLogin(email, password) {
   return Firebase.auth()
-    .signInWithEmailAndPassword(email, password)
+    .setPersistence('local')
+    .then(() => Firebase.auth().signInWithEmailAndPassword(email, password))
     .then(() => Firebase.auth().currentUser);
 }
 

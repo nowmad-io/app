@@ -33,7 +33,7 @@ class RegisterScreen extends Component {
 
     this.state = {
       email: params && params.email || 'j@j.com',
-      password: 'j',
+      password: 'jjjjjj',
       firstName: 'julien',
       lastName: 'rougeron',
       loading: false,

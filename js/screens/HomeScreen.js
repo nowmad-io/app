@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Image } from 'react-native';
 import MapView from 'react-native-maps';
 
+import Firebase from '../libs/firebase';
+
 import Header from '../components/Header';
 import Map from '../components/Map';
 import Text from '../components/Text';
@@ -10,6 +12,12 @@ import Text from '../components/Text';
 export default class HomeScreen extends React.Component {
   static propTypes = {
     navigation: PropTypes.object,
+  }
+
+  componentDidMount() {
+    Firebase.database().ref('messages').set({ text: 'yooo' })
+      .then((success) => { console.log('success', success)})
+      .catch((error) => { console.log('error', error)});
   }
 
   onActionPress = () => this.props.navigation.openDrawer();
