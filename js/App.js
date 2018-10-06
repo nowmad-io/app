@@ -1,4 +1,5 @@
 import React from 'react';
+import { YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Config from 'react-native-config';
@@ -8,6 +9,11 @@ import MainNavigator from './navigation/MainNavigator';
 import SplashScreen from './screens/SplashScreen';
 
 import configureStore from './configureStore';
+
+YellowBox.ignoreWarnings([
+  'Remote debugger',
+  'Setting a timer',
+]);
 
 const { polyfill } = require('rn-fetch-blob').default;
 
