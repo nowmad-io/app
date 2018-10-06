@@ -26,7 +26,7 @@ class SidebarScreen extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
-    me: PropTypes.object,
+    user: PropTypes.object,
   };
 
   onSharePress = () => {
@@ -39,12 +39,14 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   onLogoutPress = () => {
-    apiLogout(this.props.dispatch);
-    this.props.navigation.navigate('Auth');
+    apiLogout(this.props.dispatch)
+      .then(() => {
+        this.props.navigation.navigate('Auth');
+      });
   }
 
   render() {
-    const { me } = this.props;
+    const { user } = this.props;
 
     return (
       <View style={styles.container}>
@@ -53,7 +55,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
         >
           <View style={styles.info}>
             <Text style={styles.title}>
-              {me.first_name}
+              {user.displayName}
             </Text>
           </View>
         </View>
@@ -89,7 +91,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 }
 
 const mapStateToProps = state => ({
-  me: state.auth.me,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);

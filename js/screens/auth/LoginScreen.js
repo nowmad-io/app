@@ -11,7 +11,7 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiLogin, authenticate } from '../../actions/auth';
+import { apiLogin, sessionSuccess } from '../../actions/auth';
 
 import { loginFailed, loginNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
@@ -32,7 +32,7 @@ class LoginScreen extends Component {
 
     this.state = {
       email: params && params.email || 'j@j.com',
-      password: 'j',
+      password: 'jjjjjj',
       loading: false,
       error: null,
     };
@@ -52,18 +52,16 @@ class LoginScreen extends Component {
     Keyboard.dismiss();
     this.setState({ loading: true });
 
-    apiLogin({
-      email,
-      password,
-    }).then(({ auth_token: authToken }) => {
-      dispatch(authenticate(authToken));
-      navigation.navigate('App');
-    }).catch(() => {
-      this.setState({
-        loading: false,
-        error: loginFailed,
+    apiLogin(email, password)
+      .then((user) => {
+        dispatch(sessionSuccess(user));
+        navigation.navigate('App');
+      }).catch(() => {
+        this.setState({
+          loading: false,
+          error: loginFailed,
+        });
       });
-    });
   }
 
   registerPress = () => {

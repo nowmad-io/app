@@ -4,7 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import Config from 'react-native-config';
 
 import Api from './libs/requests';
-import PictureUpload from './libs/pictureUpload';
+import Firebase from './libs/firebase';
 import MainNavigator from './navigation/MainNavigator';
 import SplashScreen from './screens/SplashScreen';
 
@@ -18,7 +18,7 @@ window.Blob = Blob;
 
 Api.initialize(Config.API_URL);
 
-PictureUpload.initialize({
+Firebase.initialize({
   apiKey: Config.FIREBASE_APIKEY,
   authDomain: Config.FIREBASE_AUTHDOMAIN,
   databaseURL: Config.FIREBASE_DATABASEURL,

@@ -1,43 +1,48 @@
-import Api from '../libs/requests';
+import Firebase from '../libs/firebase';
 
-import {
-  AUTHENTICATE, LOGOUT, UPLOAD_PROFILE_PICTURE, UPDATE_PROFILE,
-} from '../constants/auth';
+import { SESSION_SUCCESS, UPDATE_PROFILE, LOGOUT } from '../constants/auth';
 
-export function apiLogin(data) {
-  return Api.post('auth/token/create/', { params: data });
+export function sessionSuccess(user) {
+  return {
+    type: SESSION_SUCCESS,
+    user,
+  };
 }
 
-export function apiRegister(data) {
-  return Api.post('auth/register/', { params: data });
+export function updateProfile(user) {
+  return {
+    type: UPDATE_PROFILE,
+    user,
+  };
+}
+
+export function apiUpdateProfile(profile) {
+  console.log('user here', Firebase.auth().currentUser);
+  return Firebase.auth().currentUser.updateProfile(profile)
+    .then(() => Firebase.auth().currentUser);
+}
+
+export function restoreSession() {
+  return Firebase.auth().onAuthStateChanged();
+}
+
+export function apiLogin(email, password) {
+  return Firebase.auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(() => Firebase.auth().currentUser);
+}
+
+export function apiRegister(auth, profile) {
+  return Firebase.auth()
+    .createUserWithEmailAndPassword(auth.email, auth.password)
+    .then(() => apiUpdateProfile(profile));
+}
+
+export function logout() {
+  return { type: LOGOUT };
 }
 
 export function apiLogout(dispatch) {
-  dispatch({ type: LOGOUT });
-  return Api.get('auth/token/destroy/').catch(() => true);
-}
-
-export function authenticate(token) {
-  return {
-    type: AUTHENTICATE,
-    token,
-  };
-}
-
-export function uploadProfilePicture(data) {
-  return {
-    type: UPLOAD_PROFILE_PICTURE,
-    data,
-  };
-}
-
-export function apiUpdateProfile(data) {
-  return Api.put('auth/me/', data);
-}
-
-export function updateProfile(data) {
-  return {
-    type: UPDATE_PROFILE,
-    data,
-  };
+  return Firebase.auth().signOut()
+    .then(() => dispatch(logout()));
 }

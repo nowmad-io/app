@@ -7,15 +7,15 @@ import PictureUpload from '../libs/pictureUpload';
 
 import {
   LOGOUT,
-  UPLOAD_PROFILE_PICTURE,
+  UPDATE_PROFILE,
 } from '../constants/auth';
 import { STOP_SAGAS } from '../constants/utils';
 
-import { apiUpdateProfile, updateProfile } from '../actions/auth';
+import { apiUpdateProfile, sessionSuccess } from '../actions/auth';
 
 function* uploadSaga(path) {
   const channel = yield call(() => eventChannel((emit) => {
-    PictureUpload.upload(
+    PictureUpload(
       path,
       uri => emit({ uri }),
       error => emit({ error }),
@@ -29,22 +29,20 @@ function* uploadSaga(path) {
 }
 
 function* profileFlow(action) {
-  const { firstName, lastName } = action.data;
-  let { picture } = action.data;
+  let { photoURL } = action.user;
 
-  if (picture) {
-    const { uri, error } = yield uploadSaga(picture);
-
-    picture = !error ? uri : null;
+  if (photoURL) {
+    const { uri, error } = yield uploadSaga(photoURL);
+    console.log('error', error);
+    console.log('uri', uri);
+    photoURL = !error ? uri : null;
   }
 
   const user = yield call(apiUpdateProfile, {
-    first_name: firstName,
-    last_name: lastName,
-    picture,
+    photoURL,
   });
 
-  yield put(updateProfile(user));
+  yield put(sessionSuccess(user));
 }
 
 export function* logoutFlow() {
@@ -53,6 +51,6 @@ export function* logoutFlow() {
 
 // Bootstrap sagas
 export default function* root() {
-  yield takeLatest(UPLOAD_PROFILE_PICTURE, profileFlow);
+  yield takeLatest(UPDATE_PROFILE, profileFlow);
   yield takeLatest(LOGOUT, logoutFlow);
 }

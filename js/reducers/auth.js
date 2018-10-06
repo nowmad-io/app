@@ -1,32 +1,19 @@
-import { AUTHENTICATE, UPDATE_PROFILE, LOGOUT } from '../constants/auth';
-import Api from '../libs/requests';
+import { SESSION_SUCCESS, LOGOUT } from '../constants/auth';
 
 const initialState = {
-  token: null,
-  me: {},
+  user: {},
+  logged: false,
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case AUTHENTICATE: {
-      const { token } = action;
-
-      Api.setAuthorisation(token);
+    case SESSION_SUCCESS:
       return {
         ...state,
-        token,
-      };
-    }
-    case UPDATE_PROFILE:
-      return {
-        ...state,
-        me: {
-          ...state.me,
-          ...action.data,
-        },
+        user: action.user,
+        logged: true,
       };
     case LOGOUT:
-      Api.setAuthorisation();
       return initialState;
     default:
       return state;

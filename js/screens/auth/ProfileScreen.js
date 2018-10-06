@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-import { uploadProfilePicture } from '../../actions/auth';
+import { updateProfile } from '../../actions/auth';
 
 import Text from '../../components/Text';
 import Button from '../../components/Button';
@@ -20,32 +20,24 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
-    const { firstName, lastName } = props.navigation.state.params;
-
     this.state = {
-      picture: null,
-      firstName,
-      lastName,
+      photoURL: null,
     };
   }
 
   onUpdateProfilePress = () => {
-    const { firstName, lastName, picture } = this.state;
+    const { photoURL } = this.state;
 
-    this.props.dispatch(uploadProfilePicture({
-      firstName,
-      lastName,
-      picture,
-    }));
+    this.props.dispatch(updateProfile({ photoURL }));
     this.onSkipButton();
   }
 
-  onPictureSelected = picture => this.setState({ picture });
+  onPictureSelected = photoURL => this.setState({ photoURL });
 
   onSkipButton = () => this.props.navigation.navigate('App');
 
   render() {
-    const { picture } = this.state;
+    const { photoURL } = this.state;
 
     return (
       <View style={styles.container}>
@@ -58,7 +50,7 @@ class Profile extends Component {
           </Text>
           <ProfilePicker
             style={styles.profilePicker}
-            uri={picture}
+            uri={photoURL}
             onPictureSelected={this.onPictureSelected}
           />
         </View>
@@ -66,7 +58,7 @@ class Profile extends Component {
         <View style={styles.actionWrapper}>
           <Button
             light
-            disabled={!picture}
+            disabled={!photoURL}
             onPress={this.onUpdateProfilePress}
           >
             <Text style={styles.mainText}>Enter to Nowmad</Text>

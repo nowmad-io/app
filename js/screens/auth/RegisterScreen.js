@@ -4,8 +4,6 @@ import { View, StyleSheet, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import FastImage from 'react-native-fast-image';
 
-import Api from '../../libs/requests';
-
 import Content from '../../components/Content';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
@@ -13,7 +11,7 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiRegister, authenticate } from '../../actions/auth';
+import { apiRegister, sessionSuccess } from '../../actions/auth';
 
 import { registerFailed, registerNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
@@ -43,9 +41,8 @@ class RegisterScreen extends Component {
     };
 
     this._passwordField = React.createRef();
-
-    if (props.token) {
-      Api.setAuthorisation(props.token);
+    console.log('logged', props.logged);
+    if (props.logged) {
       props.navigation.navigate('App');
     }
   }
@@ -66,11 +63,11 @@ class RegisterScreen extends Component {
 
     apiRegister({
       email,
-      first_name: firstName,
-      last_name: lastName,
       password,
-    }).then(({ auth_token: authToken }) => {
-      dispatch(authenticate(authToken));
+    }, {
+      displayName: `${firstName} ${lastName}`,
+    }).then((user) => {
+      dispatch(sessionSuccess(user));
       navigation.navigate('ProfileScreen', {
         firstName,
         lastName,
@@ -205,7 +202,7 @@ class RegisterScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  token: state.auth.token,
+  logged: state.auth.logged,
   isConnected: true,
 });
 
