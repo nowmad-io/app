@@ -1,0 +1,1 @@
+export const FETCH_CHATS_SUCCESS = 'chats/FETCH_CHATS_SUCCESS';

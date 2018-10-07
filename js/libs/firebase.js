@@ -12,6 +12,8 @@ class Firebase {
 
   database;
 
+  userChats
+
   initialize(config) {
     this.instance.initializeApp(config);
     this.auth = this.instance.auth;
@@ -20,6 +22,7 @@ class Firebase {
 
     this.users = this.instance.database().ref('users');
     this.messages = this.instance.database().ref('messages');
+    this.userChats = this.instance.database().ref('userChats');
   }
 }
 

@@ -6,7 +6,7 @@ const initialState = {
   logged: false,
 };
 
-const authReducer = (state = initialState, action) => {
+const usersReducer = (state = initialState, action) => {
   switch (action.type) {
     case SESSION_SUCCESS: {
       return {
@@ -28,4 +28,4 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-export default authReducer;
+export default usersReducer;
