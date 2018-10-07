@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Image } from 'react-native';
 import MapView from 'react-native-maps';
 
-import Chat from './Chat';
+import ChatNavigator from '../../navigation/ChatNavigator';
 
 import Header from '../../components/Header';
 import Map from '../../components/Map';
@@ -12,6 +12,12 @@ import Text from '../../components/Text';
 export default class HomeScreen extends React.Component {
   static propTypes = {
     navigation: PropTypes.object,
+  }
+
+  constructor(props) {
+    super(props);
+
+    this._chatNavigator = React.createRef();
   }
 
   onActionPress = () => this.props.navigation.openDrawer();
@@ -48,7 +54,7 @@ export default class HomeScreen extends React.Component {
             </MapView.Marker>
           ))}
         </Map>
-        <Chat />
+        <ChatNavigator ref={(r) => { this._chatNavigator = r; }} />
       </View>
     );
   }
