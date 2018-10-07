@@ -28,6 +28,10 @@ class Firebase {
     this.userChats = this.instance.database().ref('userChats');
     this.userContacts = this.instance.database().ref('userContacts');
   }
+
+  userUID() {
+    return this.auth().currentUser && this.auth().currentUser.email.replace('.', ',');
+  }
 }
 
 export default new Firebase();

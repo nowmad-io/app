@@ -1,12 +1,12 @@
 import {
-  all, call, fork, put, take, takeLatest,
+  all, call, fork, put, take, takeLatest, cancel, cancelled,
 } from 'redux-saga/effects';
 import _ from 'lodash';
 
 import { fetchUser, fetchUsers, fetchUsersSuccess } from '../actions/users';
-import { fetchChats, chatsListener, fetchChatsSuccess } from '../actions/chat';
+import { chatsListener, fetchChatsSuccess } from '../actions/chat';
 
-import { RUN_SAGAS } from '../constants/utils';
+import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
 
 function* fetchUsersFlow() {
   const users = yield call(fetchUsers);
@@ -24,19 +24,29 @@ function* fetchUsersFlow() {
 }
 
 function* fetchChatsFlow() {
-  const initChats = yield call(fetchChats);
+  const channel = yield call(chatsListener);
 
-  yield put(fetchChatsSuccess(initChats, false, true));
+  try {
+    while (true) {
+      const { removed, ...chats } = yield take(channel);
 
-  while (true) {
-    const { removed, ...chats } = yield take(chatsListener());
-    yield put(fetchChatsSuccess(chats, removed));
+      yield put(fetchChatsSuccess(chats, removed));
+    }
+  } finally {
+    if (yield cancelled()) {
+      channel.close();
+    }
   }
 }
 
 function* homeFlow() {
-  yield fork(fetchUsersFlow);
-  yield fork(fetchChatsFlow);
+  const fetchUsersFlowSaga = yield fork(fetchUsersFlow);
+  const fetchChatsFlowSaga = yield fork(fetchChatsFlow);
+
+  yield take(STOP_SAGAS);
+
+  yield cancel(fetchUsersFlowSaga);
+  yield cancel(fetchChatsFlowSaga);
 }
 
 export default function* root() {

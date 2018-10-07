@@ -4,7 +4,7 @@ import { StyleSheet, View, Share } from 'react-native';
 import { connect } from 'react-redux';
 
 import { apiLogout } from '../actions/users';
-import { runSagas } from '../actions/utils';
+import { runSagas, stopSagas } from '../actions/utils';
 
 import Icon from '../components/Icon';
 import Text from '../components/Text';
@@ -32,6 +32,10 @@ class SidebarScreen extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(runSagas());
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(stopSagas());
   }
 
   onSharePress = () => {

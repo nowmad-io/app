@@ -23,7 +23,7 @@ export function updateProfile(user) {
 
 export function apiUpdateProfile(profile) {
   return Firebase.auth().currentUser.updateProfile(profile)
-    .then(() => Firebase.users.child(Firebase.auth().currentUser.uid).update(profile))
+    .then(() => Firebase.users.child(Firebase.userUID()).update(profile))
     .then(() => profile);
 }
 
@@ -40,9 +40,9 @@ export function apiLogin(email, password) {
   return Firebase.auth()
     .setPersistence('local')
     .then(() => Firebase.auth().signInWithEmailAndPassword(email, password))
-    .then(() => Firebase.users.child(Firebase.auth().currentUser.uid).once('value'))
+    .then(() => Firebase.users.child(Firebase.userUID()).once('value'))
     .then(user => ({
-      [Firebase.auth().currentUser.uid]: user.val(),
+      [Firebase.userUID()]: user.val(),
     }));
 }
 
@@ -68,7 +68,7 @@ export function fetchUser(uid) {
 }
 
 export function fetchUsers() {
-  return Firebase.userContacts.child(Firebase.auth().currentUser.uid).once('value')
+  return Firebase.userContacts.child(Firebase.userUID()).once('value')
     .then(users => users.val());
 }
 

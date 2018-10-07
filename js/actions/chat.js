@@ -16,13 +16,8 @@ export function fetchChatsSuccess(chats, removed = false, replace = false) {
   };
 }
 
-export function fetchChats() {
-  return Firebase.userChats.child(Firebase.auth().currentUser.uid).once('value')
-    .then(chats => chats.val());
-}
-
 export function chatsListener() {
-  const query = Firebase.database().ref(`userChats/${Firebase.auth().currentUser.uid}`);
+  const query = Firebase.userChats.child(Firebase.userUID());
   const listener = eventChannel((emit) => {
     query.on(
       'child_added',
@@ -37,7 +32,8 @@ export function chatsListener() {
       data => emit({ [data.key]: data.val(), removed: true }),
     );
 
-    return () => query.off(listener);
+    return () => query.off();
   });
+
   return listener;
 }
