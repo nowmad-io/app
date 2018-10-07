@@ -27,6 +27,15 @@ export function apiUpdateProfile(profile) {
     .then(() => profile);
 }
 
+export function apiRestoreSession() {
+  return new Promise((resolve) => {
+    const unsubscribe = Firebase.auth().onAuthStateChanged(() => {
+      unsubscribe();
+      resolve();
+    });
+  });
+}
+
 export function apiLogin(email, password) {
   return Firebase.auth()
     .setPersistence('local')

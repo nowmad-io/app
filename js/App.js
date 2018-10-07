@@ -5,6 +5,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 import Config from 'react-native-config';
 
 import Firebase from './libs/firebase';
+
+import { apiRestoreSession } from './actions/users';
+
 import MainNavigator from './navigation/MainNavigator';
 import SplashScreen from './screens/SplashScreen';
 
@@ -34,7 +37,7 @@ const { persistor, store } = configureStore();
 
 export default () => (
   <Provider store={store}>
-    <PersistGate persistor={persistor} loading={<SplashScreen />}>
+    <PersistGate persistor={persistor} loading={<SplashScreen />} onBeforeLift={apiRestoreSession}>
       <MainNavigator />
     </PersistGate>
   </Provider>

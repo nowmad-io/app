@@ -11,7 +11,9 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiRegister, updateProfileSuccess } from '../../actions/users';
+import {
+  apiRegister, updateProfileSuccess,
+} from '../../actions/users';
 
 import { registerFailed, registerNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
