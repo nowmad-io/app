@@ -17,7 +17,9 @@ export default class Chat extends React.PureComponent {
     };
   }
 
-  onPress = () => {
+  onAddPress = () => {}
+
+  onBackPress = () => {
     this.props.navigation.goBack();
   }
 
@@ -28,7 +30,8 @@ export default class Chat extends React.PureComponent {
       <View style={styles.container}>
         <Text>YOO CHAT DETAIL !</Text>
         <Text>{ id }</Text>
-        <Text onPress={this.onPress}>Back</Text>
+        <Text onPress={this.onAddPress}>Add</Text>
+        <Text onPress={this.onBackPress}>Back</Text>
       </View>
     );
   }

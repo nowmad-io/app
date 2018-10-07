@@ -59,8 +59,16 @@ export function fetchUsersSuccess(users) {
   };
 }
 
+export function fetchUser(uid) {
+  return Firebase.users.child(uid).once('value')
+    .then(user => ({
+      ...user.val(),
+      uid: user.key,
+    }));
+}
+
 export function fetchUsers() {
-  return Firebase.users.once('value')
+  return Firebase.userContacts.child(Firebase.auth().currentUser.uid).once('value')
     .then(users => users.val());
 }
 

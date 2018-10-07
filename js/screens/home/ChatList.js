@@ -10,6 +10,7 @@ class ChatList extends React.PureComponent {
   static propTypes = {
     navigation: PropTypes.object,
     chats: PropTypes.object,
+    users: PropTypes.object,
   }
 
   onChatPress = id => () => {
@@ -17,13 +18,13 @@ class ChatList extends React.PureComponent {
   }
 
   render() {
-    const { chats } = this.props;
+    const { chats, users } = this.props;
 
     return (
       <View style={styles.container}>
         {_.map(chats, ({ receiver }, id) => (
           <TouchableOpacity key={id} onPress={this.onChatPress(id)}>
-            <Text capitalize>{receiver}</Text>
+            <Text capitalize>{ users[receiver] && users[receiver].displayName }</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -33,6 +34,7 @@ class ChatList extends React.PureComponent {
 
 const mapStateToProps = state => ({
   chats: state.chat.chats,
+  users: state.users.all,
 });
 
 export default connect(mapStateToProps, null)(ChatList);

@@ -2,7 +2,7 @@ import { SESSION_SUCCESS, FETCH_USERS_SUCCESS, LOGOUT } from '../constants/users
 
 const initialState = {
   me: null,
-  all: [],
+  all: {},
   logged: false,
 };
 
@@ -19,7 +19,10 @@ const usersReducer = (state = initialState, action) => {
     case FETCH_USERS_SUCCESS:
       return {
         ...state,
-        all: action.users,
+        all: {
+          ...state.all,
+          ...action.users,
+        },
       };
     case LOGOUT:
       return initialState;

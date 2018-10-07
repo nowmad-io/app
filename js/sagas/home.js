@@ -1,22 +1,32 @@
 import {
-  call, fork, put, take, takeLatest,
+  all, call, fork, put, take, takeLatest,
 } from 'redux-saga/effects';
+import _ from 'lodash';
 
-// import { fetchUsers, fetchUsersSuccess } from '../actions/users';
+import { fetchUser, fetchUsers, fetchUsersSuccess } from '../actions/users';
 import { fetchChats, chatsListener, fetchChatsSuccess } from '../actions/chat';
 
 import { RUN_SAGAS } from '../constants/utils';
 
-// function* fetchUserFlow() {
-//   const users = yield call(fetchUsers);
-//
-//   yield put(fetchUsersSuccess(users));
-// }
+function* fetchUsersFlow() {
+  const users = yield call(fetchUsers);
+  let fullUsers = yield all(_.map(
+    users,
+    (val, uid) => call(fetchUser, uid),
+  ));
+
+  fullUsers = _.chain(fullUsers)
+    .keyBy('uid')
+    .mapValues(v => _.omit(v, 'uid'))
+    .value();
+
+  yield put(fetchUsersSuccess(fullUsers));
+}
 
 function* fetchChatsFlow() {
-  const users = yield call(fetchChats);
+  const initChats = yield call(fetchChats);
 
-  yield put(fetchChatsSuccess(users, false, true));
+  yield put(fetchChatsSuccess(initChats, false, true));
 
   while (true) {
     const { removed, ...chats } = yield take(chatsListener());
@@ -25,7 +35,7 @@ function* fetchChatsFlow() {
 }
 
 function* homeFlow() {
-  // yield fork(fetchUserFlow);
+  yield fork(fetchUsersFlow);
   yield fork(fetchChatsFlow);
 }
 

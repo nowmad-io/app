@@ -12,17 +12,21 @@ class Firebase {
 
   database;
 
-  userChats
+  users;
+
+  userChats;
+
+  userContacts;
 
   initialize(config) {
     this.instance.initializeApp(config);
     this.auth = this.instance.auth;
     this.storage = this.instance.storage;
     this.database = this.instance.database;
-
     this.users = this.instance.database().ref('users');
     this.messages = this.instance.database().ref('messages');
     this.userChats = this.instance.database().ref('userChats');
+    this.userContacts = this.instance.database().ref('userContacts');
   }
 }
 
