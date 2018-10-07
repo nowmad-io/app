@@ -41,12 +41,9 @@ export function apiLogin(email, password) {
     .setPersistence('local')
     .then(() => Firebase.auth().signInWithEmailAndPassword(email, password))
     .then(() => Firebase.users.child(Firebase.auth().currentUser.uid).once('value'))
-    .then((user) => {
-      const me = {};
-      me[Firebase.auth().currentUser.uid] = user.val();
-
-      return me;
-    });
+    .then(user => ({
+      [Firebase.auth().currentUser.uid]: user.val(),
+    }));
 }
 
 export function apiRegister({ password, ...profile }) {

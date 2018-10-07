@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Image } from 'react-native';
 import MapView from 'react-native-maps';
 
-import Header from '../components/Header';
-import Map from '../components/Map';
-import Text from '../components/Text';
+import Chat from './Chat';
+
+import Header from '../../components/Header';
+import Map from '../../components/Map';
+import Text from '../../components/Text';
 
 export default class HomeScreen extends React.Component {
   static propTypes = {
@@ -46,6 +48,7 @@ export default class HomeScreen extends React.Component {
             </MapView.Marker>
           ))}
         </Map>
+        <Chat />
       </View>
     );
   }

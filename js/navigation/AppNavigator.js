@@ -1,7 +1,7 @@
 import React from 'react';
 import { createDrawerNavigator } from 'react-navigation';
 
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from '../screens/home/HomeScreen';
 import SidebarScreen from '../screens/SidebarScreen';
 
 import { sizes } from '../constants/parameters';
