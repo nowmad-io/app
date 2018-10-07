@@ -12,7 +12,9 @@ export default class Chat extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    console.log('yoo', props.navigation);
+    this.state = {
+      id: props.navigation.state.params.id,
+    };
   }
 
   onPress = () => {
@@ -20,9 +22,12 @@ export default class Chat extends React.PureComponent {
   }
 
   render() {
+    const { id } = this.state;
+
     return (
       <View style={styles.container}>
         <Text>YOO CHAT DETAIL !</Text>
+        <Text>{ id }</Text>
         <Text onPress={this.onPress}>Back</Text>
       </View>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -22,12 +22,9 @@ class ChatList extends React.PureComponent {
     return (
       <View style={styles.container}>
         {_.map(chats, ({ receiver }, id) => (
-          <Text
-            key={id}
-            onPress={this.onChatPress(id)}
-          >
-            {receiver}
-          </Text>
+          <TouchableOpacity key={id} onPress={this.onChatPress(id)}>
+            <Text capitalize>{receiver}</Text>
+          </TouchableOpacity>
         ))}
       </View>
     );
