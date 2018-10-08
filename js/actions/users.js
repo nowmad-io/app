@@ -1,7 +1,7 @@
 import Firebase from '../libs/firebase';
 
 import {
-  SESSION_SUCCESS,
+  UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE,
   FETCH_USERS_SUCCESS,
   LOGOUT,
@@ -9,7 +9,7 @@ import {
 
 export function updateProfileSuccess(user) {
   return {
-    type: SESSION_SUCCESS,
+    type: UPDATE_PROFILE_SUCCESS,
     user,
   };
 }
@@ -24,7 +24,9 @@ export function updateProfile(user) {
 export function apiUpdateProfile(profile) {
   return Firebase.auth().currentUser.updateProfile(profile)
     .then(() => Firebase.users.child(Firebase.userUID()).update(profile))
-    .then(() => profile);
+    .then(() => ({
+      [Firebase.userUID()]: profile,
+    }));
 }
 
 export function apiRestoreSession() {

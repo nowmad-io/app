@@ -2,7 +2,7 @@ import Firebase from './firebase';
 
 const { polyfill, fs } = require('rn-fetch-blob').default;
 
-export default (uri, success, error, mime = 'application/octet-stream') => new Promise(() => {
+export default (uri, mime = 'application/octet-stream') => new Promise((resolve, reject) => {
   const name = uri.split('/').pop();
   const imageRef = Firebase.storage().ref(name);
 
@@ -22,6 +22,6 @@ export default (uri, success, error, mime = 'application/octet-stream') => new P
       uploadBlob.close();
       return imageRef.getDownloadURL();
     })
-    .then(success)
-    .catch(error);
+    .then(resolve)
+    .catch(reject);
 });

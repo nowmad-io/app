@@ -1,7 +1,4 @@
-import {
-  put, takeLatest, call, take,
-} from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
+import { put, takeLatest, call } from 'redux-saga/effects';
 
 import PictureUpload from '../libs/pictureUpload';
 
@@ -13,28 +10,15 @@ import {
 import { apiUpdateProfile, updateProfileSuccess } from '../actions/users';
 import { stopSagas } from '../actions/utils';
 
-function* uploadSaga(path) {
-  const channel = yield call(() => eventChannel((emit) => {
-    PictureUpload(
-      path,
-      uri => emit({ uri }),
-      error => emit({ error }),
-    );
-    return () => {};
-  }));
-
-  const { uri, error } = yield take(channel);
-
-  return { uri, error };
-}
-
 function* profileFlow(action) {
   let { photoURL } = action.user;
 
   if (photoURL) {
-    const { uri, error } = yield uploadSaga(photoURL);
-
-    photoURL = !error ? uri : null;
+    try {
+      photoURL = yield call(PictureUpload, photoURL);
+    } catch (error) {
+      photoURL = null;
+    }
   }
 
   const user = yield call(apiUpdateProfile, {
