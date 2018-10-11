@@ -41,7 +41,13 @@ export default class Avatar extends PureComponent {
           style,
         ]}
       >
-        {text && (
+        {uri ? (
+          <Image
+            style={styles.image}
+            resizeMethod="scale"
+            source={{ uri }}
+          />
+        ) : (
           <Text
             style={[
               styles.text,
@@ -51,13 +57,6 @@ export default class Avatar extends PureComponent {
           >
             {text}
           </Text>
-        )}
-        {uri && (
-          <Image
-            style={styles.image}
-            resizeMethod="scale"
-            source={{ uri }}
-          />
         )}
       </View>
     );

@@ -4,75 +4,49 @@ import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
+import { selectPlaces } from '../../reducers/entities';
+
 import Header from '../../components/Header';
 import Map from '../../components/Map';
 import Marker from '../../components/Marker';
 
-class HomeScreen extends React.Component {
+class HomeScreen extends React.PureComponent {
   static propTypes = {
     navigation: PropTypes.object,
-    me: PropTypes.object,
-    places: PropTypes.object,
-    friends: PropTypes.object,
+    places: PropTypes.array,
   }
 
   onActionPress = () => this.props.navigation.openDrawer();
 
-  renderMarker = (place, key) => {
-    const { longitude, latitude, reviews } = place;
-    const { me, friends } = this.props;
-    console.log('reviews', reviews);
-    console.log('Object.keys(reviews)[0]', Object.keys(reviews || {})[0]);
-    console.log('friends', friends);
-    const userKey = Object.keys(reviews || {})[0];
-    const user = userKey && friends[userKey] || {};
-    let text;
-    let picture;
-
-    if (_.size(reviews) <= 1 && user && user.firstName && user.lastName) {
-      text = (userKey === me.ui) ? 'me' : `${user.firstName[0]}${user.lastName[0]}`;
-      picture = user && user.photoURL;
-    } else {
-      text = `${_.size(reviews)}`;
-    }
-
-    console.log('user', user);
-    console.log('text', text);
-    console.log('picture', picture);
-
-    return (
-      <Marker
-        key={key}
-        coordinates={{ latitude, longitude }}
-        text={text}
-        picture={picture}
-        selected={false}
-      />
-    );
-  }
+  renderMarker = places => _.map(places, ({
+    uid, latitude, longitude, text, picture,
+  }) => (
+    <Marker
+      key={uid}
+      latitude={latitude}
+      longitude={longitude}
+      text={text}
+      picture={picture}
+      selected={false}
+    />
+  ));
 
   render() {
-    const { reviews } = this.props;
-    console.log('reviews', reviews);
+    const { places } = this.props;
+    console.count('homeScreen');
     return (
       <View style={styles.container}>
         <Header onActionPress={this.onActionPress} />
-        <Map
-          ref={(m) => { this._map = m; }}
-          mapPadding={{
-            top: 0,
-            bottom: 0,
-          }}
-        />
+        <Map>
+          {this.renderMarker(places)}
+        </Map>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  me: state.users.me,
-  friends: state.users.friends,
-  reviews: state.entities.reviews,
+  places: selectPlaces(state),
 });
 
 export default connect(mapStateToProps, null)(HomeScreen);

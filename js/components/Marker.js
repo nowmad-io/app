@@ -12,7 +12,8 @@ const triangleHelper = 10;
 export default class Marker extends PureComponent {
   static propTypes = {
     onMarkerPress: PropTypes.func,
-    coordinates: PropTypes.object,
+    latitude: PropTypes.number,
+    longitude: PropTypes.number,
     text: PropTypes.string,
     picture: PropTypes.string,
     selected: PropTypes.bool,
@@ -25,7 +26,8 @@ export default class Marker extends PureComponent {
   render() {
     const {
       onMarkerPress,
-      coordinates,
+      latitude,
+      longitude,
       text,
       picture,
       selected,
@@ -35,9 +37,11 @@ export default class Marker extends PureComponent {
     const height = !selected
       ? (avatarSize + triangleHelper - 1) : (avatarSize + 2 * (triangleHelper + 1));
 
+    console.count(`marker ${text}`);
+
     return (
       <MapView.Marker
-        coordinate={coordinates}
+        coordinate={{ latitude, longitude }}
         onPress={onMarkerPress}
         anchor={{ x: 0.5, y: 1 }}
         tracksViewChanges={false}
@@ -54,7 +58,7 @@ export default class Marker extends PureComponent {
             uri={picture}
             size={avatarSize}
             text={text}
-            uppercase={me}
+            uppercase={!me}
             style={[
               styles.avatar,
               selected && styles.avatar_selected,

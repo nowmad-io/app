@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-export default class Map extends Component {
+export default class Map extends React.PureComponent {
   timeout = null
 
   static propTypes = {
@@ -11,7 +11,6 @@ export default class Map extends Component {
       PropTypes.array,
       PropTypes.object,
     ]),
-    onRef: PropTypes.func,
     onRegionChangeComplete: PropTypes.func,
     onPoiClick: PropTypes.func,
     onLongPress: PropTypes.func,
@@ -29,7 +28,6 @@ export default class Map extends Component {
   }
 
   static defaultProps = {
-    onRef: () => true,
     onRegionChangeComplete: () => true,
     onPoiClick: () => true,
     onLongPress: () => true,
@@ -41,72 +39,76 @@ export default class Map extends Component {
     scrollEnabled: true,
   }
 
+  constructor(props) {
+    super(props);
+
+    this._ref = React.createRef();
+  }
+
   componentWillUnmount() {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
   }
 
-  onRef(ref) {
-    this._ref = ref;
-    this.props.onRef(ref);
-  }
-
-  onMapReady() {
-    if (this._ref) {
-      this._ref.map.setNativeProps({ style: [styles.map, { marginBottom: 0 }] });
-    }
+  onMapReady = () => {
+    this._ref.current.map.setNativeProps({ style: [styles.map, { marginBottom: 0 }] });
 
     this.props.onMapReady();
   }
 
+  onLongPress = event => this.props.onLongPress(event.nativeEvent);
+
+  onPoiClick = event => this.props.onPoiClick(event.nativeEvent);
+
   updatePadding(mapPadding) {
-    if (!this._ref.map) {
+    if (!this._ref.current.map) {
       return;
     }
-    this._ref.map.setNativeProps({ style: [styles.map, { marginBottom: 1 }] });
-    this._ref.map.setNativeProps({ mapPadding });
+    this._ref.current.map.setNativeProps({ style: [styles.map, { marginBottom: 1 }] });
+    this._ref.current.map.setNativeProps({ mapPadding });
 
     this.timeout = setTimeout(
-      () => this._ref.map.setNativeProps({ style: [styles.map, { marginBottom: 0 }] }),
+      () => this._ref.current.map.setNativeProps({ style: [styles.map, { marginBottom: 0 }] }),
       100,
     );
   }
 
   animateToRegion(region, duration = 500) {
-    this._ref.animateToRegion(region, duration);
+    this._ref.current.animateToRegion(region, duration);
   }
 
   animateToBearing(bearing, duration = 500) {
-    this._ref.animateToBearing(bearing, duration);
+    this._ref.current.animateToBearing(bearing, duration);
   }
 
   animateToCoordinate(place, duration = 500) {
-    this._ref.animateToCoordinate(place, duration);
+    this._ref.current.animateToCoordinate(place, duration);
   }
 
   fitToCoordinates(coordinates) {
-    this._ref.fitToCoordinates(coordinates);
+    this._ref.current.fitToCoordinates(coordinates);
   }
 
   zoomBy(zoom) {
-    this._ref.zoomBy(zoom);
+    this._ref.current.zoomBy(zoom);
   }
 
   render() {
     const {
-      region, zoomEnabled, rotateEnabled, scrollEnabled, mapPadding, onLongPress,
-      onPress, onRegionChangeComplete, moveOnMarkerPress, onPoiClick, onLayout,
+      region, zoomEnabled, rotateEnabled, scrollEnabled, mapPadding,
+      onPress, onRegionChangeComplete, moveOnMarkerPress, onLayout,
       onPanDrag, cacheEnabled,
     } = this.props;
 
+    console.count('map');
     return (
       <MapView
-        ref={ref => this.onRef(ref)}
-        onMapReady={() => this.onMapReady()}
-        onRegionChangeComplete={newRegion => onRegionChangeComplete(newRegion)}
+        ref={this._ref}
+        onMapReady={this.onMapReady}
+        onRegionChangeComplete={onRegionChangeComplete}
         onPress={onPress}
-        onLongPress={event => onLongPress(event.nativeEvent)}
+        onLongPress={this.onLongPress}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsMyLocationButton={false}
@@ -118,7 +120,7 @@ export default class Map extends Component {
         moveOnMarkerPress={moveOnMarkerPress}
         onLayout={onLayout}
         onPanDrag={onPanDrag}
-        onPoiClick={event => onPoiClick && onPoiClick(event.nativeEvent)}
+        onPoiClick={this.onPoiClick}
         cacheEnabled={cacheEnabled}
       >
         {this.props.children}

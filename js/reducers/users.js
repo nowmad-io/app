@@ -2,6 +2,9 @@ import _ from 'lodash';
 
 import { UPDATE_PROFILE_SUCCESS, FETCH_FRIENDSHIPS_SUCCESS, LOGOUT } from '../constants/users';
 
+export const getMe = state => state.users.me;
+export const getFriends = state => state.users.friends;
+
 const initialState = {
   me: {},
   friends: {},

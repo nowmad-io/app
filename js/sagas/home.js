@@ -4,7 +4,7 @@ import {
 import _ from 'lodash';
 
 import { fetchUser, fetchFriendships, fetchFriendshipsSuccess } from '../actions/users';
-import { userReviewsListener, fetchUserReviewsSuccess } from '../actions/entities';
+import { userReviewsListener, fetchReviewSuccess } from '../actions/entities';
 
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
 
@@ -16,7 +16,7 @@ const fetchUserReviewsFlow = uid => (
       while (true) {
         const { removed, ...review } = yield take(channel);
 
-        yield put(fetchUserReviewsSuccess(review, removed));
+        yield put(fetchReviewSuccess(review, removed));
       }
     } finally {
       if (yield cancelled()) {
