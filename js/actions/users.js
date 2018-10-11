@@ -3,7 +3,7 @@ import Firebase from '../libs/firebase';
 import {
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE,
-  FETCH_USERS_SUCCESS,
+  FETCH_FRIENDSHIPS_SUCCESS,
   LOGOUT,
 } from '../constants/users';
 
@@ -54,10 +54,10 @@ export function apiRegister({ password, ...profile }) {
     .then(() => apiUpdateProfile(profile));
 }
 
-export function fetchUsersSuccess(users) {
+export function fetchFriendshipsSuccess(friends) {
   return {
-    type: FETCH_USERS_SUCCESS,
-    users,
+    type: FETCH_FRIENDSHIPS_SUCCESS,
+    friends,
   };
 }
 
@@ -69,9 +69,9 @@ export function fetchUser(uid) {
     }));
 }
 
-export function fetchUsers() {
-  return Firebase.userContacts.child(Firebase.userUID()).once('value')
-    .then(users => users.val());
+export function fetchFriendships() {
+  return Firebase.friendships.child(Firebase.userUID()).once('value')
+    .then(friends => friends.val());
 }
 
 export function logoutSuccess() {

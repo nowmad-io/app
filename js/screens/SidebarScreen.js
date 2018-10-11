@@ -100,7 +100,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 }
 
 const mapStateToProps = state => ({
-  me: state.users.me ? state.users.all[state.users.me] : {},
+  me: state.users.me,
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);

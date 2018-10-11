@@ -12,12 +12,6 @@ export default class HomeScreen extends React.Component {
     navigation: PropTypes.object,
   }
 
-  constructor(props) {
-    super(props);
-
-    this._chatNavigator = React.createRef();
-  }
-
   onActionPress = () => this.props.navigation.openDrawer();
 
   render() {

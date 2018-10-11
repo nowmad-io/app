@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-import { UPDATE_PROFILE_SUCCESS, FETCH_USERS_SUCCESS, LOGOUT } from '../constants/users';
+import { UPDATE_PROFILE_SUCCESS, FETCH_FRIENDSHIPS_SUCCESS, LOGOUT } from '../constants/users';
 
 const initialState = {
-  me: null,
-  all: {},
+  me: {},
+  friends: {},
   logged: false,
 };
 
@@ -13,16 +13,16 @@ const usersReducer = (state = initialState, action) => {
     case UPDATE_PROFILE_SUCCESS:
       return {
         ...state,
-        me: Object.keys(action.user)[0],
-        all: _.merge({}, state.all, action.user),
+        me: action.user[Object.keys(action.user)[0]],
+        friends: _.merge({}, state.all, action.user),
         logged: true,
       };
-    case FETCH_USERS_SUCCESS:
+    case FETCH_FRIENDSHIPS_SUCCESS:
       return {
         ...state,
-        all: {
-          ...state.all,
-          ...action.users,
+        friends: {
+          ...state.friends,
+          ...action.friends,
         },
       };
     case LOGOUT:

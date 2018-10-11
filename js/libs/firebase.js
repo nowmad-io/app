@@ -14,9 +14,7 @@ class Firebase {
 
   users;
 
-  userChats;
-
-  userContacts;
+  friendships;
 
   initialize(config) {
     this.instance.initializeApp(config);
@@ -24,9 +22,7 @@ class Firebase {
     this.storage = this.instance.storage;
     this.database = this.instance.database;
     this.users = this.instance.database().ref('users');
-    this.messages = this.instance.database().ref('messages');
-    this.userChats = this.instance.database().ref('userChats');
-    this.userContacts = this.instance.database().ref('userContacts');
+    this.friendships = this.instance.database().ref('friendships');
   }
 
   userUID() {
