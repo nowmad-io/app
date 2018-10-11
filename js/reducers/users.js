@@ -1,36 +1,27 @@
-import _ from 'lodash';
-
-import { UPDATE_PROFILE_SUCCESS, FETCH_FRIENDSHIPS_SUCCESS, LOGOUT } from '../constants/users';
+import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/users';
 
 export const getMe = state => state.users.me;
 export const getFriends = state => state.users.friends;
 
 const initialState = {
   me: {},
-  friends: {},
   logged: false,
 };
 
 const usersReducer = (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE_PROFILE_SUCCESS:
+    case UPDATE_PROFILE_SUCCESS: {
+      const { [Object.keys(action.user)[0]]: me } = action.user;
+
       return {
         ...state,
         me: {
-          uid: Object.keys(action.user)[0],
-          ...action.user[Object.keys(action.user)[0]],
+          ...state.me,
+          ...me,
         },
-        friends: _.merge({}, state.all, action.user),
         logged: true,
       };
-    case FETCH_FRIENDSHIPS_SUCCESS:
-      return {
-        ...state,
-        friends: {
-          ...state.friends,
-          ...action.friends,
-        },
-      };
+    }
     case LOGOUT:
       return initialState;
     default:

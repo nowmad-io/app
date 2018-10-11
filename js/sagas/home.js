@@ -3,8 +3,10 @@ import {
 } from 'redux-saga/effects';
 import _ from 'lodash';
 
-import { fetchUser, fetchFriendships, fetchFriendshipsSuccess } from '../actions/users';
-import { userReviewsListener, fetchReviewSuccess } from '../actions/entities';
+import { fetchUser } from '../actions/users';
+import {
+  userReviewsListener, fetchReviewSuccess, fetchFriendships, fetchFriendshipsSuccess,
+} from '../actions/entities';
 
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
 
@@ -41,7 +43,6 @@ function* homeFlow() {
     .keyBy('uid')
     .mapValues(v => _.omit(v, 'uid'))
     .value();
-
   yield put(fetchFriendshipsSuccess(friendsInfo));
 
   const reviewsListeners = yield all(_.map(
