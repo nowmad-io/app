@@ -34,6 +34,7 @@ export default class Map extends React.PureComponent {
     onLayout: () => true,
     onMapReady: () => true,
     onPanDrag: () => true,
+    moveOnMarkerPress: false,
     zoomEnabled: true,
     rotateEnabled: true,
     scrollEnabled: true,
@@ -101,7 +102,6 @@ export default class Map extends React.PureComponent {
       onPanDrag, cacheEnabled,
     } = this.props;
 
-    console.count('map');
     return (
       <MapView
         ref={this._ref}

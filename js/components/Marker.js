@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
 
 import Avatar from './Avatar';
@@ -12,15 +12,45 @@ const triangleHelper = 10;
 export default class Marker extends PureComponent {
   static propTypes = {
     onMarkerPress: PropTypes.func,
+    onPrefetched: PropTypes.func,
     latitude: PropTypes.number,
     longitude: PropTypes.number,
     text: PropTypes.string,
     picture: PropTypes.string,
     selected: PropTypes.bool,
+    prefetched: PropTypes.bool,
   };
 
   static defaultProps = {
     onMarkerPress: () => true,
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      prefetched: !props.picture || props.prefetched,
+      prefetchId: null,
+    };
+  }
+
+  componentDidMount() {
+    const { onPrefetched, picture } = this.props;
+    const { prefetched } = this.state;
+
+    if (!prefetched) {
+      Image.prefetch(picture, prefetchId => this.setState({ prefetchId }))
+        .then(() => {
+          onPrefetched();
+          this.setState({ prefetched: true });
+        });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.prefetchId) {
+      Image.abortPrefetch(this.state.prefetchId);
+    }
   }
 
   render() {
@@ -32,19 +62,19 @@ export default class Marker extends PureComponent {
       picture,
       selected,
     } = this.props;
+    const { prefetched } = this.state;
+
     const me = (text === 'me');
     const avatarSize = me ? 36 : 40;
     const height = !selected
       ? (avatarSize + triangleHelper - 1) : (avatarSize + 2 * (triangleHelper + 1));
 
-    console.count(`marker ${text}`);
-
-    return (
+    return prefetched && (
       <MapView.Marker
         coordinate={{ latitude, longitude }}
         onPress={onMarkerPress}
         anchor={{ x: 0.5, y: 1 }}
-        tracksViewChanges={false}
+        tracksViewChanges={!prefetched}
       >
         <View
           style={[
@@ -76,7 +106,7 @@ export default class Marker extends PureComponent {
           />
         </View>
       </MapView.Marker>
-    );
+    ) || [];
   }
 }
 
@@ -95,7 +125,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   avatar_selected: {
-    backgroundColor: colors.green,
+    backgroundColor: colors.primary,
     borderColor: colors.white,
   },
   avatar_text_selected: {

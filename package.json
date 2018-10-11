@@ -43,7 +43,8 @@
     "redux-saga": "^0.16.0",
     "remote-redux-devtools": "0.5.13",
     "reselect": "^4.0.0",
-    "rn-fetch-blob": "^0.10.13"
+    "rn-fetch-blob": "^0.10.13",
+    "shortid": "^2.2.13"
   },
   "devDependencies": {
     "@babel/runtime": "7.1.2",

@@ -30,6 +30,6 @@
         "fetch": false,
         "navigator": false,
         "window": false,
-        "__ENV__": false
+        "__DEV__": false
     }
 }
