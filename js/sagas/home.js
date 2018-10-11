@@ -28,7 +28,7 @@ const fetchUserReviewsFlow = uid => (
 
 function* homeFlow() {
   const { uid } = yield select(state => state.users.me);
-  const myListener = yield fork(fetchUserReviewsFlow(uid));
+  const myReviewsListener = yield fork(fetchUserReviewsFlow(uid));
 
   // Ftech all users
   const friends = yield call(fetchFriendships);
@@ -51,7 +51,7 @@ function* homeFlow() {
 
   yield take(STOP_SAGAS);
 
-  yield cancel(myListener);
+  yield cancel(myReviewsListener);
   yield all(_.map(
     reviewsListeners,
     reviewsListener => cancel(reviewsListener),
