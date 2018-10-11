@@ -21,6 +21,7 @@ const plain = {
 
 export const colors = {
   ...plain,
+  primaryShadow: rgba(plain.primary, 0.4),
   whiteTransparent: rgba(plain.white, 0.8),
   blackTransparentLight: rgba(plain.black, 0.2),
   blackTransparent: rgba(plain.black, 0.6),

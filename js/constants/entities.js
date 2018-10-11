@@ -1,0 +1,1 @@
+export const FETCH_PLACES_SUCCESS = 'entities/FETCH_PLACES_SUCCESS';

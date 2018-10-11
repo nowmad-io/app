@@ -16,6 +16,8 @@ class Firebase {
 
   friendships;
 
+  userPlaces;
+
   initialize(config) {
     this.instance.initializeApp(config);
     this.auth = this.instance.auth;
@@ -23,6 +25,7 @@ class Firebase {
     this.database = this.instance.database;
     this.users = this.instance.database().ref('users');
     this.friendships = this.instance.database().ref('friendships');
+    this.userPlaces = this.instance.database().ref('userPlaces');
   }
 
   userUID() {
