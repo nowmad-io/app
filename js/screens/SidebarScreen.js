@@ -17,13 +17,6 @@ class SidebarScreen extends React.Component {
     header: null,
   };
 
-  static initials({ first_name: firstName, last_name: lastName }) {
-    if (!firstName && !lastName) {
-      return '';
-    }
-    return `${firstName[0]}${lastName[0]}`;
-  }
-
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,

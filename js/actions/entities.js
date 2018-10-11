@@ -3,20 +3,20 @@ import { eventChannel } from 'redux-saga';
 import Firebase from '../libs/firebase';
 
 import {
-  FETCH_PLACES_SUCCESS,
+  FETCH_USER_REVIEWS_SUCCESS,
 } from '../constants/entities';
 
 
-export function fetchPlacesSuccess(places, removed) {
+export function fetchUserReviewsSuccess(reviews, removed) {
   return {
-    type: FETCH_PLACES_SUCCESS,
-    places,
+    type: FETCH_USER_REVIEWS_SUCCESS,
+    reviews,
     removed,
   };
 }
 
-export function placesListener() {
-  const query = Firebase.userPlaces.child(Firebase.userUID());
+export function userReviewsListener(uid) {
+  const query = Firebase.reviews.child(uid);
   const listener = eventChannel((emit) => {
     query.on(
       'child_added',

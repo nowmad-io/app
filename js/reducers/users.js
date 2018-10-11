@@ -13,7 +13,10 @@ const usersReducer = (state = initialState, action) => {
     case UPDATE_PROFILE_SUCCESS:
       return {
         ...state,
-        me: action.user[Object.keys(action.user)[0]],
+        me: {
+          uid: Object.keys(action.user)[0],
+          ...action.user[Object.keys(action.user)[0]],
+        },
         friends: _.merge({}, state.all, action.user),
         logged: true,
       };

@@ -1,22 +1,22 @@
 import _ from 'lodash';
 
-import { FETCH_PLACES_SUCCESS } from '../constants/entities';
+import { FETCH_USER_REVIEWS_SUCCESS } from '../constants/entities';
 import { LOGOUT } from '../constants/users';
 
 const initialState = {
+  reviews: {},
   places: {},
 };
 
 const entitiesReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_PLACES_SUCCESS:
-
+    case FETCH_USER_REVIEWS_SUCCESS:
       return {
         ...state,
-        places: !action.removed ? {
-          ...state.places,
-          ...action.places,
-        } : _.omit(state.places, Object.keys(action.places)[0]),
+        reviews: !action.removed ? {
+          ...state.reviews,
+          ...action.reviews,
+        } : _.omit(state.reviews, Object.keys(action.reviews)[0]),
       };
     case LOGOUT:
       return initialState;
