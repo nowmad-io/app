@@ -14,9 +14,9 @@ const fetchUserReviewsFlow = uid => (
 
     try {
       while (true) {
-        const { removed, ...places } = yield take(channel);
+        const { removed, ...review } = yield take(channel);
 
-        yield put(fetchUserReviewsSuccess(places, removed));
+        yield put(fetchUserReviewsSuccess(review, removed));
       }
     } finally {
       if (yield cancelled()) {

@@ -7,10 +7,10 @@ import {
 } from '../constants/entities';
 
 
-export function fetchUserReviewsSuccess(reviews, removed) {
+export function fetchUserReviewsSuccess(review, removed) {
   return {
     type: FETCH_USER_REVIEWS_SUCCESS,
-    reviews,
+    review,
     removed,
   };
 }

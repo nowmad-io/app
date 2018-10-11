@@ -15,8 +15,8 @@ const entitiesReducer = (state = initialState, action) => {
         ...state,
         reviews: !action.removed ? {
           ...state.reviews,
-          ...action.reviews,
-        } : _.omit(state.reviews, Object.keys(action.reviews)[0]),
+          ...action.review,
+        } : _.omit(state.review, Object.keys(action.review)[0]),
       };
     case LOGOUT:
       return initialState;
