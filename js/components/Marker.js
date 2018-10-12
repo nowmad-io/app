@@ -68,7 +68,7 @@ export default class Marker extends PureComponent {
     const avatarSize = me ? 36 : 40;
     const height = !selected
       ? (avatarSize + triangleHelper - 1) : (avatarSize + 2 * (triangleHelper + 1));
-
+    console.count('marker', text);
     return prefetched && (
       <MapView.Marker
         coordinate={{ latitude, longitude }}

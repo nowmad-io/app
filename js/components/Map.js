@@ -18,7 +18,7 @@ export default class Map extends React.PureComponent {
     onLayout: PropTypes.func,
     onMapReady: PropTypes.func,
     onPanDrag: PropTypes.func,
-    region: PropTypes.object,
+    initialRegion: PropTypes.object,
     zoomEnabled: PropTypes.bool,
     rotateEnabled: PropTypes.bool,
     scrollEnabled: PropTypes.bool,
@@ -97,11 +97,11 @@ export default class Map extends React.PureComponent {
 
   render() {
     const {
-      region, zoomEnabled, rotateEnabled, scrollEnabled, mapPadding,
+      initialRegion, zoomEnabled, rotateEnabled, scrollEnabled, mapPadding,
       onPress, onRegionChangeComplete, moveOnMarkerPress, onLayout,
       onPanDrag, cacheEnabled,
     } = this.props;
-
+    console.count('map');
     return (
       <MapView
         ref={this._ref}
@@ -112,7 +112,7 @@ export default class Map extends React.PureComponent {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsMyLocationButton={false}
-        initialRegion={region}
+        initialRegion={initialRegion}
         zoomEnabled={zoomEnabled}
         rotateEnabled={rotateEnabled}
         scrollEnabled={scrollEnabled}

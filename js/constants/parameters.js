@@ -22,6 +22,7 @@ const plain = {
 export const colors = {
   ...plain,
   primaryShadow: rgba(plain.primary, 0.4),
+  primaryShadowDark: rgba(plain.primary, 0.8),
   whiteTransparent: rgba(plain.white, 0.8),
   blackTransparentLight: rgba(plain.black, 0.2),
   blackTransparent: rgba(plain.black, 0.6),
@@ -55,4 +56,13 @@ export const sizes = {
   width,
   headerHeight: 56,
   drawerWidth: 304,
+};
+
+const ITEM_SPACING = 8;
+
+export const carousel = {
+  sliderWidth: sizes.width,
+  itemSpacing: ITEM_SPACING,
+  itemWidth: sizes.width - (ITEM_SPACING * 2),
+  border: 4,
 };
