@@ -17,6 +17,7 @@ const plain = {
   black: '#000',
   grey: '#BCB9B9',
   greyDark: '#5E5D5D',
+  yellowDark: '#FFB000',
 };
 
 export const colors = {
@@ -64,5 +65,7 @@ export const carousel = {
   sliderWidth: sizes.width,
   itemSpacing: ITEM_SPACING,
   itemWidth: sizes.width - (ITEM_SPACING * 2),
+  level1: 80,
+  level2: 166,
   border: 4,
 };

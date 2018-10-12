@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import Header from '../../components/Header';
 import MapScreen from './MapScreen';
+import CarouselScreen from './CarouselScreen';
 
 export default class HomeScreen extends React.PureComponent {
   static propTypes = {
@@ -17,6 +18,7 @@ export default class HomeScreen extends React.PureComponent {
       <View style={styles.container}>
         <Header onActionPress={this.onActionPress} />
         <MapScreen />
+        <CarouselScreen />
       </View>
     );
   }

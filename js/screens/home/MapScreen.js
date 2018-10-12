@@ -11,6 +11,8 @@ import { selectMarkers } from '../../reducers/entities';
 import Map from '../../components/Map';
 import Marker from '../../components/Marker';
 
+import { carousel } from '../../constants/parameters';
+
 class MapScreen extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
@@ -42,6 +44,7 @@ class MapScreen extends React.Component {
     return (
       <Map
         onRegionChangeComplete={this.onRegionChange}
+        mapPadding={{ bottom: carousel.level2 }}
       >
         {_.map(places, ({
           uid, latitude, longitude, text, picture,
