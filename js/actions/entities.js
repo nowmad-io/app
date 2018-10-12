@@ -19,11 +19,12 @@ export function fetchFriendshipsSuccess(friends) {
   };
 }
 
-export function fetchReviewSuccess(review, removed) {
+export function fetchReviewSuccess(review, removed, own) {
   return {
     type: FETCH_REVIEW_SUCCESS,
     review,
     removed,
+    own,
   };
 }
 

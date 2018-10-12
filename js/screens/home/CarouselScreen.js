@@ -20,11 +20,7 @@ class CarouselScreen extends Component {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
     visiblePlaces: PropTypes.array,
-    selectedPlace: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    gPlace: PropTypes.object,
+    selectedPlace: PropTypes.string,
     panY: PropTypes.object,
     onAddLocationPress: PropTypes.func,
   };
@@ -36,41 +32,33 @@ class CarouselScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.noCarouselUpdate = false;
     this._carousel = React.createRef();
   }
 
   componentWillReceiveProps({ selectedPlace }) {
-    if (selectedPlace && !selectedPlace.noCarouselUpdate
-      && !this.props.selectedPlace !== selectedPlace) {
-      this.noCarouselUpdate = false;
+    if (selectedPlace && !this.props.selectedPlace !== selectedPlace) {
       const index = selectedPlace
-        ? _.compact([this.props.gPlace, ...this.props.visiblePlaces])
-          .findIndex(d => d.id === selectedPlace)
+        ? this.props.visiblePlaces.findIndex(d => d.uid === selectedPlace)
         : 0;
 
       this.goToIndex(index);
     }
   }
 
-  shouldComponentUpdate({ visiblePlaces, gPlace }) {
-    return (
-      !_.isEqual(visiblePlaces, this.props.visiblePlaces)
-      || !_.isEqual(gPlace, this.props.gPlace)
-    );
+  shouldComponentUpdate({ visiblePlaces }) {
+    return !_.isEqual(visiblePlaces, this.props.visiblePlaces);
   }
 
   _onIndexChange = (index) => {
     const { visiblePlaces } = this.props;
     const place = visiblePlaces[index];
 
-    this.noCarouselUpdate = true;
     this.props.dispatch(selectPlace(place && place.uid));
   }
 
   _onLayout = () => {
     const index = this.props.selectedPlace
-      ? this.props.visiblePlaces.findIndex(place => place.id === this.props.selectedPlace) : 0;
+      ? this.props.visiblePlaces.findIndex(place => place.uid === this.props.selectedPlace) : 0;
 
     if (index !== -1) {
       this.goToIndex(index);
@@ -80,9 +68,9 @@ class CarouselScreen extends Component {
   }
 
   _onCarouselDidUpdate = () => {
-    const { selectedPlace, visiblePlaces, gPlace } = this.props;
+    const { selectedPlace, visiblePlaces } = this.props;
     const index = selectedPlace
-      ? _.compact([gPlace, ...visiblePlaces]).findIndex(d => d.id === selectedPlace)
+      ? visiblePlaces.findIndex(d => d.uid === selectedPlace)
       : -1;
 
     this._carousel.current.toIndex(index, index < 0, index < 0);
@@ -101,9 +89,9 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
   render() {
     const {
-      panY, visiblePlaces, gPlace, onAddLocationPress,
+      panY, visiblePlaces, onAddLocationPress,
     } = this.props;
-
+    console.log('------visiblePlaces------', visiblePlaces);
     return (
       <PanController
         ref={this._carousel}
@@ -115,7 +103,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
         onComponentDidUpdate={this._onCarouselDidUpdate}
         snapSpacingX={entryWidth}
       >
-        {(!visiblePlaces || !visiblePlaces.length) && !gPlace && (
+        {(!visiblePlaces || !visiblePlaces.length) && (
           <View
             style={styles.entryWrapper}
           >
@@ -131,7 +119,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             style={styles.entryWrapper}
           >
             <Entry
-              placeId={place.id}
+              placeId={place.uid}
               navigation={this.props.navigation}
             />
           </View>
@@ -141,15 +129,16 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 }
 
-const bindActions = dispatch => ({
-  dispatch,
-});
+const makeMapStateToProps = () => {
+  const visiblePlacesSelector = selectVisiblePlaces();
 
-const mapStateToProps = state => ({
-  visiblePlaces: selectVisiblePlaces(state),
-});
+  return state => ({
+    selectedPlace: state.home.selectedPlace,
+    visiblePlaces: visiblePlacesSelector(state),
+  });
+};
 
-export default connect(mapStateToProps, bindActions)(CarouselScreen);
+export default connect(makeMapStateToProps)(CarouselScreen);
 
 const entryMargin = 8;
 const entryWidth = sizes.width - (entryMargin * 2);

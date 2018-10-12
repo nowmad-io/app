@@ -15,7 +15,10 @@ export default class Marker extends PureComponent {
     onPrefetched: PropTypes.func,
     latitude: PropTypes.number,
     longitude: PropTypes.number,
-    text: PropTypes.string,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
     picture: PropTypes.string,
     selected: PropTypes.bool,
     prefetched: PropTypes.bool,

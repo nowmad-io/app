@@ -11,7 +11,7 @@ import { getPlaces } from './entities';
 
 const getRegion = state => state.home.region;
 
-export const selectVisiblePlaces = createSelector(
+export const selectVisiblePlaces = () => createSelector(
   [getPlaces, getRegion],
   (places, region) => {
     const southWest = {

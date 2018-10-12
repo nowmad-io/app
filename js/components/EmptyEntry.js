@@ -16,7 +16,7 @@ export default class EmptyEntry extends PureComponent {
 
   render() {
     const { onAddLocationPress, onSharePress } = this.props;
-
+    console.count('EmptyEntry');
     return (
       <View style={styles.card}>
         <View style={styles.textWrapper}>

@@ -10,6 +10,7 @@ export default class Entry extends Component {
   static propTypes = {};
 
   render() {
+    console.count('Entry');
     return (
       <View
         style={styles.card}

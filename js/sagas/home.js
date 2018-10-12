@@ -10,7 +10,7 @@ import {
 
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
 
-const fetchUserReviewsFlow = uid => (
+const fetchUserReviewsFlow = (uid, own) => (
   function* _fetchUserReviewsFlow() {
     const channel = yield call(userReviewsListener, uid);
 
@@ -18,7 +18,7 @@ const fetchUserReviewsFlow = uid => (
       while (true) {
         const { removed, ...review } = yield take(channel);
 
-        yield put(fetchReviewSuccess(review, removed));
+        yield put(fetchReviewSuccess(review, removed, own && uid));
       }
     } finally {
       if (yield cancelled()) {
@@ -30,7 +30,7 @@ const fetchUserReviewsFlow = uid => (
 
 function* homeFlow() {
   const { uid } = yield select(state => state.users.me);
-  const myReviewsListener = yield fork(fetchUserReviewsFlow(uid));
+  const myReviewsListener = yield fork(fetchUserReviewsFlow(uid, true));
 
   // Ftech all users
   const friends = yield call(fetchFriendships);
