@@ -1,7 +1,8 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
+import _ from 'lodash';
 
 import Avatar from './Avatar';
 
@@ -9,10 +10,11 @@ import { colors } from '../constants/parameters';
 
 const triangleHelper = 10;
 
-export default class Marker extends PureComponent {
+export default class Marker extends React.Component {
   static propTypes = {
     onMarkerPress: PropTypes.func,
     onPrefetched: PropTypes.func,
+    uid: PropTypes.string,
     latitude: PropTypes.number,
     longitude: PropTypes.number,
     text: PropTypes.oneOfType([
@@ -26,6 +28,7 @@ export default class Marker extends PureComponent {
 
   static defaultProps = {
     onMarkerPress: () => true,
+    onPrefetched: () => true,
   }
 
   constructor(props) {
@@ -33,8 +36,8 @@ export default class Marker extends PureComponent {
 
     this.state = {
       prefetched: !props.picture || props.prefetched,
-      prefetchId: null,
     };
+    this.prefetchId = null;
   }
 
   componentDidMount() {
@@ -42,23 +45,29 @@ export default class Marker extends PureComponent {
     const { prefetched } = this.state;
 
     if (!prefetched) {
-      Image.prefetch(picture, prefetchId => this.setState({ prefetchId }))
+      Image.prefetch(picture, (prefetchId) => { this.prefetchId = prefetchId; })
         .then(() => {
-          onPrefetched();
+          onPrefetched(picture);
           this.setState({ prefetched: true });
         });
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (!_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state));
+  }
+
   componentWillUnmount() {
-    if (this.state.prefetchId) {
-      Image.abortPrefetch(this.state.prefetchId);
+    if (this.prefetchId) {
+      Image.abortPrefetch(this.prefetchId);
     }
   }
 
+  onMarkerPress = () => this.props.onMarkerPress(this.props.uid);
+
   render() {
     const {
-      onMarkerPress,
+      uid,
       latitude,
       longitude,
       text,
@@ -71,11 +80,11 @@ export default class Marker extends PureComponent {
     const avatarSize = me ? 36 : 40;
     const height = !selected
       ? (avatarSize + triangleHelper - 1) : (avatarSize + 2 * (triangleHelper + 1));
-    console.count('marker', text);
+    console.count(`marker ${uid}`);
     return prefetched && (
       <MapView.Marker
         coordinate={{ latitude, longitude }}
-        onPress={onMarkerPress}
+        onPress={this.onMarkerPress}
         anchor={{ x: 0.5, y: 1 }}
         tracksViewChanges={false}
       >

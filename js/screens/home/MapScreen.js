@@ -26,11 +26,11 @@ class MapScreen extends React.Component {
     this.prefetchedPictures = {};
   }
 
-  onPrefetched = picture => () => {
+  onPrefetched = (picture) => {
     this.prefetchedPictures[picture] = true;
   };
 
-  onMarkerPress = uid => () => this.props.dispatch(selectPlace(uid));
+  onMarkerPress = uid => this.props.dispatch(selectPlace(uid));
 
   onRegionChange = (region) => {
     this.props.dispatch(regionChanged(region));
@@ -50,15 +50,16 @@ class MapScreen extends React.Component {
           uid, latitude, longitude, text, picture,
         }) => (
           <Marker
-            key={shortid.generate()}
+            key={(selectedPlace === uid) ? shortid.generate() : uid}
+            uid={uid}
             latitude={latitude}
             longitude={longitude}
             text={text}
             picture={picture}
             selected={selectedPlace === uid}
-            onMarkerPress={this.onMarkerPress(uid)}
+            onMarkerPress={this.onMarkerPress}
             prefetched={this.prefetchedPictures[picture]}
-            onPrefetched={this.onPrefetched(picture)}
+            onPrefetched={this.onPrefetched}
           />
         ))}
       </Map>
