@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
@@ -16,7 +15,7 @@ export default class EmptyEntry extends PureComponent {
 
   render() {
     const { onAddLocationPress, onSharePress } = this.props;
-    console.count('EmptyEntry');
+
     return (
       <View style={styles.card}>
         <View style={styles.textWrapper}>

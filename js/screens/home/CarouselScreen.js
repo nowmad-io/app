@@ -6,9 +6,9 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 
-import Entry from '../../components/Entry';
-import EmptyEntry from '../../components/EmptyEntry';
+import Entry from './Entry';
 import PanController from '../../components/PanController';
+import EmptyEntry from '../../components/EmptyEntry';
 
 import { selectPlace } from '../../actions/home';
 import { selectVisiblePlaces } from '../../reducers/home';
@@ -18,11 +18,9 @@ import { sizes, carousel } from '../../constants/parameters';
 class CarouselScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
-    navigation: PropTypes.object,
     visiblePlaces: PropTypes.array,
     selectedPlace: PropTypes.string,
     panY: PropTypes.object,
-    onAddLocationPress: PropTypes.func,
   };
 
   static defaultProps = {
@@ -49,25 +47,14 @@ class CarouselScreen extends Component {
     return !_.isEqual(visiblePlaces, this.props.visiblePlaces);
   }
 
-  _onIndexChange = (index) => {
+  onIndexChange = (index) => {
     const { visiblePlaces } = this.props;
     const place = visiblePlaces[index];
 
     this.props.dispatch(selectPlace(place && place.uid));
   }
 
-  _onLayout = () => {
-    const index = this.props.selectedPlace
-      ? this.props.visiblePlaces.findIndex(place => place.uid === this.props.selectedPlace) : 0;
-
-    if (index !== -1) {
-      this.goToIndex(index);
-    } else {
-      this.goToIndex(0);
-    }
-  }
-
-  _onCarouselDidUpdate = () => {
+  onCarouselDidUpdate = () => {
     const { selectedPlace, visiblePlaces } = this.props;
     const index = selectedPlace
       ? visiblePlaces.findIndex(d => d.uid === selectedPlace)
@@ -76,7 +63,7 @@ class CarouselScreen extends Component {
     this._carousel.current.toIndex(index, index < 0, index < 0);
   }
 
-  _onSharePress = () => Share.share({
+  onSharePress = () => Share.share({
     message: `Hi!
 Join me in Nowmad and lets start sharing the best places for travelling around the world !
 See you soon on Nowmad !
@@ -88,10 +75,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   render() {
-    const {
-      panY, visiblePlaces, onAddLocationPress,
-    } = this.props;
-    console.log('------visiblePlaces------', visiblePlaces);
+    const { panY, visiblePlaces } = this.props;
+
     return (
       <PanController
         ref={this._carousel}
@@ -99,8 +84,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
         horizontal
         lockDirection
         panY={panY}
-        onIndexChange={this._onIndexChange}
-        onComponentDidUpdate={this._onCarouselDidUpdate}
+        onIndexChange={this.onIndexChange}
+        onComponentDidUpdate={this.onCarouselDidUpdate}
         snapSpacingX={entryWidth}
       >
         {(!visiblePlaces || !visiblePlaces.length) && (
@@ -108,21 +93,17 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             style={styles.entryWrapper}
           >
             <EmptyEntry
-              onAddLocationPress={onAddLocationPress}
-              onSharePress={this._onSharePress}
+              onAddLocationPress={this.onAddLocationPress}
+              onSharePress={this.onSharePress}
             />
           </View>
         )}
-        {visiblePlaces && visiblePlaces.map(place => (
-          <View
-            key={place.uid}
+        {visiblePlaces && visiblePlaces.map(({ uid }) => (
+          <Entry
+            key={uid}
+            placeUid={uid}
             style={styles.entryWrapper}
-          >
-            <Entry
-              placeId={place.uid}
-              navigation={this.props.navigation}
-            />
-          </View>
+          />
         ))}
       </PanController>
     );

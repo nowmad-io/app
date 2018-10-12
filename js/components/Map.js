@@ -101,7 +101,7 @@ export default class Map extends React.PureComponent {
       onPress, onRegionChangeComplete, moveOnMarkerPress, onLayout,
       onPanDrag, cacheEnabled,
     } = this.props;
-    console.count('map');
+
     return (
       <MapView
         ref={this._ref}

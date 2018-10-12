@@ -24,13 +24,10 @@ export const selectVisiblePlaces = () => createSelector(
       longitude: region.longitude + region.longitudeDelta / 2,
     };
 
-    return _.filter(places, (place) => {
-      if (place.latitude > southWest.latitude && place.latitude < northEast.latitude
-          && place.longitude > southWest.longitude && place.longitude < northEast.longitude) {
-        return true;
-      }
-      return false;
-    });
+    return _.filter(places, place => (
+      place.latitude > southWest.latitude && place.latitude < northEast.latitude
+        && place.longitude > southWest.longitude && place.longitude < northEast.longitude
+    ));
   },
 );
 

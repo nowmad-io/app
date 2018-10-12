@@ -17,6 +17,7 @@ const plain = {
   black: '#000',
   grey: '#BCB9B9',
   greyDark: '#5E5D5D',
+  yellow: '#FFC546',
   yellowDark: '#FFB000',
 };
 
@@ -34,6 +35,7 @@ export const colors = {
     shadowOpacity: 0.5,
     shadowRadius: 4,
   },
+  yellowTransparent: rgba(plain.yellow, 0.95),
 };
 
 export const fonts = {

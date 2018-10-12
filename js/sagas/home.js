@@ -41,7 +41,6 @@ function* homeFlow() {
 
   friendsInfo = _.chain(friendsInfo)
     .keyBy('uid')
-    .mapValues(v => _.omit(v, 'uid'))
     .value();
   yield put(fetchFriendshipsSuccess(friendsInfo));
 

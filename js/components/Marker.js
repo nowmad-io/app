@@ -67,7 +67,6 @@ export default class Marker extends React.Component {
 
   render() {
     const {
-      uid,
       latitude,
       longitude,
       text,
@@ -80,7 +79,7 @@ export default class Marker extends React.Component {
     const avatarSize = me ? 36 : 40;
     const height = !selected
       ? (avatarSize + triangleHelper - 1) : (avatarSize + 2 * (triangleHelper + 1));
-    console.count(`marker ${uid}`);
+
     return prefetched && (
       <MapView.Marker
         coordinate={{ latitude, longitude }}

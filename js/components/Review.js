@@ -9,21 +9,20 @@ import Avatar from './Avatar';
 import { fonts, colors } from '../constants/parameters';
 
 export default class Review extends PureComponent {
-  static initials({ first_name: firstName, last_name: lastName }) {
+  static initials({ firstName, lastName }) {
     return (firstName && lastName) ? firstName[0] + lastName[0] : '';
   }
 
   static propTypes = {
-    style: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.number,
-      PropTypes.array,
-    ]),
-    review: PropTypes.object,
-    others: PropTypes.array,
     onPress: PropTypes.func,
+    categories: PropTypes.array,
+    own: PropTypes.bool,
+    createdBy: PropTypes.object,
+    friends: PropTypes.array,
+    shortDescription: PropTypes.string,
+    status: PropTypes.string,
+    pictures: PropTypes.array,
     cover: PropTypes.bool,
-    gPlace: PropTypes.bool,
     detail: PropTypes.bool,
   }
 
@@ -42,27 +41,20 @@ export default class Review extends PureComponent {
   render() {
     const { xHeaderRight } = this.state;
     const {
-      style,
       onPress,
-      review: {
-        short_description: shortDescription,
-        created_by: createdBy,
-        categories,
-        pictures,
-        status,
-      },
-      others,
-      gPlace,
+      own,
+      shortDescription,
+      createdBy,
+      friends,
+      categories,
+      pictures,
+      status,
       cover,
       detail,
     } = this.props;
 
     return (
-      <View style={[
-        styles.review,
-        style && style,
-      ]}
-      >
+      <View style={styles.review}>
         <TouchableOpacity
           onPress={onPress}
           activeOpacity={onPress ? 0.8 : 1}
@@ -70,35 +62,36 @@ export default class Review extends PureComponent {
         >
           <View style={styles.header}>
             <Avatar
-              uri={createdBy.picture}
-              text={Review.initials(createdBy)}
+              uri={createdBy.photoURL}
+              text={own ? 'me' : Review.initials(createdBy)}
+              uppercase={!own}
             />
             <View
               style={styles.header_right}
               onLayout={this._onLayout}
             >
               <Text>
-                <Text style={styles.user_text}>
-                  {userText}
+                <Text style={styles.user_text} capitalize>
+                  {`${own ? 'me' : createdBy.firstName}`}
                 </Text>
-                {othersText}
+                {friends.length ? ` and ${friends.length} more friend${friends.length > 1 ? 's' : ''}` : ''}
               </Text>
-              {(others && others.length) ? (
+              {friends.length ? (
                 <View style={styles.others}>
-                  { others.map(({ created_by: user }) => (
+                  { friends.map(({ uid, photoURL, ...friend }) => (
                     <Avatar
-                      key={user.id}
-                      uri={user.picture}
+                      key={uid}
+                      uri={photoURL}
                       style={styles.others_avatar}
                       textStyle={styles.others_avatar_text}
-                      text={Review.initials(user)}
+                      text={Review.initials(friend)}
                       size={18}
                     />
                   )) }
                 </View>
               ) : (
-                <Text lowercase={!gPlace}>
-                  {gPlace ? 'Google' : `was ${status}`}
+                <Text lowercase>
+                  {`was ${status}`}
                 </Text>
               )}
             </View>
@@ -133,8 +126,8 @@ export default class Review extends PureComponent {
                 {shortDescription}
               </Text>
               <Text style={styles.categories}>
-                {categories.map(({ id, name }, index) => (
-                  <Text key={id} style={styles.categorie}>
+                {categories.map((name, index) => (
+                  <Text key={name} style={styles.categorie}>
                     {`${name}${(index !== categories.length - 1) ? ' · ' : ''}`}
                   </Text>
                 ))}
@@ -170,7 +163,6 @@ const styles = StyleSheet.create({
   },
   others_avatar: {
     marginRight: 2,
-    borderWidth: 1,
   },
   others_avatar_text: {
     fontSize: 9,

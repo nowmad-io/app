@@ -6,8 +6,21 @@ import { getMe } from './users';
 import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/users';
 import { FETCH_REVIEW_SUCCESS, FETCH_FRIENDSHIPS_SUCCESS } from '../constants/entities';
 
+const getPlace = (state, uid) => state.entities.places[uid];
 export const getPlaces = state => state.entities.places;
 export const getFriends = state => state.entities.friends;
+
+export const selectPlace = () => createSelector(
+  [getPlace, getFriends],
+  (place, friends) => ({
+    ...place,
+    friends: (
+      place.own
+        ? [_.head(place.friends), ..._.reverse(_.tail(place.friends) || [])]
+        : _.reverse(place.friends.slice())
+    ).map(uid => (friends[uid] || { uid })),
+  }),
+);
 
 export const selectMarkers = () => createSelector(
   [getPlaces, getMe, getFriends],
@@ -73,26 +86,28 @@ const updatePlaces = (
       { uid: reviewUid, createdBy },
       ...(places[place.uid] && places[place.uid].reviews || []),
     ], 'uid') : _.filter(places[place.uid].reviews, { uid: reviewUid }),
-    own: own && reviewUid,
-    pictures: own
-      ? [
-        ...(_.values(review.pictures) || []),
-        ...(places[place.uid] && places[place.uid].pictures || []),
-      ] : [
-        ...(places[place.uid] && places[place.uid].pictures || []),
-        ...(_.values(review.pictures) || []),
-      ],
-    friends: own
+    own: own && reviewUid || (places[place.uid] || {}).own,
+    pictures: _.uniqBy((
+      own
+        ? [
+          ...(_.values(review.pictures) || []),
+          ...(places[place.uid] && places[place.uid].pictures || []),
+        ] : [
+          ...(places[place.uid] && places[place.uid].pictures || []),
+          ...(_.values(review.pictures) || []),
+        ]
+    ), 'uri'),
+    friends: _.uniq(own
       ? [own, ...(places[place.uid] && places[place.uid].friends || [])]
-      : [...(places[place.uid] && places[place.uid].friends || []), createdBy],
-    categories: own
+      : [...(places[place.uid] && places[place.uid].friends || []), createdBy]),
+    categories: _.uniq(own
       ? [
         ...(_.keys(review.categories) || []),
         ...(places[place.uid] && places[place.uid].categories || []),
       ] : [
         ...(places[place.uid] && places[place.uid].categories || []),
         ...(_.keys(review.categories) || []),
-      ],
+      ]),
     shortDescription: !(places[place.uid] || {}).own ? review.shortDescription : (places[place.uid] && places[place.uid].shortDescription || ''),
     status: !(places[place.uid] || {}).own ? review.status : (places[place.uid] && places[place.uid].status || ''),
   },
