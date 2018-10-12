@@ -32,9 +32,9 @@ class MapScreen extends React.Component {
 
   onMarkerPress = uid => this.props.dispatch(selectPlace(uid));
 
-  onRegionChange = (region) => {
-    this.props.dispatch(regionChanged(region));
-  }
+  onRegionChange = region => this.props.dispatch(regionChanged(region));
+
+  onMapReady = () => this.props.dispatch(regionChanged());
 
   render() {
     const {
@@ -45,6 +45,7 @@ class MapScreen extends React.Component {
       <Map
         onRegionChangeComplete={this.onRegionChange}
         mapPadding={{ bottom: carousel.level2 }}
+        onMapReady={this.onMapReady}
       >
         {_.map(places, ({
           uid, latitude, longitude, text, picture,

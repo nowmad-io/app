@@ -46,7 +46,7 @@ const homeReducer = (state = initialState, action) => {
     case REGION_CHANGE:
       return {
         ...state,
-        region: action.region,
+        region: action.region || initialState.region,
       };
     case SELECT_PLACE:
       return {
