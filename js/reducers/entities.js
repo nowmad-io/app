@@ -73,6 +73,8 @@ const updatePlaces = (
     uid: reviewUid,
     createdBy,
     place,
+    shortDescription,
+    status,
     ...review
   },
   removed,
@@ -108,8 +110,8 @@ const updatePlaces = (
         ...(places[place.uid] && places[place.uid].categories || []),
         ...(_.keys(review.categories) || []),
       ]),
-    shortDescription: !(places[place.uid] || {}).own ? review.shortDescription : (places[place.uid] && places[place.uid].shortDescription || ''),
-    status: !(places[place.uid] || {}).own ? review.status : (places[place.uid] && places[place.uid].status || ''),
+    shortDescription: (!(places[place.uid] || {}).own || own) ? shortDescription : (places[place.uid] && places[place.uid].shortDescription || ''),
+    status: (!(places[place.uid] || {}).own || own) ? status : (places[place.uid] && places[place.uid].status || ''),
   },
 });
 
@@ -123,7 +125,7 @@ const entitiesReducer = (state = initialState, action) => {
         places: updatePlaces(state.places, review, action.removed, action.own),
         reviews: !action.removed ? {
           ...state.reviews,
-          ...review,
+          [review.uid]: review,
         } : _.omit(state.review, review.uid),
       };
     }

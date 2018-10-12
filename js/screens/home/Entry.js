@@ -43,6 +43,7 @@ class Entry extends PureComponent {
             shortDescription={shortDescription}
             status={status}
             pictures={pictures}
+            cover
           />
           <TouchableOpacity
             style={styles.cta}
