@@ -30,9 +30,6 @@ export function fetchReviewSuccess(review, removed, own) {
 
 export function pushReview(review) {
   Firebase.reviews.child(Firebase.userUID()).child(review.uid).update(review);
-  return fetchReviewSuccess({
-    [review.uid]: review,
-  }, false, true);
 }
 
 export function userReviewsListener(uid) {

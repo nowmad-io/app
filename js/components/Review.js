@@ -82,7 +82,10 @@ export default class Review extends PureComponent {
                     <Avatar
                       key={uid}
                       uri={photoURL}
-                      style={styles.others_avatar}
+                      style={[
+                        styles.others_avatar,
+                        !photoURL && styles.others_avatar_image,
+                      ]}
                       textStyle={styles.others_avatar_text}
                       text={Review.initials(friend)}
                       size={18}
@@ -167,6 +170,9 @@ const styles = StyleSheet.create({
   others_avatar_text: {
     fontSize: 9,
     lineHeight: 11,
+  },
+  others_avatar_image: {
+    borderWidth: 1,
   },
   body: {
     flex: 1,

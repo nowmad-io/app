@@ -99,11 +99,11 @@ class AddReviewScreen extends Component {
     const { place, review } = this.state;
 
     Keyboard.dismiss();
-    this.props.dispatch(pushReview({
+    pushReview({
       uid: shortid.generate(),
       ...review,
       place,
-    }));
+    });
     this.props.navigation.goBack();
   }
 
