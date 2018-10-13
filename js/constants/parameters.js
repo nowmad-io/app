@@ -19,6 +19,7 @@ const plain = {
   greyDark: '#5E5D5D',
   yellow: '#FFC546',
   yellowDark: '#FFB000',
+  red: '#FF4A40',
 };
 
 export const colors = {

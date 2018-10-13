@@ -2,32 +2,31 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 
-import Button from './Button';
-
 import { colors, sizes } from '../constants/parameters';
 
 export default class Spinner extends PureComponent {
   static propTypes = {
-    onActionPress: PropTypes.func,
-  };
-
-  static defaultProps = {
-    onActionPress: () => true,
+    children: PropTypes.any,
+    left: PropTypes.object,
+    right: PropTypes.object,
   };
 
   render() {
-    const { onActionPress } = this.props;
+    const { children, left, right } = this.props;
 
     return (
       <View style={styles.header}>
-        <View style={styles.right}>
-          <Button
-            header
-            transparent
-            onPress={onActionPress}
-            icon="menu"
-          />
-        </View>
+        {left && (
+          <View style={styles.left}>
+            {left}
+          </View>
+        )}
+        {children}
+        {right && (
+          <View style={styles.right}>
+            {right}
+          </View>
+        )}
       </View>
     );
   }

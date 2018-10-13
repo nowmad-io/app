@@ -7,8 +7,14 @@ import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/users';
 import { FETCH_REVIEW_SUCCESS, FETCH_FRIENDSHIPS_SUCCESS } from '../constants/entities';
 
 const getPlace = (state, uid) => state.entities.places[uid];
+const getReview = (state, uid) => state.entities.reviews[uid];
 export const getPlaces = state => state.entities.places;
 export const getFriends = state => state.entities.friends;
+
+export const selectReview = () => createSelector(
+  [getReview],
+  review => review,
+);
 
 export const selectPlace = () => createSelector(
   [getPlace, getFriends],

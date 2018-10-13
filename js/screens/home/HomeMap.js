@@ -13,7 +13,7 @@ import Marker from '../../components/Marker';
 
 import { carousel } from '../../constants/parameters';
 
-class MapScreen extends React.Component {
+class HomeMap extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     places: PropTypes.array,
@@ -77,4 +77,4 @@ const makeMapStateToProps = () => {
   });
 };
 
-export default connect(makeMapStateToProps, null)(MapScreen);
+export default connect(makeMapStateToProps, null)(HomeMap);

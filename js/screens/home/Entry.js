@@ -14,9 +14,19 @@ import { colors, carousel } from '../../constants/parameters';
 class Entry extends PureComponent {
   static propTypes = {
     style: PropTypes.any,
+    onActionPress: PropTypes.func,
     // eslint-disable-next-line
     placeUid: PropTypes.string,
     place: PropTypes.object,
+  };
+
+  onActionPress = () => {
+    const { place: { own, uid } } = this.props;
+
+    this.props.onActionPress({
+      reviewId: own,
+      place: uid,
+    });
   };
 
   render() {
@@ -48,7 +58,7 @@ class Entry extends PureComponent {
           <TouchableOpacity
             style={styles.cta}
             activeOpacity={0.8}
-            onPress={this.addOrEditReview}
+            onPress={this.onActionPress}
           >
             <Icon
               name={own ? 'edit' : 'playlist-add'}

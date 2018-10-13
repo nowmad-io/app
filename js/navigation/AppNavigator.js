@@ -1,18 +1,14 @@
-import React from 'react';
-import { createDrawerNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 
-import HomeScreen from '../screens/home/HomeScreen';
-import SidebarScreen from '../screens/SidebarScreen';
+import HomeNavigator from './HomeNavigator';
+import AddReviewScreen from '../screens/AddReviewScreen';
+import AddImageScreen from '../screens/AddImageScreen';
 
-import { sizes } from '../constants/parameters';
-
-export default createDrawerNavigator({
-  HomeScreen,
-  SidebarScreen,
+export default createStackNavigator({
+  Home: HomeNavigator,
+  AddReviewScreen,
+  AddImageScreen,
 }, {
-  drawerPosition: 'right',
-  contentComponent: props => <SidebarScreen {...props} />,
-  drawerWidth: sizes.drawerWidth,
   navigationOptions: {
     header: null,
   },

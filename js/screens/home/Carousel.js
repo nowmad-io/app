@@ -18,6 +18,7 @@ import { sizes, carousel } from '../../constants/parameters';
 class CarouselScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
+    navigation: PropTypes.object,
     visiblePlaces: PropTypes.array,
     selectedPlace: PropTypes.string,
     panY: PropTypes.object,
@@ -70,6 +71,8 @@ See you soon on Nowmad !
 https://play.google.com/store/apps/details?id=com.nowmad`,
   });
 
+  onActionPress = reviewPlace => this.props.navigation.navigate('AddReviewScreen', reviewPlace);
+
   goToIndex(index) {
     this._carousel.current.toIndex(index);
   }
@@ -103,6 +106,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             key={uid}
             placeUid={uid}
             style={styles.entryWrapper}
+            onActionPress={this.onActionPress}
           />
         ))}
       </PanController>
