@@ -23,7 +23,7 @@ import Icon from '../components/Icon';
 import Map from '../components/Map';
 import Marker from '../components/Marker';
 
-// import { addReview, updateReview } from '../../../actions/reviews';
+import { pushReview } from '../actions/entities';
 import { selectReview, selectMarkers } from '../reducers/entities';
 
 import { colors } from '../constants/parameters';
@@ -47,7 +47,6 @@ class AddReviewScreen extends Component {
     navigation: PropTypes.object,
     place: PropTypes.object,
     review: PropTypes.object,
-    me: PropTypes.object,
   }
 
   constructor(props) {
@@ -55,8 +54,6 @@ class AddReviewScreen extends Component {
     const { review, place } = props;
 
     const defaultReview = {
-      created_by: props.me,
-      public: props.me.public_default,
       short_description: '',
       information: '',
       status: STATUS[0],
@@ -72,7 +69,10 @@ class AddReviewScreen extends Component {
         ...defaultReview,
         ...review,
       },
-      place,
+      place: {
+        uid: `${`${place.latitude}`.replace('.', ',')}_${`${place.longitude}`.replace('.', ',')}`,
+        ...place,
+      },
     };
   }
 
@@ -96,27 +96,18 @@ class AddReviewScreen extends Component {
   }
 
   onPublish = () => {
-    const { place: { google, reviews, ...newPlace }, review } = this.state;
-
-    const newReview = {
-      uid: shortid.generate(),
-      created_by: this.props.me.id,
-      user_type: 'me',
-      ...review,
-      place: {
-        id: shortid.generate(),
-        ...newPlace,
-        ...(newPlace.id ? { reviews } : {}),
-      },
-    };
+    const { place, review } = this.state;
 
     Keyboard.dismiss();
-    this.props.dispatch(updateReview(newReview));
+    this.props.dispatch(pushReview({
+      uid: shortid.generate(),
+      ...review,
+      place,
+    }));
+    this.props.navigation.goBack();
   }
 
   onImageEditBack = ({ image, remove }) => {
-    console.log('image', image);
-    console.log('remove', remove);
     const { review: { pictures } } = this.state;
 
     this.setState({ addingImage: false });
@@ -217,7 +208,6 @@ class AddReviewScreen extends Component {
       place,
       addingImage,
     } = this.state;
-    console.log('this.state', this.state);
 
     const valid = !!shortDescription;
 
@@ -271,7 +261,7 @@ class AddReviewScreen extends Component {
                   short => this.setState(({ review }) => ({
                     review: {
                       ...review,
-                      short_description: short,
+                      shortDescription: short,
                     },
                   }))
                 }
@@ -382,12 +372,10 @@ const makeMapStateToProps = () => {
 
   return (state, props) => {
     const { reviewId, place } = props.navigation.state.params;
-    console.log('markersSelector(state)', markersSelector(state));
-    console.log('place', place);
+
     return {
       review: reviewId ? reviewSelector(state, reviewId) : {},
       place: _.isObject(place) ? place : _.find(markersSelector(state), { uid: place }),
-      me: state.users.me,
     };
   };
 };
