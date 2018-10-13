@@ -51,10 +51,6 @@ export function userReviewsListener(uid) {
       'child_changed',
       data => emitData(emit, data),
     );
-    query.on(
-      'child_removed',
-      data => emitData(emit, data, true),
-    );
 
     return () => query.off();
   });
