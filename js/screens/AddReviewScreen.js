@@ -23,7 +23,7 @@ import Icon from '../components/Icon';
 import Map from '../components/Map';
 import Marker from '../components/Marker';
 
-import { pushReview } from '../actions/entities';
+import { pushReview, uploadPictures } from '../actions/entities';
 import { selectReview, selectMarkers } from '../reducers/entities';
 
 import { colors } from '../constants/parameters';
@@ -54,13 +54,13 @@ class AddReviewScreen extends Component {
     const { review, place } = props;
 
     const defaultReview = {
-      short_description: '',
+      shortDescription: '',
       information: '',
       status: STATUS[0],
-      categories: [],
-      pictures: [],
-      links_1: '',
-      links_2: '',
+      categories: {},
+      pictures: {},
+      link1: '',
+      link2: '',
     };
 
     this.state = {
@@ -96,14 +96,29 @@ class AddReviewScreen extends Component {
   }
 
   onPublish = () => {
-    const { place, review } = this.state;
-
-    Keyboard.dismiss();
-    pushReview({
+    const {
+      place: {
+        uid,
+        latitude,
+        longitude,
+      },
+      review: {
+        pictures,
+        ...review
+      },
+    } = this.state;
+    const newReview = {
       uid: shortid.generate(),
       ...review,
-      place,
-    });
+      place: {
+        uid,
+        latitude,
+        longitude,
+      },
+    };
+    Keyboard.dismiss();
+    pushReview(newReview);
+    this.props.dispatch(uploadPictures(newReview.uid, pictures));
     this.props.navigation.goBack();
   }
 
@@ -158,15 +173,12 @@ class AddReviewScreen extends Component {
     this.setState({ addingImage: true });
 
     ImagePicker.showImagePicker(options, ({
-      didCancel, error, path, uri,
+      didCancel, error, uri,
     }) => {
       if (didCancel || error) {
         this.setState({ addingImage: false });
       } else {
-        this.navigateToImage({
-          uri,
-          path: Platform.OS === 'android' ? path : { path: uri },
-        })();
+        this.navigateToImage({ uri })();
       }
     });
   }
@@ -202,8 +214,8 @@ class AddReviewScreen extends Component {
         categories,
         pictures,
         status,
-        link_1: link1,
-        link_2: link2,
+        link1,
+        link2,
       },
       place,
       addingImage,
@@ -339,7 +351,7 @@ class AddReviewScreen extends Component {
                 onChangeText={link => this.setState(({ review }) => ({
                   review: {
                     ...review,
-                    link_1: link,
+                    link1: link,
                   },
                 }))}
               />
@@ -352,7 +364,7 @@ class AddReviewScreen extends Component {
                   onChangeText={link => this.setState(({ review }) => ({
                     review: {
                       ...review,
-                      link_2: link,
+                      link2: link,
                     },
                   }))}
                 />

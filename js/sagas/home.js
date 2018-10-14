@@ -3,12 +3,40 @@ import {
 } from 'redux-saga/effects';
 import _ from 'lodash';
 
+import PictureUpload from '../libs/pictureUpload';
+
 import { fetchUser } from '../actions/users';
 import {
-  userReviewsListener, fetchReviewSuccess, fetchFriendships, fetchFriendshipsSuccess,
+  pushReview,
+  userReviewsListener,
+  fetchReviewSuccess,
+  fetchFriendships,
+  fetchFriendshipsSuccess,
 } from '../actions/entities';
 
+import { UPLOAD_PICTURES } from '../constants/entities';
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
+
+function uploadPicture({ uri, ...picture }) {
+  return uri.startsWith('http')
+    ? ({ uri, ...picture })
+    : PictureUpload(uri)
+      .then(res => ({ uri: res, ...picture }));
+}
+
+function* uploadPicturesFlow(action) {
+  const { uid, pictures } = action;
+
+  const uploadedPictures = yield all(_.map(
+    pictures,
+    picture => call(uploadPicture, picture),
+  ));
+
+  pushReview({
+    uid,
+    pictures: _.keyBy(uploadedPictures, 'uid'),
+  });
+}
 
 const fetchUserReviewsFlow = (uid, own) => (
   function* _fetchUserReviewsFlow() {
@@ -60,4 +88,5 @@ function* homeFlow() {
 
 export default function* root() {
   yield takeLatest(RUN_SAGAS, homeFlow);
+  yield takeLatest(UPLOAD_PICTURES, uploadPicturesFlow);
 }

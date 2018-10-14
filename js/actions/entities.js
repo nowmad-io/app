@@ -5,6 +5,7 @@ import Firebase from '../libs/firebase';
 import {
   FETCH_REVIEW_SUCCESS,
   FETCH_FRIENDSHIPS_SUCCESS,
+  UPLOAD_PICTURES,
 } from '../constants/entities';
 
 export function fetchFriendships() {
@@ -25,6 +26,14 @@ export function fetchReviewSuccess(review, removed, own) {
     review,
     removed,
     own,
+  };
+}
+
+export function uploadPictures(reviewUid, pictures) {
+  return {
+    type: UPLOAD_PICTURES,
+    uid: reviewUid,
+    pictures,
   };
 }
 
