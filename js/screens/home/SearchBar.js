@@ -19,9 +19,7 @@ export default class SearchBar extends Component {
   static propTypes = {
     navigation: PropTypes.object,
     children: PropTypes.any,
-    onFriendPress: PropTypes.func,
     onAddFriendPress: PropTypes.func,
-    onPlacePress: PropTypes.func,
     onAddThisPlacePress: PropTypes.func,
     onClear: PropTypes.func,
   }
@@ -43,7 +41,7 @@ export default class SearchBar extends Component {
       placesLoading: false,
     };
 
-    this._searchRouter = React.createRef();
+    this._searchNavigation = React.createRef();
   }
 
   componentDidMount() {
@@ -88,8 +86,6 @@ export default class SearchBar extends Component {
   }
 
   onClearPress = () => {
-    this.props.onFriendPress({});
-    this.props.onPlacePress(null);
     this.setState({ text: '', previousValue: '' });
     this.searchDebounced('');
     this.props.onClear();
@@ -97,15 +93,11 @@ export default class SearchBar extends Component {
 
   onFriendPress = (friend) => {
     this.blur();
-    this.props.onPlacePress(null);
-    this.props.onFriendPress(friend);
     this.onChangeText(friend.first_name, true);
   }
 
   onPlacePress = (place) => {
     this.blur();
-    this.props.onFriendPress({});
-    this.props.onPlacePress(place);
     this.onChangeText(place.name, true);
   };
 
@@ -126,14 +118,10 @@ export default class SearchBar extends Component {
       .then(places => this.setState({ places, placesLoading: false }));
   }
 
-  searchCoordinates(coordinatesQuery) {
+  searchNearby(coordinatesQuery) {
     this.searchDebounced(coordinatesQuery);
     this.setState({ text: coordinatesQuery });
-    if (this._searchRouter) {
-      this._searchRouter._navigation.navigate('Places', {
-        coordinates: true,
-      });
-    }
+    this._searchNavigation.current._navigation.navigate('Places');
     this.setState({ focused: true });
   }
 
@@ -210,7 +198,7 @@ export default class SearchBar extends Component {
           ]}
         >
           <SearchNavigation
-            ref={this._searchRouter}
+            ref={this._searchNavigation}
             screenProps={{
               people,
               peopleLoading,

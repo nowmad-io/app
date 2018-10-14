@@ -24,6 +24,7 @@ const INITIAL_PADDING = {
 class MapWrapper extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
+    searchNearby: PropTypes.func,
     geolocation: PropTypes.object,
     places: PropTypes.array,
     selectedPlace: PropTypes.string,
@@ -71,11 +72,9 @@ class MapWrapper extends React.Component {
 
   onLocationPress = () => this.props.dispatch(getGeolocation());
 
-  onPositionPress = ({ coordinate }) => {};
-
   render() {
     const {
-      geolocation, places, selectedPlace, panY,
+      geolocation, places, selectedPlace, panY, searchNearby,
     } = this.props;
 
     return (
@@ -85,6 +84,7 @@ class MapWrapper extends React.Component {
           onRegionChangeComplete={this.onRegionChange}
           mapPadding={INITIAL_PADDING}
           onMapReady={this.onMapReady}
+          onLongPress={searchNearby}
         >
           {_.map(places, ({
             uid, latitude, longitude, text, picture,
@@ -106,7 +106,7 @@ class MapWrapper extends React.Component {
             <MarkerPosition
               latitude={geolocation.coords.latitude}
               longitude={geolocation.coords.longitude}
-              onPositionPress={this.onPositionPress}
+              onPositionPress={searchNearby}
             />
           )}
         </Map>
