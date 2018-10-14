@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import _ from 'lodash';
 
 import Text from './Text';
 
@@ -17,7 +18,11 @@ export default class List extends PureComponent {
     onPress: PropTypes.func,
     text: PropTypes.string,
     secondaryText: PropTypes.string,
-    thumbnail: PropTypes.string,
+    thumbnail: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
+    thumbnailStyle: PropTypes.any,
     disabled: PropTypes.bool,
   };
 
@@ -27,7 +32,7 @@ export default class List extends PureComponent {
 
   render() {
     const {
-      children, onPress, text, secondaryText, thumbnail, disabled,
+      children, onPress, text, secondaryText, thumbnail, disabled, thumbnailStyle,
     } = this.props;
 
     return (
@@ -38,10 +43,12 @@ export default class List extends PureComponent {
       >
         { thumbnail && (
           <FastImage
-            source={{ uri: thumbnail }}
+            source={!_.isNumber(thumbnail) ? { uri: thumbnail } : thumbnail}
+            fallback={_.isNumber(thumbnail)}
             style={[
               styles.image,
               disabled && styles.image_disabled,
+              thumbnailStyle,
             ]}
           />
         )}

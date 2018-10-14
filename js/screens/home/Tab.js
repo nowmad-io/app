@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  StyleSheet, ScrollView, View,
+  StyleSheet, ScrollView, View, Image,
 } from 'react-native';
 import _ from 'lodash';
 
@@ -13,6 +13,9 @@ import Button from '../../components/Button';
 
 import { colors, fonts } from '../../constants/parameters';
 
+const poweredByGoogle = require('../../../assets/images/powered_by_google.png');
+const googleImage = require('../../../assets/images/icons/google.png');
+
 const MAX_LIST = 3;
 
 class Tab extends PureComponent {
@@ -22,17 +25,23 @@ class Tab extends PureComponent {
     friends: PropTypes.object,
   };
 
+  navigate = tab => () => this.props.navigation.navigate(tab);
+
   render() {
     const {
       navigation,
       screenProps: {
         people,
         peopleLoading,
+        places,
+        placesLoading,
       },
       friends,
     } = this.props;
 
     const allPage = navigation.state.routeName === 'All';
+    const peoplePage = navigation.state.routeName === 'People';
+    const placesPage = navigation.state.routeName === 'Places';
 
     return (
       <View style={styles.container}>
@@ -40,13 +49,13 @@ class Tab extends PureComponent {
           style={styles.scrollView}
           keyboardShouldPersistTaps="handled"
         >
-          { people && (
+          { (peoplePage || allPage) && (
             <List
               label={allPage ? 'RESULTS BY PEOPLE' : null}
               style={styles.list}
               action="see all"
               actionDisable={people.length <= MAX_LIST}
-              onActionPress={() => navigation.navigate('People')}
+              onActionPress={this.navigate('People')}
             >
               <Spinner visible={peopleLoading} />
               {!peopleLoading && (allPage ? people.slice(0, MAX_LIST) : people).map(result => (
@@ -64,6 +73,26 @@ class Tab extends PureComponent {
                     />
                   )}
                 </ListItem>
+              ))}
+            </List>
+          )}
+          { (placesPage || allPage) && (
+            <List
+              label={allPage ? 'RESULTS BY PLACES' : null}
+              style={styles.list}
+              action="see all"
+              actionDisable={places.length <= MAX_LIST}
+              onActionPress={this.navigate('Places')}
+            >
+              <Image source={poweredByGoogle} style={styles.poweredByGoogle} />
+              <Spinner visible={placesLoading} />
+              {!placesLoading && (allPage ? places.slice(0, MAX_LIST) : places).map(result => (
+                <ListItem
+                  key={result.placeId}
+                  text={result.name}
+                  thumbnail={googleImage}
+                  thumbnailStyle={styles.thumbnailStyle}
+                />
               ))}
             </List>
           )}
@@ -126,5 +155,9 @@ const styles = StyleSheet.create({
   },
   poweredByGoogle: {
     marginBottom: 12,
+  },
+  thumbnailStyle: {
+    height: 16,
+    width: 16,
   },
 });

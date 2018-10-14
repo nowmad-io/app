@@ -122,8 +122,8 @@ export default class SearchBar extends Component {
   searchDebounced(query) {
     peopleSearch(query)
       .then(people => this.setState({ people, peopleLoading: false }));
-    // placesSearch(query)
-    //   .then(places => this.setState({ places, placesLoading: false }));
+    placesSearch(query)
+      .then(places => this.setState({ places, placesLoading: false }));
   }
 
   searchCoordinates(coordinatesQuery) {
