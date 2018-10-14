@@ -13,7 +13,7 @@ import EmptyEntry from '../../components/EmptyEntry';
 import { selectPlace } from '../../actions/home';
 import { selectVisiblePlaces } from '../../reducers/home';
 
-import { sizes, carousel } from '../../constants/parameters';
+import { sizes } from '../../constants/parameters';
 
 class CarouselScreen extends Component {
   static propTypes = {
@@ -25,7 +25,7 @@ class CarouselScreen extends Component {
   };
 
   static defaultProps = {
-    panY: new Animated.Value(-carousel.level2),
+    panY: new Animated.Value(0),
   }
 
   constructor(props) {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  StyleSheet, BackHandler, Keyboard, View, Platform,
+  StyleSheet, BackHandler, Keyboard, View,
 } from 'react-native';
 import _ from 'lodash';
 import shortid from 'shortid';

@@ -20,6 +20,7 @@ const plain = {
   yellow: '#FFC546',
   yellowDark: '#FFB000',
   red: '#FF4A40',
+  blue: '#0076FF',
 };
 
 export const colors = {

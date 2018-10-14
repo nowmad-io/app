@@ -62,6 +62,8 @@ export default class Map extends React.PureComponent {
 
   onPoiClick = event => this.props.onPoiClick(event.nativeEvent);
 
+  getRef = () => this._ref.current;
+
   updatePadding(mapPadding) {
     if (!this._ref.current.map) {
       return;

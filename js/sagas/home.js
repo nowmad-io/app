@@ -1,10 +1,12 @@
 import {
   all, call, fork, put, take, takeLatest, cancel, cancelled, select,
 } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
 import _ from 'lodash';
 
 import PictureUpload from '../libs/pictureUpload';
 
+import { setGeolocation } from '../actions/home';
 import { fetchUser } from '../actions/users';
 import {
   pushReview,
@@ -14,8 +16,27 @@ import {
   fetchFriendshipsSuccess,
 } from '../actions/entities';
 
+import { GET_GEOLOCATION } from '../constants/home';
 import { UPLOAD_PICTURES } from '../constants/entities';
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
+
+function getCurrentPosition() {
+  return eventChannel((emit) => {
+    const observer = navigator.geolocation.getCurrentPosition(
+      position => emit(setGeolocation(position.coords)),
+      () => {},
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+    return () => observer.stopObserving();
+  });
+}
+
+function* currentPosition() {
+  const channel = yield call(getCurrentPosition);
+
+  const action = yield take(channel);
+  yield put(action);
+}
 
 function uploadPicture({ uri, ...picture }) {
   return uri.startsWith('http')
@@ -88,5 +109,6 @@ function* homeFlow() {
 
 export default function* root() {
   yield takeLatest(RUN_SAGAS, homeFlow);
+  yield takeLatest(GET_GEOLOCATION, currentPosition);
   yield takeLatest(UPLOAD_PICTURES, uploadPicturesFlow);
 }

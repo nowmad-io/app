@@ -4,6 +4,8 @@ import _ from 'lodash';
 import {
   REGION_CHANGE,
   SELECT_PLACE,
+  GET_GEOLOCATION,
+  SET_GEOLOCATION,
 } from '../constants/home';
 import { LOGOUT } from '../constants/users';
 
@@ -38,6 +40,10 @@ const initialState = {
     longitude: 5.266113225370649,
     latitude: 20.476854784243514,
   },
+  geolocation: {
+    loading: false,
+    location: null,
+  },
   selectedPlace: null,
 };
 
@@ -52,6 +58,23 @@ const homeReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedPlace: action.place,
+      };
+    case GET_GEOLOCATION:
+      return {
+        ...state,
+        geolocation: {
+          ...state.geolocation,
+          loading: true,
+        },
+      };
+    case SET_GEOLOCATION:
+      return {
+        ...state,
+        geolocation: {
+          ...state.geolocation,
+          coords: action.coords,
+          loading: false,
+        },
       };
     case `${LOGOUT}_REQUEST`:
       return initialState;
