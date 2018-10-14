@@ -27,6 +27,8 @@ class Tab extends PureComponent {
 
   navigate = tab => () => this.props.navigation.navigate(tab);
 
+  onNearbyPress = place => () => this.props.screenProps.onNearbyPress(place);;
+
   render() {
     const {
       navigation,
@@ -86,12 +88,13 @@ class Tab extends PureComponent {
             >
               <Image source={poweredByGoogle} style={styles.poweredByGoogle} />
               <Spinner visible={placesLoading} />
-              {!placesLoading && (allPage ? places.slice(0, MAX_LIST) : places).map(result => (
+              {!placesLoading && (allPage ? places.slice(0, MAX_LIST) : places).map(place => (
                 <ListItem
-                  key={result.placeId}
-                  text={result.name}
+                  key={place.placeId}
+                  text={place.name}
                   thumbnail={googleImage}
                   thumbnailStyle={styles.thumbnailStyle}
+                  onPress={this.onNearbyPress(place)}
                 />
               ))}
             </List>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Image } from 'react-native';
 
 import Text from './Text';
+import Icon from './Icon';
 
 import { colors } from '../constants/parameters';
 
@@ -17,6 +18,8 @@ export default class Avatar extends PureComponent {
     uri: PropTypes.string,
     uppercase: PropTypes.bool,
     size: PropTypes.number,
+    icon: PropTypes.string,
+    set: PropTypes.string,
   };
 
   static defaultProps = {
@@ -26,7 +29,7 @@ export default class Avatar extends PureComponent {
 
   render() {
     const {
-      style, textStyle, size, text, uppercase, uri,
+      style, textStyle, size, text, uppercase, uri, icon, set,
     } = this.props;
 
     return (
@@ -47,7 +50,7 @@ export default class Avatar extends PureComponent {
             resizeMethod="scale"
             source={{ uri }}
           />
-        ) : (
+        ) : !icon ? (
           <Text
             style={[
               styles.text,
@@ -57,6 +60,15 @@ export default class Avatar extends PureComponent {
           >
             {text}
           </Text>
+        ) : (
+          <Icon
+            set={set}
+            name={icon}
+            style={[
+              styles.text,
+              textStyle,
+            ]}
+          />
         )}
       </View>
     );

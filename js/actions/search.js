@@ -22,9 +22,11 @@ const autocompleteToPlace = autocomplete => (!autocomplete
 
 const nearByToPlace = nearby => (!nearby
   ? []
-  : nearby.results.map(({ place_id: placeId, name }) => ({
+  : nearby.results.map(({ place_id: placeId, name, geometry: { location } }) => ({
     placeId,
     name,
+    latitude: location.lat,
+    longitude: location.lng,
   })));
 
 export function peopleSearch(query) {
@@ -61,9 +63,12 @@ export function placeDetails(placeId, poiName = null) {
 
   return fetch(`${url}?${key}&${placeid}&${fields}`)
     .then(response => response.json())
-    .then(({ result: { name, ...place } }) => ({
+    .then(({ result: { name, geometry: { location }, ...place } }) => ({
+      placeId,
       name: poiName || name,
-      place,
+      latitude: location.lat,
+      longitude: location.lng,
+      ...place,
     }));
 }
 

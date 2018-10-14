@@ -45,8 +45,13 @@ class AddReviewScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
+    onDidFocus: PropTypes.func,
     place: PropTypes.object,
     review: PropTypes.object,
+  }
+
+  static defaultProps = {
+    onDidFocus: () => true,
   }
 
   constructor(props) {
@@ -78,6 +83,7 @@ class AddReviewScreen extends Component {
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+    this.props.onDidFocus();
   }
 
   componentWillUnmount() {
@@ -248,6 +254,7 @@ class AddReviewScreen extends Component {
                 latitude={place.latitude}
                 text={place.text}
                 picture={place.picture}
+                google={place.google}
               />
             </Map>
             <View style={styles.addressWrapper} onLayout={this.onAddressLayout}>
@@ -383,11 +390,16 @@ const makeMapStateToProps = () => {
   const markersSelector = selectMarkers();
 
   return (state, props) => {
-    const { reviewId, place } = props.navigation.state.params;
+    const { reviewId, place, onDidFocus } = props.navigation.state.params;
 
     return {
       review: reviewId ? reviewSelector(state, reviewId) : {},
-      place: _.isObject(place) ? place : _.find(markersSelector(state), { uid: place }),
+      place: _.isObject(place)
+        ? {
+          ...place,
+          google: true,
+        } : _.find(markersSelector(state), { uid: place }),
+      onDidFocus,
     };
   };
 };

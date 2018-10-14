@@ -21,9 +21,13 @@ export default class Marker extends React.Component {
       PropTypes.string,
       PropTypes.number,
     ]),
-    picture: PropTypes.string,
+    picture: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+    ]),
     selected: PropTypes.bool,
     prefetched: PropTypes.bool,
+    google: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -72,6 +76,7 @@ export default class Marker extends React.Component {
       text,
       picture,
       selected,
+      google,
     } = this.props;
     const { prefetched } = this.state;
 
@@ -108,6 +113,8 @@ export default class Marker extends React.Component {
               selected && styles.avatar_text_selected,
               me && styles.avatarMe,
             ]}
+            set="FontAwesome"
+            icon={google && 'google' || ''}
           />
           <View
             style={[

@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginBottom: 18,
+    paddingVertical: 9,
   },
   wrapper: {
     flexDirection: 'row',

@@ -5,11 +5,12 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 
-import { peopleSearch, placesSearch } from '../../actions/search';
+import { placeDetails, peopleSearch, placesSearch } from '../../actions/search';
 
 import SearchNavigation from '../../navigation/SearchNavigation';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
+import Spinner from '../../components/Spinner';
 
 import { colors, sizes } from '../../constants/parameters';
 
@@ -20,7 +21,6 @@ export default class SearchBar extends Component {
     navigation: PropTypes.object,
     children: PropTypes.any,
     onAddFriendPress: PropTypes.func,
-    onAddThisPlacePress: PropTypes.func,
     onClear: PropTypes.func,
   }
 
@@ -32,6 +32,7 @@ export default class SearchBar extends Component {
     super(props);
 
     this.state = {
+      loading: false,
       text: '',
       previousValue: '',
       focused: false,
@@ -105,24 +106,47 @@ export default class SearchBar extends Component {
     this.props.onAddFriendPress(friend);
   }
 
-  onAddThisPlacePress = (coord) => {
-    this.blur();
-    this.onClearPress();
-    this.props.onAddThisPlacePress(coord);
+  onNearbyPress = (place) => {
+    this.setState({ loading: true });
+
+    const action = (fullPlace) => {
+      this.props.navigation.navigate('AddReviewScreen', {
+        place: fullPlace,
+        onDidFocus: () => {
+          this.onClearPress();
+          this.blur();
+        },
+      });
+    };
+
+    if (place.latitude && place.longitude) {
+      action(place);
+      return;
+    }
+
+    placeDetails(place.placeId).then(action);
+  }
+
+  searchNearby(coordinatesQuery) {
+    this.setState({
+      peopleLoading: true,
+      placesLoading: true,
+    });
+    this.searchDebounced(coordinatesQuery);
+    this.setState({ text: coordinatesQuery });
+    this._searchNavigation.current._navigation.navigate('Places');
+    this.setState({ focused: true });
   }
 
   searchDebounced(query) {
     peopleSearch(query)
       .then(people => this.setState({ people, peopleLoading: false }));
-    placesSearch(query)
-      .then(places => this.setState({ places, placesLoading: false }));
-  }
-
-  searchNearby(coordinatesQuery) {
-    this.searchDebounced(coordinatesQuery);
-    this.setState({ text: coordinatesQuery });
-    this._searchNavigation.current._navigation.navigate('Places');
-    this.setState({ focused: true });
+    if (query) {
+      placesSearch(query)
+        .then(places => this.setState({ places, placesLoading: false }));
+    } else {
+      this.setState({ places: [], placesLoading: false });
+    }
   }
 
   focus() {
@@ -131,13 +155,14 @@ export default class SearchBar extends Component {
   }
 
   blur() {
-    this.setState({ focused: false });
+    this.setState({ focused: false, loading: false });
     this.textInput.blur();
   }
 
   render() {
     const { children } = this.props;
     const {
+      loading,
       text,
       focused,
       people,
@@ -204,8 +229,10 @@ export default class SearchBar extends Component {
               peopleLoading,
               places,
               placesLoading,
+              onNearbyPress: this.onNearbyPress,
             }}
           />
+          <Spinner overlay visible={loading} />
         </View>
       </View>
     );
