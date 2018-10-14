@@ -59,6 +59,8 @@ class Api {
       ...this.baseConfig,
       basePath,
     };
+
+    return this;
   }
 
   setAuthorisation(token) {

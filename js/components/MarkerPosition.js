@@ -29,6 +29,7 @@ export default class MarkerPosition extends PureComponent {
         coordinate={{ latitude, longitude }}
         onPress={this.onPositionPress}
         anchor={{ x: 0.5, y: 0.5 }}
+        style={{ elevation: 4 }}
       >
         <View style={styles.dot} />
       </MapView.Marker>
@@ -38,8 +39,9 @@ export default class MarkerPosition extends PureComponent {
 
 const styles = StyleSheet.create({
   dot: {
-    height: 14,
-    width: 14,
+    elevation: 4,
+    height: 20,
+    width: 20,
     backgroundColor: colors.blue,
     borderWidth: 2,
     borderColor: colors.white,

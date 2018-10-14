@@ -14,9 +14,14 @@ import Marker from '../../components/Marker';
 import Button from '../../components/Button';
 import MarkerPosition from '../../components/MarkerPosition';
 
-import { carousel } from '../../constants/parameters';
+import { carousel, sizes } from '../../constants/parameters';
 
-class HomeMap extends React.Component {
+const INITIAL_PADDING = {
+  top: sizes.headerHeight,
+  bottom: carousel.level2,
+};
+
+class MapWrapper extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     geolocation: PropTypes.object,
@@ -34,10 +39,6 @@ class HomeMap extends React.Component {
 
     this.prefetchedPictures = {};
     this._map = React.createRef();
-  }
-
-  componentDidMount() {
-    this.props.dispatch(getGeolocation());
   }
 
   componentWillReceiveProps({ geolocation }) {
@@ -59,7 +60,10 @@ class HomeMap extends React.Component {
 
   onRegionChange = region => this.props.dispatch(regionChanged(region));
 
-  onMapReady = () => this.props.dispatch(regionChanged());
+  onMapReady = () => {
+    this.props.dispatch(getGeolocation());
+    this.props.dispatch(regionChanged());
+  };
 
   onZoomOut = () => {
     this._map.current.getRef().zoomBy(-4);
@@ -79,7 +83,7 @@ class HomeMap extends React.Component {
         <Map
           ref={this._map}
           onRegionChangeComplete={this.onRegionChange}
-          mapPadding={{ bottom: carousel.level2 }}
+          mapPadding={INITIAL_PADDING}
           onMapReady={this.onMapReady}
         >
           {_.map(places, ({
@@ -140,7 +144,7 @@ const makeMapStateToProps = () => {
   });
 };
 
-export default connect(makeMapStateToProps, null)(HomeMap);
+export default connect(makeMapStateToProps, null)(MapWrapper);
 
 const styles = StyleSheet.create({
   buttonControls: {
