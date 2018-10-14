@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { selectPlace } from '../../reducers/entities';
 
 import Review from '../../components/Review';
+import ReviewGoogle from '../../components/ReviewGoogle';
 import Icon from '../../components/Icon';
 
 import { colors, carousel } from '../../constants/parameters';
@@ -18,6 +19,7 @@ class Entry extends PureComponent {
     // eslint-disable-next-line
     placeUid: PropTypes.string,
     place: PropTypes.object,
+    google: PropTypes.bool,
   };
 
   onActionPress = () => {
@@ -39,22 +41,38 @@ class Entry extends PureComponent {
         shortDescription,
         pictures,
         categories,
+        name,
+        loading,
       },
+      google,
     } = this.props;
 
     return (
       <View style={style}>
-        <View style={styles.card}>
-          <Review
-            own={!!own}
-            categories={categories}
-            createdBy={_.head(friends)}
-            friends={_.tail(friends)}
-            shortDescription={shortDescription}
-            status={status}
-            pictures={pictures}
-            cover
-          />
+        <View
+          style={[
+            styles.card,
+            google && styles.googleCard,
+          ]}
+        >
+          {!google ? (
+            <Review
+              own={!!own}
+              categories={categories}
+              createdBy={_.head(friends)}
+              friends={_.tail(friends)}
+              shortDescription={shortDescription}
+              status={status}
+              pictures={pictures}
+              cover
+            />
+          ) : (
+            <ReviewGoogle
+              name={name}
+              pictures={pictures}
+              loading={loading}
+            />
+          )}
           <TouchableOpacity
             style={styles.cta}
             activeOpacity={0.8}
@@ -78,7 +96,7 @@ const makeMapStateToProps = () => {
   const placeSelector = selectPlace();
 
   return (state, props) => ({
-    place: placeSelector(state, props.placeUid),
+    place: props.google ? state.home.poiPlace : placeSelector(state, props.placeUid),
   });
 };
 
@@ -93,6 +111,10 @@ const styles = StyleSheet.create({
     borderTopWidth: carousel.border,
     borderRadius: 2,
     elevation: 3,
+  },
+  googleCard: {
+    backgroundColor: colors.primaryLight,
+    borderColor: colors.primaryLight,
   },
   cta: {
     backgroundColor: colors.yellowTransparent,

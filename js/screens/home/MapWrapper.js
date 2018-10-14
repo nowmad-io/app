@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import shortid from 'shortid';
 import _ from 'lodash';
 
-import { regionChanged, selectPlace, getGeolocation } from '../../actions/home';
+import {
+  regionChanged, selectPlace, getGeolocation, setPoiPlace,
+} from '../../actions/home';
+
+import { poiToPlace, placeDetails } from '../../actions/search';
 
 import { selectMarkers } from '../../reducers/entities';
 
@@ -25,6 +29,8 @@ class MapWrapper extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     searchNearby: PropTypes.func,
+    onPoiPress: PropTypes.func,
+    poiPlace: PropTypes.object,
     geolocation: PropTypes.object,
     places: PropTypes.array,
     selectedPlace: PropTypes.string,
@@ -72,9 +78,21 @@ class MapWrapper extends React.Component {
 
   onLocationPress = () => this.props.dispatch(getGeolocation());
 
+  onPoiPress = (poi) => {
+    const poiPlace = poiToPlace(poi);
+
+    this.props.dispatch(setPoiPlace(poiPlace, true));
+    this.props.onPoiPress(poiPlace.name);
+
+    placeDetails(poiPlace.placeId, poiPlace.name)
+      .then((place) => {
+        this.props.dispatch(setPoiPlace(place));
+      });
+  }
+
   render() {
     const {
-      geolocation, places, selectedPlace, panY, searchNearby,
+      geolocation, places, selectedPlace, panY, searchNearby, poiPlace,
     } = this.props;
 
     return (
@@ -85,7 +103,18 @@ class MapWrapper extends React.Component {
           mapPadding={INITIAL_PADDING}
           onMapReady={this.onMapReady}
           onLongPress={searchNearby}
+          onPoiClick={this.onPoiPress}
         >
+          {poiPlace && (
+            <Marker
+              uid={poiPlace.uid}
+              latitude={poiPlace.latitude}
+              longitude={poiPlace.longitude}
+              selected={selectedPlace === poiPlace.uid}
+              onMarkerPress={this.onMarkerPress}
+              google
+            />
+          )}
           {_.map(places, ({
             uid, latitude, longitude, text, picture,
           }) => (
@@ -141,6 +170,7 @@ const makeMapStateToProps = () => {
     selectedPlace: state.home.selectedPlace,
     places: markersSelector(state),
     geolocation: state.home.geolocation,
+    poiPlace: state.home.poiPlace,
   });
 };
 

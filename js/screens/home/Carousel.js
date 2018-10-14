@@ -21,6 +21,7 @@ class CarouselScreen extends Component {
     navigation: PropTypes.object,
     visiblePlaces: PropTypes.array,
     selectedPlace: PropTypes.string,
+    poiPlace: PropTypes.object,
     panY: PropTypes.object,
   };
 
@@ -78,7 +79,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   render() {
-    const { panY, visiblePlaces } = this.props;
+    const { panY, visiblePlaces, poiPlace } = this.props;
 
     return (
       <PanController
@@ -101,6 +102,15 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             />
           </View>
         )}
+        {poiPlace && (
+          <Entry
+            key={poiPlace.uid}
+            placeUid={poiPlace.uid}
+            style={styles.entryWrapper}
+            onActionPress={this.onActionPress}
+            google
+          />
+        )}
         {visiblePlaces && visiblePlaces.map(({ uid }) => (
           <Entry
             key={uid}
@@ -119,6 +129,7 @@ const makeMapStateToProps = () => {
 
   return state => ({
     selectedPlace: state.home.selectedPlace,
+    poiPlace: state.home.poiPlace,
     visiblePlaces: visiblePlacesSelector(state),
   });
 };

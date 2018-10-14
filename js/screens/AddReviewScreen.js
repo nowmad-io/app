@@ -74,10 +74,7 @@ class AddReviewScreen extends Component {
         ...defaultReview,
         ...review,
       },
-      place: {
-        uid: `${`${place.latitude}`.replace('.', ',')}_${`${place.longitude}`.replace('.', ',')}`,
-        ...place,
-      },
+      place,
     };
   }
 

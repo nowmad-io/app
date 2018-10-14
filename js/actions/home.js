@@ -3,6 +3,7 @@ import {
   SELECT_PLACE,
   GET_GEOLOCATION,
   SET_GEOLOCATION,
+  POI_PLACE,
 } from '../constants/home';
 
 export function getGeolocation() {
@@ -29,5 +30,13 @@ export function selectPlace(place) {
   return {
     type: SELECT_PLACE,
     place,
+  };
+}
+
+export function setPoiPlace(poi, partial) {
+  return {
+    type: POI_PLACE,
+    poi,
+    partial,
   };
 }

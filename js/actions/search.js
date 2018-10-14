@@ -4,14 +4,29 @@ import Api from '../libs/requests';
 
 export const COORD_REGEX = /^([-+]?[\d]{1,2}\.\d+),\s*([-+]?[\d]{1,3}\.\d+)?$/;
 
-export function photoUrl(ref) {
+const photoUrl = ({ photo_reference: ref }) => {
   const url = 'https://maps.googleapis.com/maps/api/place/photo';
   const key = `key=${Config.PLACES_API_KEY}`;
   const maxwidth = 'maxwidth=600';
   const photoreference = `photoreference=${ref}`;
 
-  return `${url}?${key}&${maxwidth}&${photoreference}`;
-}
+  return {
+    uid: ref,
+    uri: `${url}?${key}&${maxwidth}&${photoreference}`,
+  };
+};
+
+const getUid = ({
+  latitude, longitude, lat, lng,
+}) => `${`${latitude || lat}`.replace('.', ',')}_${`${longitude || lng}`.replace('.', ',')}`;
+
+export const poiToPlace = ({ placeId, name, coordinate }) => ({
+  uid: getUid(coordinate),
+  placeId,
+  name,
+  latitude: coordinate.latitude,
+  longitude: coordinate.longitude,
+});
 
 const autocompleteToPlace = autocomplete => (!autocomplete
   ? []
@@ -23,6 +38,7 @@ const autocompleteToPlace = autocomplete => (!autocomplete
 const nearByToPlace = nearby => (!nearby
   ? []
   : nearby.results.map(({ place_id: placeId, name, geometry: { location } }) => ({
+    uid: getUid(location),
     placeId,
     name,
     latitude: location.lat,
@@ -63,23 +79,17 @@ export function placeDetails(placeId, poiName = null) {
 
   return fetch(`${url}?${key}&${placeid}&${fields}`)
     .then(response => response.json())
-    .then(({ result: { name, geometry: { location }, ...place } }) => ({
+    .then(({
+      result: {
+        name, geometry: { location }, photos, ...place
+      },
+    }) => ({
+      uid: getUid(location),
       placeId,
       name: poiName || name,
       latitude: location.lat,
       longitude: location.lng,
+      pictures: photos.map(photoUrl),
       ...place,
     }));
 }
-
-export const poiToPlace = ({ name, coordinate }) => ({
-  latitude: coordinate.latitude,
-  longitude: coordinate.longitude,
-  reviews: [{
-    created_by: {
-      first_name: name,
-    },
-    categories: [],
-    pictures: [],
-  }],
-});

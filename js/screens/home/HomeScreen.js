@@ -25,13 +25,19 @@ export default class HomeScreen extends React.PureComponent {
 
   searchNearby = ({ coordinate: { latitude, longitude } }) => this._searchBar.current.searchNearby(`${latitude}, ${longitude}`);
 
+  onPoiPress = name => this._searchBar.current.onChangeText(name);
+
   render() {
     const { navigation } = this.props;
     const { panY } = this.state;
 
     return (
       <SearchBar ref={this._searchBar} navigation={navigation}>
-        <MapWrapper panY={panY} searchNearby={this.searchNearby} />
+        <MapWrapper
+          panY={panY}
+          searchNearby={this.searchNearby}
+          onPoiPress={this.onPoiPress}
+        />
         <Carousel panY={panY} navigation={navigation} />
       </SearchBar>
     );

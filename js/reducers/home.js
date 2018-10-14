@@ -6,6 +6,7 @@ import {
   SELECT_PLACE,
   GET_GEOLOCATION,
   SET_GEOLOCATION,
+  POI_PLACE,
 } from '../constants/home';
 import { LOGOUT } from '../constants/users';
 
@@ -45,6 +46,7 @@ const initialState = {
     location: null,
   },
   selectedPlace: null,
+  poiPlace: null,
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -75,6 +77,15 @@ const homeReducer = (state = initialState, action) => {
           coords: action.coords,
           loading: false,
         },
+      };
+    case POI_PLACE:
+      return {
+        ...state,
+        poiPlace: {
+          ...action.poi,
+          loading: action.partial,
+        },
+        selectedPlace: action.poi && action.poi.uid,
       };
     case `${LOGOUT}_REQUEST`:
       return initialState;
