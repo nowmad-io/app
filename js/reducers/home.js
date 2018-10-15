@@ -27,7 +27,7 @@ export const selectVisiblePlaces = () => createSelector(
       latitude: region.latitude + region.latitudeDelta / 2,
       longitude: region.longitude + region.longitudeDelta / 2,
     };
-    console.log('yo', [...[poiPlace || []]]);
+
     return [...(poiPlace && [poiPlace] || []), ..._.filter(places, place => (
       place.latitude > southWest.latitude && place.latitude < northEast.latitude
         && place.longitude > southWest.longitude && place.longitude < northEast.longitude
