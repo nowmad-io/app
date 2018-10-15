@@ -61,12 +61,12 @@ export default class SearchBar extends Component {
 
   onMenuPress = () => this.props.navigation.openDrawer();
 
-  onFocus() {
+  onFocus = () => {
     this.setState({ focused: true });
     this.searchDebounced(this.state.text);
   }
 
-  onChangeText(text, previous = false) {
+  onChangeText = (text, previous = false) => {
     this.setState({
       text,
       ...(previous ? { previousValue: text } : {}),
