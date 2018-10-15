@@ -82,7 +82,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
   render() {
     const { panY, visiblePlaces, poiPlace } = this.props;
-    console.log('visiblePlaces', visiblePlaces);
+
     return (
       <PanController
         ref={this._carousel}
