@@ -8,7 +8,7 @@ import {
   SET_GEOLOCATION,
   POI_PLACE,
 } from '../constants/home';
-import { LOGOUT } from '../constants/users';
+import { LOGOUT } from '../constants/auth';
 
 import { getPlaces } from './entities';
 

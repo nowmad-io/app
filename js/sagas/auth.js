@@ -5,9 +5,9 @@ import PictureUpload from '../libs/pictureUpload';
 import {
   LOGOUT,
   UPDATE_PROFILE,
-} from '../constants/users';
+} from '../constants/auth';
 
-import { apiUpdateProfile, updateProfileSuccess } from '../actions/users';
+import { apiUpdateProfile, updateProfileSuccess } from '../actions/auth';
 import { stopSagas } from '../actions/utils';
 
 function* profileFlow(action) {

@@ -1,13 +1,13 @@
-import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/users';
+import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/auth';
 
-export const getMe = state => state.users.me;
+export const getMe = state => state.authme;
 
 const initialState = {
   me: {},
   logged: false,
 };
 
-const usersReducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_PROFILE_SUCCESS: {
       const { [Object.keys(action.user)[0]]: me } = action.user;
@@ -28,4 +28,4 @@ const usersReducer = (state = initialState, action) => {
   }
 };
 
-export default usersReducer;
+export default authReducer;

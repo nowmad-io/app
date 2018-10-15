@@ -7,7 +7,7 @@ import Config from 'react-native-config';
 import Api from './libs/requests';
 import Firebase from './libs/firebase';
 
-import { apiRestoreSession } from './actions/users';
+import { apiRestoreSession } from './actions/auth';
 
 import MainNavigator from './navigation/MainNavigator';
 import SplashScreen from './screens/SplashScreen';

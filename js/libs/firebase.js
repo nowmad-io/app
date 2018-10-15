@@ -25,6 +25,7 @@ class Firebase {
     this.database = this.instance.database;
     this.users = this.instance.database().ref('users');
     this.friendships = this.instance.database().ref('friendships');
+    this.friendRequests = this.instance.database().ref('friendRequests');
     this.reviews = this.instance.database().ref('reviews');
   }
 

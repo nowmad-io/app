@@ -4,7 +4,7 @@ import {
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE,
   LOGOUT,
-} from '../constants/users';
+} from '../constants/auth';
 
 export function updateProfileSuccess(user) {
   return {

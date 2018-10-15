@@ -13,7 +13,7 @@ import Modal from '../../components/Modal';
 
 import {
   apiRegister, updateProfileSuccess,
-} from '../../actions/users';
+} from '../../actions/auth';
 
 import { registerFailed, registerNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
@@ -202,7 +202,7 @@ class RegisterScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  logged: state.users.logged,
+  logged: state.authlogged,
   isConnected: true,
 });
 

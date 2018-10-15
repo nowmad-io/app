@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Share } from 'react-native';
 import { connect } from 'react-redux';
 
-import { apiLogout } from '../actions/users';
+import { apiLogout } from '../actions/auth';
 import { runSagas, stopSagas } from '../actions/utils';
 
 import Icon from '../components/Icon';
@@ -93,7 +93,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 }
 
 const mapStateToProps = state => ({
-  me: state.users.me,
+  me: state.authme,
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import PictureUpload from '../libs/pictureUpload';
 
 import { setGeolocation } from '../actions/home';
-import { fetchUser } from '../actions/users';
+import { fetchUser } from '../actions/auth';
 import {
   pushReview,
   userReviewsListener,
@@ -78,7 +78,7 @@ const fetchUserReviewsFlow = (uid, own) => (
 );
 
 function* homeFlow() {
-  const { uid } = yield select(state => state.users.me);
+  const { uid } = yield select(state => state.authme);
   const myReviewsListener = yield fork(fetchUserReviewsFlow(uid, true));
 
   // Ftech all users

@@ -11,7 +11,7 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiLogin, updateProfileSuccess } from '../../actions/users';
+import { apiLogin, updateProfileSuccess } from '../../actions/auth';
 
 import { loginFailed, loginNoNetwork } from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';

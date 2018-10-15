@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
-import { getMe } from './users';
+import { getMe } from './auth';
 
-import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/users';
+import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/auth';
 import { FETCH_REVIEW_SUCCESS, FETCH_FRIENDSHIPS_SUCCESS } from '../constants/entities';
 
 const getPlace = (state, uid) => state.entities.places[uid];

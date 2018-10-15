@@ -1,9 +1,9 @@
-import users from './users';
+import auth from './auth';
 import entities from './entities';
 import home from './home';
 
 export default {
-  users,
+  auth,
   entities,
   home,
 };
