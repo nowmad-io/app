@@ -392,10 +392,7 @@ const makeMapStateToProps = () => {
     return {
       review: reviewId ? reviewSelector(state, reviewId) : {},
       place: _.isObject(place)
-        ? {
-          ...place,
-          google: true,
-        } : _.find(markersSelector(state), { uid: place }),
+        ? place : _.find(markersSelector(state), { uid: place }),
       onDidFocus,
     };
   };

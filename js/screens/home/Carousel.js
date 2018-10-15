@@ -36,35 +36,32 @@ class CarouselScreen extends Component {
   }
 
   componentWillReceiveProps({ selectedPlace: nextSelectedPlace }) {
-    const { selectedPlace, poiPlace, visiblePlaces } = this.props;
+    const { selectedPlace, visiblePlaces } = this.props;
 
     if (nextSelectedPlace && !selectedPlace !== nextSelectedPlace) {
       const index = nextSelectedPlace
-        ? [...[poiPlace || []], ...visiblePlaces].findIndex(d => d.uid === nextSelectedPlace)
+        ? visiblePlaces.findIndex(d => d.uid === nextSelectedPlace)
         : 0;
 
       this.goToIndex(index);
     }
   }
 
-  shouldComponentUpdate({ visiblePlaces, poiPlace }) {
-    return (
-      !_.isEqual(visiblePlaces, this.props.visiblePlaces)
-      || !_.isEqual(poiPlace, this.props.poiPlace)
-    );
+  shouldComponentUpdate({ visiblePlaces }) {
+    return !_.isEqual(visiblePlaces, this.props.visiblePlaces);
   }
 
   onIndexChange = (index) => {
-    const { visiblePlaces, poiPlace } = this.props;
-    const place = [...[poiPlace || []], ...visiblePlaces][index];
+    const { visiblePlaces } = this.props;
+    const place = visiblePlaces[index];
 
     this.props.dispatch(selectPlace(place && place.uid));
   }
 
   onCarouselDidUpdate = () => {
-    const { selectedPlace, visiblePlaces, poiPlace } = this.props;
+    const { selectedPlace, visiblePlaces } = this.props;
     const index = selectedPlace
-      ? [...[poiPlace || []], ...visiblePlaces].findIndex(d => d.uid === selectedPlace)
+      ? visiblePlaces.findIndex(d => d.uid === selectedPlace)
       : -1;
 
     this._carousel.current.toIndex(index, index < 0, index < 0);
@@ -85,7 +82,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
   render() {
     const { panY, visiblePlaces, poiPlace } = this.props;
-
+    console.log('visiblePlaces', visiblePlaces);
     return (
       <PanController
         ref={this._carousel}
@@ -107,21 +104,13 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             />
           </View>
         )}
-        {poiPlace && (
-          <Entry
-            key={poiPlace.uid}
-            placeUid={poiPlace.uid}
-            style={styles.entryWrapper}
-            onActionPress={this.onActionPress}
-            google
-          />
-        )}
-        {visiblePlaces && visiblePlaces.map(({ uid }) => (
+        {visiblePlaces && visiblePlaces.map(({ uid, google }) => (
           <Entry
             key={uid}
             placeUid={uid}
             style={styles.entryWrapper}
             onActionPress={this.onActionPress}
+            google={google}
           />
         ))}
       </PanController>

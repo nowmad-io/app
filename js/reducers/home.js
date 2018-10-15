@@ -13,10 +13,11 @@ import { LOGOUT } from '../constants/users';
 import { getPlaces } from './entities';
 
 const getRegion = state => state.home.region;
+const getPoiPlace = state => state.home.poiPlace;
 
 export const selectVisiblePlaces = () => createSelector(
-  [getPlaces, getRegion],
-  (places, region) => {
+  [getPlaces, getRegion, getPoiPlace],
+  (places, region, poiPlace) => {
     const southWest = {
       latitude: region.latitude - region.latitudeDelta / 2,
       longitude: region.longitude - region.longitudeDelta / 2,
@@ -26,11 +27,11 @@ export const selectVisiblePlaces = () => createSelector(
       latitude: region.latitude + region.latitudeDelta / 2,
       longitude: region.longitude + region.longitudeDelta / 2,
     };
-
-    return _.filter(places, place => (
+    console.log('yo', [...[poiPlace || []]]);
+    return [...(poiPlace && [poiPlace] || []), ..._.filter(places, place => (
       place.latitude > southWest.latitude && place.latitude < northEast.latitude
         && place.longitude > southWest.longitude && place.longitude < northEast.longitude
-    ));
+    ))];
   },
 );
 

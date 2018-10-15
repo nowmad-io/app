@@ -26,7 +26,7 @@ export default class SearchBar extends Component {
 
   static defaultProps = {
     onClear: () => true,
-  };
+  }
 
   constructor(props) {
     super(props);
@@ -112,10 +112,7 @@ export default class SearchBar extends Component {
     const action = (fullPlace) => {
       this.props.navigation.navigate('AddReviewScreen', {
         place: fullPlace,
-        onDidFocus: () => {
-          this.onClearPress();
-          this.blur();
-        },
+        onDidFocus: this.blur,
       });
     };
 
@@ -191,8 +188,8 @@ export default class SearchBar extends Component {
             placeholderTextColor={colors.white}
             style={styles.searchInput}
             value={text}
-            onFocus={() => this.onFocus()}
-            onChangeText={t => this.onChangeText(t)}
+            onFocus={this.onFocus}
+            onChangeText={this.onChangeText}
             withRef
           />
 

@@ -26,6 +26,7 @@ export const poiToPlace = ({ placeId, name, coordinate }) => ({
   name,
   latitude: coordinate.latitude,
   longitude: coordinate.longitude,
+  google: true,
 });
 
 const autocompleteToPlace = autocomplete => (!autocomplete
@@ -90,6 +91,7 @@ export function placeDetails(placeId, poiName = null) {
       latitude: location.lat,
       longitude: location.lng,
       pictures: photos.map(photoUrl),
+      google: true,
       ...place,
     }));
 }

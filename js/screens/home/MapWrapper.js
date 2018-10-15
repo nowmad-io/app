@@ -97,7 +97,6 @@ class MapWrapper extends React.Component {
     }
   }
 
-
   render() {
     const {
       geolocation, places, selectedPlace, panY, searchNearby, poiPlace,

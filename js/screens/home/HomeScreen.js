@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Animated } from 'react-native';
+import { connect } from 'react-redux';
+
+import { setPoiPlace } from '../../actions/home';
 
 import MapWrapper from './MapWrapper';
 import SearchBar from './SearchBar';
@@ -8,8 +11,9 @@ import Carousel from './Carousel';
 
 import { carousel } from '../../constants/parameters';
 
-export default class HomeScreen extends React.PureComponent {
+class HomeScreen extends React.PureComponent {
   static propTypes = {
+    dispatch: PropTypes.func,
     navigation: PropTypes.object,
   }
 
@@ -25,14 +29,20 @@ export default class HomeScreen extends React.PureComponent {
 
   searchNearby = ({ coordinate: { latitude, longitude } }) => this._searchBar.current.searchNearby(`${latitude}, ${longitude}`);
 
-  onPoiPress = name => this._searchBar.current.onChangeText(name);
+  onPoiPress = name => this._searchBar.current.onChangeText(name || '');
+
+  onClear = () => this.props.dispatch(setPoiPlace());
 
   render() {
     const { navigation } = this.props;
     const { panY } = this.state;
 
     return (
-      <SearchBar ref={this._searchBar} navigation={navigation}>
+      <SearchBar
+        ref={this._searchBar}
+        navigation={navigation}
+        onClear={this.onClear}
+      >
         <MapWrapper
           panY={panY}
           searchNearby={this.searchNearby}
@@ -43,3 +53,5 @@ export default class HomeScreen extends React.PureComponent {
     );
   }
 }
+
+export default connect()(HomeScreen);
