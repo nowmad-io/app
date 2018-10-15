@@ -54,11 +54,9 @@ class LoginScreen extends Component {
 
     apiLogin(email, password)
       .then((user) => {
-        console.log('user', user);
         dispatch(updateProfileSuccess(user));
         navigation.navigate('App');
-      }).catch((err) => {
-        console.log('err', err);
+      }).catch(() => {
         this.setState({
           loading: false,
           error: loginFailed,
