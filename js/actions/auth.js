@@ -59,14 +59,6 @@ export function apiRegister({ password, ...profile }) {
     .then(() => apiUpdateProfile(profile));
 }
 
-export function fetchUser(uid) {
-  return Firebase.users.child(uid).once('value')
-    .then(user => ({
-      ...user.val(),
-      uid: user.key,
-    }));
-}
-
 export function logoutSuccess() {
   return { type: LOGOUT };
 }

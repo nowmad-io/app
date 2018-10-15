@@ -202,7 +202,7 @@ class RegisterScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  logged: state.authlogged,
+  logged: state.auth.logged,
   isConnected: true,
 });
 

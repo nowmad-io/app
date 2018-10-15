@@ -93,7 +93,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 }
 
 const mapStateToProps = state => ({
-  me: state.authme,
+  me: state.auth.me,
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);

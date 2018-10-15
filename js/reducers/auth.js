@@ -1,6 +1,6 @@
 import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/auth';
 
-export const getMe = state => state.authme;
+export const getMe = state => state.auth.me;
 
 const initialState = {
   me: {},

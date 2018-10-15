@@ -1,5 +1,5 @@
 import {
-  all, call, fork, put, take, takeLatest, cancel, cancelled, select,
+  all, call, fork, put, take, takeLatest, cancel, cancelled, select, takeEvery,
 } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import _ from 'lodash';
@@ -7,17 +7,16 @@ import _ from 'lodash';
 import PictureUpload from '../libs/pictureUpload';
 
 import { setGeolocation } from '../actions/home';
-import { fetchUser } from '../actions/auth';
 import {
   pushReview,
   userReviewsListener,
   fetchReviewSuccess,
-  fetchFriendships,
-  fetchFriendshipsSuccess,
 } from '../actions/entities';
+import { friendshipsListener, fetchFriendshipsSuccess } from '../actions/friends';
 
 import { GET_GEOLOCATION } from '../constants/home';
 import { UPLOAD_PICTURES } from '../constants/entities';
+import { FETCH_FRIENDSHIPS_SUCCESS } from '../constants/friends';
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
 
 function getCurrentPosition() {
@@ -77,38 +76,50 @@ const fetchUserReviewsFlow = (uid, own) => (
   }
 );
 
+const fetchFrienshipsFlow = uid => (
+  function* _fetchFrienshipsFlow() {
+    const channel = yield call(friendshipsListener, uid);
+
+    try {
+      while (true) {
+        const friend = yield take(channel);
+
+        yield put(fetchFriendshipsSuccess(friend));
+      }
+    } finally {
+      if (yield cancelled()) {
+        channel.close();
+      }
+    }
+  }
+);
+
+const fetchReviewsFlow = uid => (
+  function* _fetchReviewsFlow(action) {
+    const { [Object.keys(action.friends)[0]]: friend } = action.friends;
+
+    const reviewsListeners = yield fork(fetchUserReviewsFlow(friend.uid, friend.uid === uid));
+
+    yield take(STOP_SAGAS);
+
+    yield cancel(reviewsListeners);
+  }
+);
+
 function* homeFlow() {
-  const { uid } = yield select(state => state.authme);
+  const { uid } = yield select(state => state.auth.me);
   const myReviewsListener = yield fork(fetchUserReviewsFlow(uid, true));
-
-  // Ftech all users
-  const friends = yield call(fetchFriendships);
-  let friendsInfo = yield all(_.map(
-    friends,
-    (val, myUid) => call(fetchUser, myUid),
-  ));
-
-  friendsInfo = _.chain(friendsInfo)
-    .keyBy('uid')
-    .value();
-  yield put(fetchFriendshipsSuccess(friendsInfo));
-
-  const reviewsListeners = yield all(_.map(
-    friends,
-    (val, friendUid) => fork(fetchUserReviewsFlow(friendUid)),
-  ));
+  const frienshipsListener = yield fork(fetchFrienshipsFlow(uid));
 
   yield take(STOP_SAGAS);
 
   yield cancel(myReviewsListener);
-  yield all(_.map(
-    reviewsListeners,
-    reviewsListener => cancel(reviewsListener),
-  ));
+  yield cancel(frienshipsListener);
 }
 
 export default function* root() {
   yield takeLatest(RUN_SAGAS, homeFlow);
   yield takeLatest(GET_GEOLOCATION, currentPosition);
   yield takeLatest(UPLOAD_PICTURES, uploadPicturesFlow);
+  yield takeEvery(FETCH_FRIENDSHIPS_SUCCESS, fetchReviewsFlow);
 }

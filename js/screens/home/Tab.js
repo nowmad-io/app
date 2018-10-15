@@ -106,7 +106,7 @@ class Tab extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  friends: state.entities.friends,
+  friends: state.friends.all,
 });
 
 export default connect(mapStateToProps)(Tab);

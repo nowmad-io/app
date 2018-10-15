@@ -4,20 +4,12 @@ import Firebase from '../libs/firebase';
 
 import {
   FETCH_REVIEW_SUCCESS,
-  FETCH_FRIENDSHIPS_SUCCESS,
   UPLOAD_PICTURES,
 } from '../constants/entities';
 
 export function fetchFriendships() {
   return Firebase.friendships.child(Firebase.userUID()).once('value')
     .then(friends => friends.val());
-}
-
-export function fetchFriendshipsSuccess(friends) {
-  return {
-    type: FETCH_FRIENDSHIPS_SUCCESS,
-    friends,
-  };
 }
 
 export function fetchReviewSuccess(review, removed, own) {

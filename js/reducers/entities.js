@@ -2,14 +2,14 @@ import { createSelector } from 'reselect';
 import _ from 'lodash';
 
 import { getMe } from './auth';
+import { getFriends } from './friends';
 
-import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/auth';
-import { FETCH_REVIEW_SUCCESS, FETCH_FRIENDSHIPS_SUCCESS } from '../constants/entities';
+import { LOGOUT } from '../constants/auth';
+import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
 
 const getPlace = (state, uid) => state.entities.places[uid];
 const getReview = (state, uid) => state.entities.reviews[uid];
 export const getPlaces = state => state.entities.places;
-export const getFriends = state => state.entities.friends;
 
 export const selectReview = () => createSelector(
   [getReview],
@@ -135,28 +135,6 @@ const entitiesReducer = (state = initialState, action) => {
         } : _.omit(state.review, review.uid),
       };
     }
-    case UPDATE_PROFILE_SUCCESS: {
-      const { [Object.keys(action.user)[0]]: me } = action.user;
-
-      return {
-        ...state,
-        friends: {
-          ...state.friends,
-          [me.uid]: {
-            ...(state.friends[me.uid] || {}),
-            ...me,
-          },
-        },
-      };
-    }
-    case FETCH_FRIENDSHIPS_SUCCESS:
-      return {
-        ...state,
-        friends: {
-          ...state.friends,
-          ...action.friends,
-        },
-      };
     case LOGOUT:
       return initialState;
     default:
