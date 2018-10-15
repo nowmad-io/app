@@ -94,17 +94,14 @@ const fetchFrienshipsFlow = uid => (
   }
 );
 
-const fetchReviewsFlow = uid => (
-  function* _fetchReviewsFlow(action) {
-    const { [Object.keys(action.friends)[0]]: friend } = action.friends;
+function* fetchReviewsFlow(action) {
+  const { [Object.keys(action.friends)[0]]: friend } = action.friends;
+  const reviewsListeners = yield fork(fetchUserReviewsFlow(friend.uid));
 
-    const reviewsListeners = yield fork(fetchUserReviewsFlow(friend.uid, friend.uid === uid));
+  yield take(STOP_SAGAS);
 
-    yield take(STOP_SAGAS);
-
-    yield cancel(reviewsListeners);
-  }
-);
+  yield cancel(reviewsListeners);
+}
 
 function* homeFlow() {
   const { uid } = yield select(state => state.auth.me);

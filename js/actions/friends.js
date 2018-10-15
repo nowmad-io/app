@@ -25,10 +25,9 @@ export function friendshipsListener(uid) {
   const listener = eventChannel((emit) => {
     query.on(
       'child_added',
-      (data) => {
-        console.log('data.key', data.key);
-        fetchUser(data.key).then(emit);
-      },
+      data => fetchUser(data.key).then(friend => emit({
+        [friend.uid]: friend,
+      })),
     );
     query.on(
       'child_removed',

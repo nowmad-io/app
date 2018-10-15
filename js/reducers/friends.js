@@ -6,9 +6,9 @@ import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/auth';
 export const getFriends = state => state.friends.all;
 
 const initialState = {
-  all: [],
-  incomings: [],
-  outgoings: [],
+  all: {},
+  incomings: {},
+  outgoings: {},
 };
 
 const friendsReducer = (state = initialState, action) => {

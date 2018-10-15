@@ -70,7 +70,6 @@ export const selectMarkers = () => createSelector(
 const initialState = {
   reviews: {},
   places: {},
-  friends: {},
 };
 
 const updatePlaces = (
