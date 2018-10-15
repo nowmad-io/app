@@ -90,6 +90,14 @@ class MapWrapper extends React.Component {
       });
   }
 
+  onMapPress = () => {
+    if (this.props.poiPlace) {
+      this.props.dispatch(setPoiPlace());
+      this.props.onPoiPress();
+    }
+  }
+
+
   render() {
     const {
       geolocation, places, selectedPlace, panY, searchNearby, poiPlace,
@@ -104,6 +112,7 @@ class MapWrapper extends React.Component {
           onMapReady={this.onMapReady}
           onLongPress={searchNearby}
           onPoiClick={this.onPoiPress}
+          onPress={this.onMapPress}
         >
           {poiPlace && (
             <Marker

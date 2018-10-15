@@ -23,11 +23,11 @@ class Entry extends PureComponent {
   };
 
   onActionPress = () => {
-    const { place: { own, uid } } = this.props;
+    const { onActionPress, google, place } = this.props;
 
-    this.props.onActionPress({
-      reviewId: own,
-      place: uid,
+    onActionPress({
+      reviewId: place.own,
+      place: google ? place : place.uid,
     });
   };
 

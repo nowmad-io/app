@@ -19,11 +19,11 @@ YellowBox.ignoreWarnings([
   'Setting a timer',
 ]);
 
-// const { polyfill } = require('rn-fetch-blob').default;
-//
-// const { Blob, XMLHttpRequest } = polyfill;
-// window.XMLHttpRequest = XMLHttpRequest;
-// window.Blob = Blob;
+const { polyfill } = require('rn-fetch-blob').default;
+
+const { Blob, XMLHttpRequest } = polyfill;
+window.XMLHttpRequest = XMLHttpRequest;
+window.Blob = Blob;
 
 Api.initialize(Config.API_URL).setAuthorisation(Config.API_TOKEN);
 

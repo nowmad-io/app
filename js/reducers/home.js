@@ -81,10 +81,10 @@ const homeReducer = (state = initialState, action) => {
     case POI_PLACE:
       return {
         ...state,
-        poiPlace: {
+        poiPlace: action.poi ? {
           ...action.poi,
           loading: action.partial,
-        },
+        } : null,
         selectedPlace: action.poi && action.poi.uid,
       };
     case `${LOGOUT}_REQUEST`:

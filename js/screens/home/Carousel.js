@@ -35,31 +35,36 @@ class CarouselScreen extends Component {
     this._carousel = React.createRef();
   }
 
-  componentWillReceiveProps({ selectedPlace }) {
-    if (selectedPlace && !this.props.selectedPlace !== selectedPlace) {
-      const index = selectedPlace
-        ? this.props.visiblePlaces.findIndex(d => d.uid === selectedPlace)
+  componentWillReceiveProps({ selectedPlace: nextSelectedPlace }) {
+    const { selectedPlace, poiPlace, visiblePlaces } = this.props;
+
+    if (nextSelectedPlace && !selectedPlace !== nextSelectedPlace) {
+      const index = nextSelectedPlace
+        ? [...[poiPlace || []], ...visiblePlaces].findIndex(d => d.uid === nextSelectedPlace)
         : 0;
 
       this.goToIndex(index);
     }
   }
 
-  shouldComponentUpdate({ visiblePlaces }) {
-    return !_.isEqual(visiblePlaces, this.props.visiblePlaces);
+  shouldComponentUpdate({ visiblePlaces, poiPlace }) {
+    return (
+      !_.isEqual(visiblePlaces, this.props.visiblePlaces)
+      || !_.isEqual(poiPlace, this.props.poiPlace)
+    );
   }
 
   onIndexChange = (index) => {
-    const { visiblePlaces } = this.props;
-    const place = visiblePlaces[index];
+    const { visiblePlaces, poiPlace } = this.props;
+    const place = [...[poiPlace || []], ...visiblePlaces][index];
 
     this.props.dispatch(selectPlace(place && place.uid));
   }
 
   onCarouselDidUpdate = () => {
-    const { selectedPlace, visiblePlaces } = this.props;
+    const { selectedPlace, visiblePlaces, poiPlace } = this.props;
     const index = selectedPlace
-      ? visiblePlaces.findIndex(d => d.uid === selectedPlace)
+      ? [...[poiPlace || []], ...visiblePlaces].findIndex(d => d.uid === selectedPlace)
       : -1;
 
     this._carousel.current.toIndex(index, index < 0, index < 0);
@@ -92,7 +97,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
         onComponentDidUpdate={this.onCarouselDidUpdate}
         snapSpacingX={entryWidth}
       >
-        {(!visiblePlaces || !visiblePlaces.length) && (
+        {!visiblePlaces.length && !poiPlace && (
           <View
             style={styles.entryWrapper}
           >
