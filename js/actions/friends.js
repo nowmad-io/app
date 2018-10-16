@@ -17,10 +17,10 @@ export function sendRequest(uid) {
 
 export function acceptRequest(uid) {
   const request = {
-    [`/requests/${Firebase.userUID()}/incomings/${uid}`]: null,
-    [`/requests/${uid}/outgoings/${Firebase.userUID()}`]: null,
     [`/friendships/${Firebase.userUID()}/${uid}`]: true,
     [`/friendships/${uid}/${Firebase.userUID()}`]: true,
+    [`/requests/${Firebase.userUID()}/incomings/${uid}`]: null,
+    [`/requests/${uid}/outgoings/${Firebase.userUID()}`]: null,
   };
   return Firebase.database().ref().update(request);
 }
