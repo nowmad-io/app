@@ -25,6 +25,22 @@ export function acceptRequest(uid) {
   return Firebase.database().ref().update(request);
 }
 
+export function rejectRequest(uid) {
+  const request = {
+    [`/requests/${Firebase.userUID()}/incomings/${uid}`]: null,
+    [`/requests/${uid}/outgoings/${Firebase.userUID()}`]: null,
+  };
+  return Firebase.database().ref().update(request);
+}
+
+export function cancelRequest(uid) {
+  const request = {
+    [`/requests/${Firebase.userUID()}/outgoings/${uid}`]: null,
+    [`/requests/${uid}/incomings/${Firebase.userUID()}`]: null,
+  };
+  return Firebase.database().ref().update(request);
+}
+
 export function fetchUser(uid) {
   return Firebase.users.child(uid).once('value')
     .then(user => ({
