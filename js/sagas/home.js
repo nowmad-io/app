@@ -105,13 +105,13 @@ function* fetchReviewsFlow(action) {
 
 function* homeFlow() {
   const { uid } = yield select(state => state.auth.me);
-  const myReviewsListener = yield fork(fetchUserReviewsFlow(uid, true));
-  const frienshipsListener = yield fork(fetchFrienshipsFlow(uid));
+  const myReviewsFork = yield fork(fetchUserReviewsFlow(uid, true));
+  const friendshipsFork = yield fork(fetchFrienshipsFlow(uid));
 
   yield take(STOP_SAGAS);
 
-  yield cancel(myReviewsListener);
-  yield cancel(frienshipsListener);
+  yield cancel(myReviewsFork);
+  yield cancel(friendshipsFork);
 }
 
 export default function* root() {

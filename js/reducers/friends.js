@@ -1,5 +1,6 @@
 import {
   FETCH_FRIENDSHIPS_SUCCESS,
+  FETCH_REQUESTS_SUCCESS,
 } from '../constants/friends';
 import { UPDATE_PROFILE_SUCCESS, LOGOUT } from '../constants/auth';
 
@@ -35,6 +36,15 @@ const friendsReducer = (state = initialState, action) => {
           ...action.friends,
         },
       };
+    case FETCH_REQUESTS_SUCCESS: {
+      const { incomings, outgoings } = action.requests;
+
+      return {
+        ...state,
+        incomings: incomings || state.incomings,
+        outgoings: outgoings || state.outgoings,
+      };
+    }
     case `${LOGOUT}_REQUEST`:
       return initialState;
     default:
