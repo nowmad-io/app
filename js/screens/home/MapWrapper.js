@@ -103,7 +103,7 @@ class MapWrapper extends React.Component {
     } = this.props;
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Map
           ref={this._map}
           onRegionChangeComplete={this.onRegionChange}
@@ -185,6 +185,9 @@ const makeMapStateToProps = () => {
 export default connect(makeMapStateToProps, null)(MapWrapper);
 
 const styles = StyleSheet.create({
+  container: {
+    height: sizes.height - sizes.headerHeight,
+  },
   buttonControls: {
     position: 'absolute',
     left: 0,
