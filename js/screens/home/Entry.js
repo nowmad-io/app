@@ -96,7 +96,7 @@ const makeMapStateToProps = () => {
   const placeSelector = selectPlace();
 
   return (state, props) => ({
-    place: props.google ? state.home.poiPlace : placeSelector(state, props.placeUid),
+    place: props.google ? state.home.gPlace : placeSelector(state, props.placeUid),
   });
 };
 

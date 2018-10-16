@@ -19,6 +19,7 @@ export default class SearchBar extends Component {
 
   static propTypes = {
     navigation: PropTypes.object,
+    onGPlacePress: PropTypes.func,
     children: PropTypes.any,
     onAddFriendPress: PropTypes.func,
     onClear: PropTypes.func,
@@ -106,13 +107,16 @@ export default class SearchBar extends Component {
     this.props.onAddFriendPress(friend);
   }
 
-  onNearbyPress = (place) => {
+  onGPlacePress = (place) => {
     this.setState({ loading: true });
 
     const action = (fullPlace) => {
-      this.props.navigation.navigate('AddReviewScreen', {
-        place: fullPlace,
-        onDidFocus: this.blur,
+      this.props.onGPlacePress(fullPlace);
+      this.blur();
+      this.setState({
+        text: fullPlace.name,
+        previousValue: fullPlace.name,
+        loading: false,
       });
     };
 
@@ -226,7 +230,7 @@ export default class SearchBar extends Component {
               peopleLoading,
               places,
               placesLoading,
-              onNearbyPress: this.onNearbyPress,
+              onGPlacePress: this.onGPlacePress,
             }}
           />
           <Spinner overlay visible={loading} />

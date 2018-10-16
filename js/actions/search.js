@@ -44,6 +44,7 @@ const nearByToPlace = nearby => (!nearby
     name,
     latitude: location.lat,
     longitude: location.lng,
+    google: true,
   })));
 
 export function peopleSearch(query) {

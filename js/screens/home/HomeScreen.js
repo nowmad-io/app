@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Animated } from 'react-native';
 import { connect } from 'react-redux';
 
-import { setPoiPlace } from '../../actions/home';
+import { setGPlace } from '../../actions/home';
 
 import MapWrapper from './MapWrapper';
 import SearchBar from './SearchBar';
@@ -15,6 +15,7 @@ class HomeScreen extends React.PureComponent {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
+    places: PropTypes.object,
   }
 
   constructor(props) {
@@ -24,14 +25,24 @@ class HomeScreen extends React.PureComponent {
       panY: new Animated.Value(-carousel.level2),
     };
 
+    this._map = React.createRef();
     this._searchBar = React.createRef();
   }
 
   searchNearby = ({ coordinate: { latitude, longitude } }) => this._searchBar.current.searchNearby(`${latitude}, ${longitude}`);
 
-  onPoiPress = name => this._searchBar.current.onChangeText(name || '');
+  onGPlacePress = (place) => {
+    this.onGplace(place.name);
+    if (this.props.places[place.uid]) {
+      this._map.current.getRef().animateToCoordinate(place);
+    } else {
+      this.props.dispatch(setGPlace(place));
+    }
+  };
 
-  onClear = () => this.props.dispatch(setPoiPlace());
+  onGplace = name => this._searchBar.current.onChangeText(name || '');
+
+  onClear = () => this.props.dispatch(setGPlace());
 
   render() {
     const { navigation } = this.props;
@@ -42,11 +53,13 @@ class HomeScreen extends React.PureComponent {
         ref={this._searchBar}
         navigation={navigation}
         onClear={this.onClear}
+        onGPlacePress={this.onGPlacePress}
       >
         <MapWrapper
+          onRef={(ref) => { this._map.current = ref; }}
           panY={panY}
           searchNearby={this.searchNearby}
-          onPoiPress={this.onPoiPress}
+          onPoiPress={this.onGplace}
         />
         <Carousel panY={panY} navigation={navigation} />
       </SearchBar>
@@ -54,4 +67,9 @@ class HomeScreen extends React.PureComponent {
   }
 }
 
-export default connect()(HomeScreen);
+
+const makeMapStateToProps = state => ({
+  places: state.entities.places,
+});
+
+export default connect(makeMapStateToProps)(HomeScreen);

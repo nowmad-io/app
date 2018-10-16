@@ -6,7 +6,7 @@ import shortid from 'shortid';
 import _ from 'lodash';
 
 import {
-  regionChanged, selectPlace, getGeolocation, setPoiPlace,
+  regionChanged, selectPlace, getGeolocation, setGPlace,
 } from '../../actions/home';
 
 import { poiToPlace, placeDetails } from '../../actions/search';
@@ -28,9 +28,10 @@ const INITIAL_PADDING = {
 class MapWrapper extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
+    onRef: PropTypes.func,
     searchNearby: PropTypes.func,
     onPoiPress: PropTypes.func,
-    poiPlace: PropTypes.object,
+    gPlace: PropTypes.object,
     geolocation: PropTypes.object,
     places: PropTypes.array,
     selectedPlace: PropTypes.string,
@@ -38,6 +39,7 @@ class MapWrapper extends React.Component {
   }
 
   static defaultProps = {
+    onRef: () => true,
     panY: new Animated.Value(0),
   }
 
@@ -48,7 +50,7 @@ class MapWrapper extends React.Component {
     this._map = React.createRef();
   }
 
-  componentWillReceiveProps({ geolocation }) {
+  componentWillReceiveProps({ geolocation, gPlace }) {
     if (geolocation && geolocation.coords
         && !geolocation.loading && this.props.geolocation.loading) {
       this._map.current.getRef().animateToRegion({
@@ -57,6 +59,15 @@ class MapWrapper extends React.Component {
         longitudeDelta: 0.0034,
       }, 1000);
     }
+
+    if (gPlace && (!this.props.gPlace || gPlace.uid !== this.props.gPlace.uid)) {
+      this._map.current.getRef().animateToCoordinate(gPlace);
+    }
+  }
+
+  onRef = (ref) => {
+    this._map.current = ref;
+    this.props.onRef(ref);
   }
 
   onPrefetched = (picture) => {
@@ -79,33 +90,33 @@ class MapWrapper extends React.Component {
   onLocationPress = () => this.props.dispatch(getGeolocation());
 
   onPoiPress = (poi) => {
-    const poiPlace = poiToPlace(poi);
+    const gPlace = poiToPlace(poi);
 
-    this.props.dispatch(setPoiPlace(poiPlace, true));
-    this.props.onPoiPress(poiPlace.name);
+    this.props.dispatch(setGPlace(gPlace, true));
+    this.props.onPoiPress(gPlace.name);
 
-    placeDetails(poiPlace.placeId, poiPlace.name)
+    placeDetails(gPlace.placeId, gPlace.name)
       .then((place) => {
-        this.props.dispatch(setPoiPlace(place));
+        this.props.dispatch(setGPlace(place));
       });
   }
 
   onMapPress = () => {
-    if (this.props.poiPlace) {
-      this.props.dispatch(setPoiPlace());
+    if (this.props.gPlace) {
+      this.props.dispatch(setGPlace());
       this.props.onPoiPress();
     }
   }
 
   render() {
     const {
-      geolocation, places, selectedPlace, panY, searchNearby, poiPlace,
+      geolocation, places, selectedPlace, panY, searchNearby, gPlace,
     } = this.props;
 
     return (
       <View style={styles.container}>
         <Map
-          ref={this._map}
+          ref={this.onRef}
           onRegionChangeComplete={this.onRegionChange}
           mapPadding={INITIAL_PADDING}
           onMapReady={this.onMapReady}
@@ -113,12 +124,12 @@ class MapWrapper extends React.Component {
           onPoiClick={this.onPoiPress}
           onPress={this.onMapPress}
         >
-          {poiPlace && (
+          {gPlace && (
             <Marker
-              uid={poiPlace.uid}
-              latitude={poiPlace.latitude}
-              longitude={poiPlace.longitude}
-              selected={selectedPlace === poiPlace.uid}
+              uid={gPlace.uid}
+              latitude={gPlace.latitude}
+              longitude={gPlace.longitude}
+              selected={selectedPlace === gPlace.uid}
               onMarkerPress={this.onMarkerPress}
               google
             />
@@ -178,7 +189,7 @@ const makeMapStateToProps = () => {
     selectedPlace: state.home.selectedPlace,
     places: markersSelector(state),
     geolocation: state.home.geolocation,
-    poiPlace: state.home.poiPlace,
+    gPlace: state.home.gPlace,
   });
 };
 

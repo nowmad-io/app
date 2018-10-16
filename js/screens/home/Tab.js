@@ -37,7 +37,7 @@ class Tab extends PureComponent {
 
   navigate = tab => () => this.props.navigation.navigate(tab);
 
-  onNearbyPress = place => () => this.props.screenProps.onNearbyPress(place);;
+  onGPlacePress = place => () => this.props.screenProps.onGPlacePress(place);;
 
   sendFriendRequest = uid => () => sendRequest(uid);
 
@@ -142,7 +142,7 @@ class Tab extends PureComponent {
                   text={place.name}
                   thumbnail={googleImage}
                   thumbnailStyle={styles.thumbnailStyle}
-                  onPress={this.onNearbyPress(place)}
+                  onPress={this.onGPlacePress(place)}
                 />
               ))}
             </List>
