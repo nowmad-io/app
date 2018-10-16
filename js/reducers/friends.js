@@ -37,12 +37,12 @@ const friendsReducer = (state = initialState, action) => {
         },
       };
     case FETCH_REQUESTS_SUCCESS: {
-      const { incomings, outgoings } = action.requests;
+      const { incomings, outgoings, removed } = action.requests;
 
       return {
         ...state,
-        incomings: incomings || state.incomings,
-        outgoings: outgoings || state.outgoings,
+        incomings: !removed ? (incomings || state.incomings) : {},
+        outgoings: !removed ? (outgoings || state.outgoings) : {},
       };
     }
     case `${LOGOUT}_REQUEST`:

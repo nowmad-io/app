@@ -6,6 +6,14 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 
+import {
+  sendRequest,
+  acceptRequest,
+  cancelRequest,
+  rejectRequest,
+} from '../../actions/friends';
+
+import Text from '../../components/Text';
 import List from '../../components/List';
 import ListItem from '../../components/ListItem';
 import Spinner from '../../components/Spinner';
@@ -23,11 +31,21 @@ class Tab extends PureComponent {
     navigation: PropTypes.object,
     screenProps: PropTypes.object,
     friends: PropTypes.object,
+    incomings: PropTypes.object,
+    outgoings: PropTypes.object,
   };
 
   navigate = tab => () => this.props.navigation.navigate(tab);
 
   onNearbyPress = place => () => this.props.screenProps.onNearbyPress(place);;
+
+  sendFriendRequest = uid => () => sendRequest(uid);
+
+  acceptFriendRequest = uid => () => acceptRequest(uid);
+
+  rejectFriendRequest = uid => () => rejectRequest(uid);
+
+  cancelFriendRequest = uid => () => cancelRequest(uid);
 
   render() {
     const {
@@ -39,6 +57,8 @@ class Tab extends PureComponent {
         placesLoading,
       },
       friends,
+      incomings,
+      outgoings,
     } = this.props;
 
     const allPage = navigation.state.routeName === 'All';
@@ -66,13 +86,41 @@ class Tab extends PureComponent {
                   text={`${_.upperFirst(result.firstName)} ${_.upperFirst(result.lastName)}`}
                   thumbnail={result.photoUrl}
                 >
-                  { !friends[result.uid] && (
+                  {!friends[result.uid] && !incomings[result.uid] && !outgoings[result.uid] && (
                     <Button
                       transparent
                       style={{ height: 24, padding: 0 }}
                       iconStyle={styles.icon}
                       icon="person-add"
+                      onPress={this.sendFriendRequest(result.uid)}
                     />
+                  )}
+                  {outgoings[result.uid] && (
+                    <Button
+                      transparent
+                      style={{ height: 24, padding: 0 }}
+                      onPress={this.cancelFriendRequest(result.uid)}
+                    >
+                      <Text style={styles.text}>Cancel</Text>
+                    </Button>
+                  )}
+                  {incomings[result.uid] && (
+                    <View style={{ flexDirection: 'row' }}>
+                      <Button
+                        transparent
+                        icon="close"
+                        style={styles.requestButton}
+                        iconStyle={styles.requestIcon}
+                        onPress={this.rejectFriendRequest(result.uid)}
+                      />
+                      <Button
+                        transparent
+                        icon="check"
+                        style={styles.requestButton}
+                        iconStyle={styles.requestIcon}
+                        onPress={this.acceptFriendRequest(result.uid)}
+                      />
+                    </View>
                   )}
                 </ListItem>
               ))}
@@ -107,6 +155,8 @@ class Tab extends PureComponent {
 
 const mapStateToProps = state => ({
   friends: state.friends.all,
+  incomings: state.friends.incomings,
+  outgoings: state.friends.outgoings,
 });
 
 export default connect(mapStateToProps)(Tab);

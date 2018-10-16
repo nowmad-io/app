@@ -8,9 +8,21 @@ import {
 } from '../constants/friends';
 
 export function sendRequest(uid) {
-  return Firebase.requests.child(Firebase.userUID()).child('outgoings').set({
-    [uid]: true,
-  });
+  const request = {
+    [`/${Firebase.userUID()}/outgoings/${uid}`]: true,
+    [`/${uid}/incomings/${Firebase.userUID()}`]: true,
+  };
+  return Firebase.requests.update(request);
+}
+
+export function acceptRequest(uid) {
+  const request = {
+    [`/requests/${Firebase.userUID()}/incomings/${uid}`]: null,
+    [`/requests/${uid}/outgoings/${Firebase.userUID()}`]: null,
+    [`/friendships/${Firebase.userUID()}/${uid}`]: true,
+    [`/friendships/${uid}/${Firebase.userUID()}`]: true,
+  };
+  return Firebase.database().ref().update(request);
 }
 
 export function fetchUser(uid) {
@@ -43,6 +55,13 @@ export function requestsListener(uid) {
       'child_changed',
       data => emit({
         [data.key]: data.val(),
+      }),
+    );
+    query.on(
+      'child_removed',
+      data => emit({
+        [data.key]: data.val(),
+        removed: true,
       }),
     );
 
