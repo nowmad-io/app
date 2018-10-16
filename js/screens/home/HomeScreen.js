@@ -32,10 +32,10 @@ class HomeScreen extends React.PureComponent {
   searchNearby = ({ coordinate: { latitude, longitude } }) => this._searchBar.current.searchNearby(`${latitude}, ${longitude}`);
 
   onGPlacePress = (place) => {
-    this.onGplace(place.name);
     if (this.props.places[place.uid]) {
       this._map.current.getRef().animateToCoordinate(place);
     } else {
+      this.onGplace(place.name);
       this.props.dispatch(setGPlace(place));
     }
   };

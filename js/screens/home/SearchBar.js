@@ -111,13 +111,13 @@ export default class SearchBar extends Component {
     this.setState({ loading: true });
 
     const action = (fullPlace) => {
-      this.props.onGPlacePress(fullPlace);
-      this.blur();
       this.setState({
-        text: fullPlace.name,
-        previousValue: fullPlace.name,
+        text: '',
+        previousValue: '',
         loading: false,
       });
+      this.props.onGPlacePress(fullPlace);
+      this.blur();
     };
 
     if (place.latitude && place.longitude) {
