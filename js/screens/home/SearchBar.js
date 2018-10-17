@@ -140,6 +140,9 @@ export default class SearchBar extends Component {
   }
 
   searchDebounced(query) {
+    if (!this.state.focused) {
+      return;
+    }
     peopleSearch(query)
       .then(people => this.setState({ people, peopleLoading: false }));
     if (query) {
