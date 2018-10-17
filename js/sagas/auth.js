@@ -11,9 +11,11 @@ import { apiUpdateProfile, updateProfileSuccess } from '../actions/auth';
 import { stopSagas } from '../actions/utils';
 
 function* profileFlow(action) {
-  let { photoURL } = action.user;
+  // eslint-disable-next-line prefer-const
+  let { photoURL, ...user } = action.user;
 
-  if (photoURL) {
+  if (photoURL && !photoURL.startsWith('http')) {
+    console.log('here ?');
     try {
       photoURL = yield call(PictureUpload, photoURL);
     } catch (error) {
@@ -21,11 +23,12 @@ function* profileFlow(action) {
     }
   }
 
-  const user = yield call(apiUpdateProfile, {
+  const updatedUser = yield call(apiUpdateProfile, {
+    ...user,
     photoURL,
   });
 
-  yield put(updateProfileSuccess(user));
+  yield put(updateProfileSuccess(updatedUser));
 }
 
 export function* logoutFlow() {

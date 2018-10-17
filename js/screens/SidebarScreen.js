@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Share } from 'react-native';
+import {
+  StyleSheet, View, Share, TouchableOpacity,
+} from 'react-native';
 import { connect } from 'react-redux';
 import OneSignal from 'react-native-onesignal';
 import _ from 'lodash';
@@ -11,10 +13,15 @@ import { runSagas, stopSagas } from '../actions/utils';
 import Icon from '../components/Icon';
 import Text from '../components/Text';
 import Button from '../components/Button';
+import Avatar from '../components/Avatar';
 
 import { colors, fonts } from '../constants/parameters';
 
 class SidebarScreen extends React.Component {
+  static initials({ firstName, lastName }) {
+    return (firstName && lastName) ? firstName[0] + lastName[0] : '';
+  }
+
   static navigationOptions = {
     header: null,
   };
@@ -27,6 +34,7 @@ class SidebarScreen extends React.Component {
   };
 
   componentWillMount() {
+    this.props.navigation.openDrawer();
     OneSignal.addEventListener('opened', () => this.props.navigation.openDrawer());
   }
 
@@ -48,6 +56,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
     });
   }
 
+  navigateToProfile = () => this.props.navigation.navigate('EditProfileScreen');
+
   onLogoutPress = () => {
     apiLogout(this.props.dispatch)
       .then(() => {
@@ -60,18 +70,36 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
     return (
       <View style={styles.container}>
-        <View
+        <TouchableOpacity
+          activeOpacity={0.6}
           style={styles.profileWrapper}
+          onPress={this.navigateToProfile}
         >
           <View style={styles.info}>
             <Text style={styles.title}>
               {`${me.firstName} ${me.lastName}`}
             </Text>
-            <Text style={styles.subtitle}>
+            <Text
+              style={styles.subtitle}
+              onPress={this.navigateToFriends}
+            >
               {`${_.size(friends)} Friend${_.size(friends) === 1 ? '' : 's'}`}
             </Text>
           </View>
-        </View>
+          <View style={styles.avatarWrapper}>
+            <Avatar
+              uri={me.photoURL}
+              text={SidebarScreen.initials(me)}
+              size={50}
+            />
+            <View style={styles.editProfile}>
+              <Icon
+                style={styles.editProfileIcon}
+                name="camera-alt"
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
         <View style={styles.contentWrapper} />
         <View style={styles.shareWrapper}>
           <Button
@@ -128,20 +156,19 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   title: {
     fontSize: 20,
     ...fonts.medium,
-    lineHeight: 24,
     marginTop: 4,
-    marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    lineHeight: 18,
     ...fonts.medium,
     color: colors.primary,
+    paddingVertical: 4,
+    alignSelf: 'flex-start',
   },
   contentWrapper: {
     paddingTop: 32,
@@ -154,6 +181,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 0.5,
     borderColor: colors.grey,
+  },
+  avatarWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  editProfile: {
+    backgroundColor: colors.white,
+    position: 'absolute',
+    bottom: -4,
+    left: -4,
+    borderWidth: 0,
+    elevation: 0,
+    height: 25,
+    width: 25,
+    paddingHorizontal: 0,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  editProfileIcon: {
+    fontSize: 15,
+    color: colors.primary,
   },
   shareText: {
     color: colors.primary,
@@ -177,7 +226,6 @@ const styles = StyleSheet.create({
   },
   footerLabel: {
     fontSize: 12,
-    lineHeight: 14,
     ...fonts.light,
   },
 });

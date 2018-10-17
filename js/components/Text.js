@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     ...fonts.regular,
     color: colors.black,
-    lineHeight: 18,
   },
   note: {
     color: colors.greyDark,
