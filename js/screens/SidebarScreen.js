@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Share } from 'react-native';
 import { connect } from 'react-redux';
+import OneSignal from 'react-native-onesignal';
 
 import { apiLogout } from '../actions/auth';
 import { runSagas, stopSagas } from '../actions/utils';
@@ -23,11 +24,16 @@ class SidebarScreen extends React.Component {
     me: PropTypes.object,
   };
 
+  componentWillMount() {
+    OneSignal.addEventListener('opened', () => this.props.navigation.openDrawer());
+  }
+
   componentDidMount() {
     this.props.dispatch(runSagas());
   }
 
   componentWillUnmount() {
+    OneSignal.removeEventListener('opened', this.onOpened);
     this.props.dispatch(stopSagas());
   }
 

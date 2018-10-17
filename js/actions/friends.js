@@ -5,13 +5,22 @@ import Firebase from '../libs/firebase';
 import {
   FETCH_FRIENDSHIPS_SUCCESS,
   FETCH_REQUESTS_SUCCESS,
+  SEND_FRIEND_REQUEST_NOTIFICATION,
 } from '../constants/friends';
+
+export function sendFriendRequestNotification(senderId) {
+  return {
+    type: SEND_FRIEND_REQUEST_NOTIFICATION,
+    senderId,
+  };
+}
 
 export function sendRequest(uid) {
   const request = {
     [`/${Firebase.userUID()}/outgoings/${uid}`]: true,
     [`/${uid}/incomings/${Firebase.userUID()}`]: true,
   };
+
   return Firebase.requests.update(request);
 }
 
@@ -49,7 +58,6 @@ export function fetchUser(uid) {
     }));
 }
 
-
 export function fetchRequestsSuccess(requests) {
   return {
     type: FETCH_REQUESTS_SUCCESS,
@@ -57,7 +65,6 @@ export function fetchRequestsSuccess(requests) {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function requestsListener(uid) {
   const query = Firebase.requests.child(uid);
   const listener = eventChannel((emit) => {

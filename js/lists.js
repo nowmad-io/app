@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const STATUS = [
   'Travelling here',
   'Living here',
@@ -10,3 +12,12 @@ export const CATEGORIES = [
   'Culture',
   'City',
 ];
+
+export const NOTIFICATIONS = {
+  friendRequest: (me, senderId) => [
+    { en: 'sent you a Friend Request' },
+    {},
+    senderId,
+    { headings: { en: `${_.upperFirst(me.firstName)} ${_.upperFirst(me.lastName)}` } },
+  ],
+};

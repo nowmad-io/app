@@ -1,10 +1,13 @@
 import {
   call, fork, put, take, takeLatest, cancel, cancelled, select,
 } from 'redux-saga/effects';
+import OneSignal from 'react-native-onesignal';
 
 import { requestsListener, fetchRequestsSuccess } from '../actions/friends';
 
+import { SEND_FRIEND_REQUEST_NOTIFICATION } from '../constants/friends';
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
+import { NOTIFICATIONS } from '../lists';
 
 const fetchRequestsFlow = uid => (
   function* _fetchRequestsFlow() {
@@ -24,12 +27,17 @@ const fetchRequestsFlow = uid => (
   }
 );
 
+const sendFriendRequest = me => action => OneSignal.postNotification(
+  ...NOTIFICATIONS.friendRequest(me, action.senderId),
+);
+
 function* friendsFlow() {
-  const { uid } = yield select(state => state.auth.me);
+  const { uid, ...me } = yield select(state => state.auth.me);
   const requestsFork = yield fork(fetchRequestsFlow(uid));
 
-  yield take(STOP_SAGAS);
+  yield takeLatest(SEND_FRIEND_REQUEST_NOTIFICATION, sendFriendRequest(me));
 
+  yield take(STOP_SAGAS);
   yield cancel(requestsFork);
 }
 

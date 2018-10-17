@@ -7,6 +7,7 @@ import {
 import _ from 'lodash';
 
 import {
+  sendFriendRequestNotification,
   sendRequest,
   acceptRequest,
   cancelRequest,
@@ -28,6 +29,7 @@ const MAX_LIST = 3;
 
 class Tab extends PureComponent {
   static propTypes = {
+    dispatch: PropTypes.func,
     navigation: PropTypes.object,
     screenProps: PropTypes.object,
     friends: PropTypes.object,
@@ -39,7 +41,10 @@ class Tab extends PureComponent {
 
   onGPlacePress = place => () => this.props.screenProps.onGPlacePress(place);;
 
-  sendFriendRequest = uid => () => sendRequest(uid);
+  sendFriendRequest = (uid, senderId) => () => {
+    sendRequest(uid);
+    this.props.dispatch(sendFriendRequestNotification(senderId));
+  };
 
   acceptFriendRequest = uid => () => acceptRequest(uid);
 
@@ -92,7 +97,7 @@ class Tab extends PureComponent {
                       style={{ height: 24, padding: 0 }}
                       iconStyle={styles.icon}
                       icon="person-add"
-                      onPress={this.sendFriendRequest(result.uid)}
+                      onPress={this.sendFriendRequest(result.uid, result.senderId)}
                     />
                   )}
                   {outgoings[result.uid] && (

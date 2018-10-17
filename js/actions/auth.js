@@ -1,3 +1,5 @@
+import OneSignal from 'react-native-onesignal';
+
 import Firebase from '../libs/firebase';
 
 import {
@@ -43,11 +45,20 @@ export function apiRestoreSession() {
   });
 }
 
+function getSenderId() {
+  return new Promise(resolve => OneSignal.getPermissionSubscriptionState(resolve));
+}
+
 export function apiLogin(email, password) {
   return Firebase.auth()
     .setPersistence('local')
     .then(() => Firebase.auth().signInWithEmailAndPassword(email, password))
-    .then(() => Firebase.users.child(Firebase.userUID()).once('value'))
+    .then(getSenderId)
+    .then(({ userId: senderId }) => apiUpdateProfile({ senderId }))
+    .then(() => {
+      OneSignal.sendTag('userId', Firebase.userUID());
+      return Firebase.users.child(Firebase.userUID()).once('value');
+    })
     .then(user => ({
       [Firebase.userUID()]: user.val(),
     }));
@@ -56,7 +67,14 @@ export function apiLogin(email, password) {
 export function apiRegister({ password, ...profile }) {
   return Firebase.auth()
     .createUserWithEmailAndPassword(profile.email, password)
-    .then(() => apiUpdateProfile(profile));
+    .then(getSenderId)
+    .then(({ userId: senderId }) => {
+      OneSignal.sendTag('userId', Firebase.userUID());
+      return apiUpdateProfile({
+        ...profile,
+        senderId,
+      });
+    });
 }
 
 export function logoutSuccess() {

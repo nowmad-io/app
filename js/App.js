@@ -42,31 +42,7 @@ const { persistor, store } = configureStore();
 export default class App extends Component {
   componentWillMount() {
     OneSignal.init(Config.ONESIGNAL_APPID);
-
-    OneSignal.addEventListener('received', this.onReceived);
-    OneSignal.addEventListener('opened', this.onOpened);
-    OneSignal.addEventListener('ids', this.onIds);
-  }
-
-  componentWillUnmount() {
-    OneSignal.removeEventListener('received', this.onReceived);
-    OneSignal.removeEventListener('opened', this.onOpened);
-    OneSignal.removeEventListener('ids', this.onIds);
-  }
-
-  onReceived = (notification) => {
-    console.log('Notification received: ', notification);
-  }
-
-  onOpened = (openResult) => {
-    console.log('Message: ', openResult.notification.payload.body);
-    console.log('Data: ', openResult.notification.payload.additionalData);
-    console.log('isActive: ', openResult.notification.isAppInFocus);
-    console.log('openResult: ', openResult);
-  }
-
-  onIds = (device) => {
-    console.log('Device info: ', device);
+    OneSignal.inFocusDisplaying(2);
   }
 
   render() {
@@ -77,7 +53,7 @@ export default class App extends Component {
           loading={<SplashScreen />}
           onBeforeLift={apiRestoreSession}
         >
-          <MainNavigator />
+          <MainNavigator ref={this._navigation} />
         </PersistGate>
       </Provider>
     );
