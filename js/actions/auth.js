@@ -1,4 +1,5 @@
 import OneSignal from 'react-native-onesignal';
+import _ from 'lodash';
 
 import Firebase from '../libs/firebase';
 
@@ -22,7 +23,17 @@ export function updateProfile(user) {
   };
 }
 
-export function apiUpdateProfile(profile) {
+export function apiUpdateProfile({ firstName, lastName, ...profileToUpdate }) {
+  const identity = {
+    ...(firstName ? { firstName: _.upperFirst(firstName) } : {}),
+    ...(lastName ? { lastName: _.upperFirst(lastName) } : {}),
+  };
+
+  const profile = {
+    ...profileToUpdate,
+    ...identity,
+  };
+
   return Firebase.auth().currentUser.updateProfile(profile)
     .then(() => Firebase.users.child(Firebase.userUID()).update({
       ...profile,

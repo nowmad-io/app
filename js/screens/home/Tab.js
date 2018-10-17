@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import {
   StyleSheet, ScrollView, View, Image,
 } from 'react-native';
-import _ from 'lodash';
 
 import {
   sendFriendRequestNotification,
@@ -88,7 +87,7 @@ class Tab extends PureComponent {
               {!peopleLoading && (allPage ? people.slice(0, MAX_LIST) : people).map(result => (
                 <ListItem
                   key={result.uid}
-                  text={`${_.upperFirst(result.firstName)} ${_.upperFirst(result.lastName)}`}
+                  text={`${result.firstName} ${result.lastName}`}
                   thumbnail={result.photoUrl}
                 >
                   {!friends[result.uid] && !incomings[result.uid] && !outgoings[result.uid] && (

@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export const STATUS = [
   'Travelling here',
   'Living here',
@@ -18,6 +16,6 @@ export const NOTIFICATIONS = {
     { en: 'sent you a Friend Request' },
     {},
     senderId,
-    { headings: { en: `${_.upperFirst(me.firstName)} ${_.upperFirst(me.lastName)}` } },
+    { headings: { en: `${me.firstName} ${me.lastName}` } },
   ],
 };
