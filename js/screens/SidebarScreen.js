@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View, Share } from 'react-native';
 import { connect } from 'react-redux';
 import OneSignal from 'react-native-onesignal';
+import _ from 'lodash';
 
 import { apiLogout } from '../actions/auth';
 import { runSagas, stopSagas } from '../actions/utils';
@@ -22,6 +23,7 @@ class SidebarScreen extends React.Component {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
     me: PropTypes.object,
+    friends: PropTypes.object,
   };
 
   componentWillMount() {
@@ -54,7 +56,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   render() {
-    const { me } = this.props;
+    const { me, friends } = this.props;
 
     return (
       <View style={styles.container}>
@@ -63,7 +65,10 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
         >
           <View style={styles.info}>
             <Text style={styles.title}>
-              {me.displayName}
+              {`${me.firstName} ${me.lastName}`}
+            </Text>
+            <Text style={styles.subtitle}>
+              {`${_.size(friends)} Friend${_.size(friends) === 1 ? '' : 's'}`}
             </Text>
           </View>
         </View>
@@ -100,6 +105,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
 const mapStateToProps = state => ({
   me: state.auth.me,
+  friends: state.friends.all,
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);
@@ -112,9 +118,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   profileWrapper: {
-    marginHorizontal: 20,
-    marginTop: 16,
-    paddingBottom: 22,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 16,
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: colors.grey,
@@ -125,9 +131,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    fontSize: 24,
-    lineHeight: 26,
-    marginBottom: 8,
+    fontSize: 20,
+    ...fonts.medium,
+    lineHeight: 24,
+    marginTop: 4,
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    lineHeight: 18,
+    ...fonts.medium,
+    color: colors.primary,
   },
   contentWrapper: {
     paddingTop: 32,
@@ -143,7 +157,7 @@ const styles = StyleSheet.create({
   },
   shareText: {
     color: colors.primary,
-    fontWeight: fonts.fontWeight.regular,
+    ...fonts.regular,
   },
   footer: {
     width: '100%',
@@ -164,6 +178,6 @@ const styles = StyleSheet.create({
   footerLabel: {
     fontSize: 12,
     lineHeight: 14,
-    fontWeight: fonts.fontWeight.light,
+    ...fonts.light,
   },
 });

@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   action: {
     fontSize: 14,
     color: colors.primary,
-    fontWeight: fonts.fontWeight.regular,
+    ...fonts.regular,
   },
   action_disable: {
     color: colors.primaryShadow,

@@ -44,7 +44,7 @@ export default createMaterialTopTabNavigator({
 const styles = StyleSheet.create({
   regular: {
     fontSize: 14,
-    fontWeight: fonts.fontWeight.medium,
+    ...fonts.medium,
     color: colors.grey,
   },
   focused: {

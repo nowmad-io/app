@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontWeight: fonts.fontWeight.light,
+    ...fonts.light,
     color: colors.primary,
   },
   requestButton: {

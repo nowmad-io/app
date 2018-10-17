@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 80,
     fontSize: 24,
     lineHeight: 34,
-    fontWeight: fonts.fontWeight.medium,
+    ...fonts.medium,
     textAlign: 'center',
   },
   pictureWrapper: {

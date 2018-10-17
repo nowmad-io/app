@@ -40,20 +40,17 @@ export const colors = {
   yellowTransparent: rgba(plain.yellow, 0.95),
 };
 
+const fontFamily = 'AvenirNextLTPro';
 export const fonts = {
-  fontFamily: 'Roboto',
-  fontWeight: {
-    thin: '100',
-    light: '300',
-    regular: '400',
-    medium: '500',
-    bold: '700',
-    black: '900',
-  },
-  fontStyle: {
-    normal: 'normal',
-    italic: 'italic',
-  },
+  thin: { fontFamily: `${fontFamily}-Thin`, fontWeight: undefined },
+  extraLight: { fontFamily: `${fontFamily}-ExtraLight`, fontWeight: undefined },
+  light: { fontFamily: `${fontFamily}-Light`, fontWeight: undefined },
+  regular: { fontFamily: `${fontFamily}-Regular`, fontWeight: undefined },
+  medium: { fontFamily: `${fontFamily}-Medium`, fontWeight: undefined },
+  semiBold: { fontFamily: `${fontFamily}-SemiBold`, fontWeight: undefined },
+  bold: { fontFamily: `${fontFamily}-Bold`, fontWeight: undefined },
+  extraBold: { fontFamily: `${fontFamily}-ExtraBold`, fontWeight: undefined },
+  black: { fontFamily: `${fontFamily}-Black`, fontWeight: undefined },
 };
 
 export const sizes = {

@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.white,
-    fontWeight: fonts.fontWeight.medium,
+    ...fonts.medium,
   },
   icon: {
     color: colors.white,

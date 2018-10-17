@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: fonts.fontWeight.regular,
+    ...fonts.regular,
     lineHeight: 20,
   },
   action: {

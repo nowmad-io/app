@@ -231,12 +231,12 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: fonts.fontWeight.medium,
+    ...fonts.medium,
     lineHeight: 34,
   },
   name: {
     fontSize: 32,
-    fontWeight: fonts.fontWeight.bold,
+    ...fonts.bold,
   },
   formWrapper: {
     flex: 1,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   formFieldInput: {
     marginVertical: 2,
     color: colors.white,
-    fontWeight: fonts.fontWeight.medium,
+    ...fonts.medium,
   },
   showPasswordStyle: {
     color: colors.white,
