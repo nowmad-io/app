@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Config from 'react-native-config';
+import OneSignal from 'react-native-onesignal';
 
 import Api from './libs/requests';
 import Firebase from './libs/firebase';
@@ -38,10 +39,23 @@ Firebase.initialize({
 
 const { persistor, store } = configureStore();
 
-export default () => (
-  <Provider store={store}>
-    <PersistGate persistor={persistor} loading={<SplashScreen />} onBeforeLift={apiRestoreSession}>
-      <MainNavigator />
-    </PersistGate>
-  </Provider>
-);
+export default class App extends Component {
+  componentWillMount() {
+    OneSignal.init(Config.ONESIGNAL_APPID);
+    OneSignal.inFocusDisplaying(2);
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <PersistGate
+          persistor={persistor}
+          loading={<SplashScreen />}
+          onBeforeLift={apiRestoreSession}
+        >
+          <MainNavigator ref={this._navigation} />
+        </PersistGate>
+      </Provider>
+    );
+  }
+}

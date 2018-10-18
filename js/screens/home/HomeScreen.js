@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Animated } from 'react-native';
+import { Animated, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
+import OneSignal from 'react-native-onesignal';
+import Dispatch from '../../libs/dispatch';
 
 import { setGPlace } from '../../actions/home';
+import { runSagas, stopSagas } from '../../actions/utils';
 
 import MapWrapper from './MapWrapper';
 import SearchBar from './SearchBar';
@@ -27,6 +30,27 @@ class HomeScreen extends React.PureComponent {
 
     this._map = React.createRef();
     this._searchBar = React.createRef();
+  }
+
+  componentWillMount() {
+    this.props.navigation.openDrawer();
+    OneSignal.addEventListener('opened', this.onNitificationOpened);
+    Dispatch.initialize(this.props.dispatch);
+  }
+
+  componentDidMount() {
+    this.props.dispatch(runSagas());
+  }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('opened', this.onOpened);
+    this.props.dispatch(stopSagas());
+  }
+
+  onNitificationOpened = () => {
+    Keyboard.dismiss();
+    this.props.navigation.openDrawer();
+    this._searchBar.current.blur();
   }
 
   searchNearby = ({ coordinate: { latitude, longitude } }) => this._searchBar.current.searchNearby(`${latitude}, ${longitude}`);

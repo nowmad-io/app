@@ -33,7 +33,10 @@ export default class Text extends Component {
     }
 
     return (
-      <RNText {...this.props} style={[styles.text, note && styles.note, style]}>
+      <RNText
+        {...this.props}
+        style={[styles.text, note && styles.note, style]}
+      >
         { text }
       </RNText>
     );
@@ -42,12 +45,9 @@ export default class Text extends Component {
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: fonts.fontFamily,
     fontSize: 16,
-    fontWeight: fonts.fontWeight.regular,
-    fontStyle: fonts.fontStyle.normal,
+    ...fonts.regular,
     color: colors.black,
-    lineHeight: 18,
   },
   note: {
     color: colors.greyDark,

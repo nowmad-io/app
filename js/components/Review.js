@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   user_text: {
-    fontWeight: fonts.fontWeight.medium,
+    ...fonts.medium,
   },
   others: {
     flexDirection: 'row',
@@ -196,13 +196,13 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 18,
     lineHeight: 24,
-    fontWeight: fonts.fontWeight.medium,
+    ...fonts.medium,
     color: colors.greyDark,
   },
   description_noimage: {
     fontSize: 22,
     lineHeight: 28,
-    fontWeight: fonts.fontWeight.regular,
+    ...fonts.regular,
   },
   description_detail: {
     marginBottom: 12,

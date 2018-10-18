@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import {
   StyleSheet, ScrollView, View, Image,
 } from 'react-native';
-import _ from 'lodash';
 
 import {
+  sendNotification,
   sendRequest,
-  acceptRequest,
-  cancelRequest,
-  rejectRequest,
+  apiAcceptRequest,
+  apiCancelRequest,
+  apiRejectRequest,
 } from '../../actions/friends';
 
 import Text from '../../components/Text';
@@ -28,6 +28,7 @@ const MAX_LIST = 3;
 
 class Tab extends PureComponent {
   static propTypes = {
+    dispatch: PropTypes.func,
     navigation: PropTypes.object,
     screenProps: PropTypes.object,
     friends: PropTypes.object,
@@ -39,13 +40,19 @@ class Tab extends PureComponent {
 
   onGPlacePress = place => () => this.props.screenProps.onGPlacePress(place);;
 
-  sendFriendRequest = uid => () => sendRequest(uid);
+  sendFriendRequest = (uid, senderId) => () => {
+    this.props.dispatch(sendRequest(uid));
+    this.props.dispatch(sendNotification(senderId, 'friendRequest'));
+  };
 
-  acceptFriendRequest = uid => () => acceptRequest(uid);
+  acceptFriendRequest = (uid, senderId) => () => {
+    apiAcceptRequest(uid);
+    this.props.dispatch(sendNotification(senderId, 'acceptFriendRequest'));
+  };
 
-  rejectFriendRequest = uid => () => rejectRequest(uid);
+  rejectFriendRequest = uid => () => apiRejectRequest(uid);
 
-  cancelFriendRequest = uid => () => cancelRequest(uid);
+  cancelFriendRequest = uid => () => apiCancelRequest(uid);
 
   render() {
     const {
@@ -83,7 +90,7 @@ class Tab extends PureComponent {
               {!peopleLoading && (allPage ? people.slice(0, MAX_LIST) : people).map(result => (
                 <ListItem
                   key={result.uid}
-                  text={`${_.upperFirst(result.firstName)} ${_.upperFirst(result.lastName)}`}
+                  text={`${result.firstName} ${result.lastName}`}
                   thumbnail={result.photoUrl}
                 >
                   {!friends[result.uid] && !incomings[result.uid] && !outgoings[result.uid] && (
@@ -92,7 +99,7 @@ class Tab extends PureComponent {
                       style={{ height: 24, padding: 0 }}
                       iconStyle={styles.icon}
                       icon="person-add"
-                      onPress={this.sendFriendRequest(result.uid)}
+                      onPress={this.sendFriendRequest(result.uid, result.senderId)}
                     />
                   )}
                   {outgoings[result.uid] && (
@@ -118,7 +125,7 @@ class Tab extends PureComponent {
                         icon="check"
                         style={styles.requestButton}
                         iconStyle={styles.requestIcon}
-                        onPress={this.acceptFriendRequest(result.uid)}
+                        onPress={this.acceptFriendRequest(result.uid, result.senderId)}
                       />
                     </View>
                   )}
@@ -180,7 +187,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontWeight: fonts.fontWeight.light,
+    ...fonts.light,
     color: colors.primary,
   },
   requestButton: {

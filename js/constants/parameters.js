@@ -13,6 +13,7 @@ function rgba(hex, a = null) {
 const plain = {
   primary: '#1DA07F',
   primaryLight: '#BBE2D8',
+  primaryDark: '#5E8C7F',
   white: '#fff',
   black: '#000',
   grey: '#BCB9B9',
@@ -25,6 +26,7 @@ const plain = {
 
 export const colors = {
   ...plain,
+  primaryShadowLight: rgba(plain.primary, 0.2),
   primaryShadow: rgba(plain.primary, 0.4),
   primaryShadowDark: rgba(plain.primary, 0.8),
   whiteTransparent: rgba(plain.white, 0.8),
@@ -40,20 +42,17 @@ export const colors = {
   yellowTransparent: rgba(plain.yellow, 0.95),
 };
 
+const fontFamily = 'AvenirNextLTPro';
 export const fonts = {
-  fontFamily: 'Roboto',
-  fontWeight: {
-    thin: '100',
-    light: '300',
-    regular: '400',
-    medium: '500',
-    bold: '700',
-    black: '900',
-  },
-  fontStyle: {
-    normal: 'normal',
-    italic: 'italic',
-  },
+  thin: { fontFamily: `${fontFamily}-Thin`, fontWeight: undefined },
+  extraLight: { fontFamily: `${fontFamily}-ExtraLight`, fontWeight: undefined },
+  light: { fontFamily: `${fontFamily}-Light`, fontWeight: undefined },
+  regular: { fontFamily: `${fontFamily}-Regular`, fontWeight: undefined },
+  medium: { fontFamily: `${fontFamily}-Medium`, fontWeight: undefined },
+  semiBold: { fontFamily: `${fontFamily}-SemiBold`, fontWeight: undefined },
+  bold: { fontFamily: `${fontFamily}-Bold`, fontWeight: undefined },
+  extraBold: { fontFamily: `${fontFamily}-ExtraBold`, fontWeight: undefined },
+  black: { fontFamily: `${fontFamily}-Black`, fontWeight: undefined },
 };
 
 export const sizes = {
