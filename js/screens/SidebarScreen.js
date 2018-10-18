@@ -49,6 +49,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
   navigateToProfile = () => this.props.navigation.navigate('EditProfileScreen');
 
+  navigateToFriends = () => this.props.navigation.navigate('FriendsScreen');
+
   onLogoutPress = () => {
     apiLogout(this.props.dispatch)
       .then(() => {
