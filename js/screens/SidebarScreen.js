@@ -31,6 +31,8 @@ class SidebarScreen extends React.Component {
     navigation: PropTypes.object,
     me: PropTypes.object,
     friends: PropTypes.object,
+    incomings: PropTypes.object,
+    outgoings: PropTypes.object,
   };
 
   componentWillMount() {
@@ -66,7 +68,12 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   render() {
-    const { me, friends } = this.props;
+    const {
+      me, friends, incomings, outgoings,
+    } = this.props;
+
+    console.log('incomings', incomings);
+    console.log('outgoings', outgoings);
 
     return (
       <View style={styles.container}>
@@ -75,22 +82,24 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
           style={styles.profileWrapper}
           onPress={this.navigateToProfile}
         >
-          <View style={styles.info}>
-            <Text style={styles.title}>
-              {`${me.firstName} ${me.lastName}`}
-            </Text>
-            <Text
-              style={styles.subtitle}
-              onPress={this.navigateToFriends}
-            >
-              {`${_.size(friends)} Friend${_.size(friends) === 1 ? '' : 's'}`}
-            </Text>
+          <View style={styles.infoWrapper}>
+            <View style={styles.info}>
+              <Text style={styles.title}>
+                {`${me.firstName} ${me.lastName}`}
+              </Text>
+              <Text
+                style={styles.subtitle}
+                onPress={this.navigateToFriends}
+              >
+                {`${_.size(friends)} Friend${_.size(friends) === 1 ? '' : 's'}`}
+              </Text>
+            </View>
           </View>
           <View style={styles.avatarWrapper}>
             <Avatar
               uri={me.photoURL}
               text={SidebarScreen.initials(me)}
-              size={50}
+              size={56}
             />
             <View style={styles.editProfile}>
               <Icon
@@ -122,7 +131,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
               style={styles.footerLabel}
               uppercase={false}
             >
-              Logout
+              Log out
             </Text>
           </Button>
         </View>
@@ -134,6 +143,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 const mapStateToProps = state => ({
   me: state.auth.me,
   friends: state.friends.all,
+  incomings: state.friends.incomings,
+  outgoings: state.friends.outgoings,
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);
@@ -143,7 +154,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'flex-start',
   },
   profileWrapper: {
     paddingHorizontal: 16,
@@ -154,20 +164,24 @@ const styles = StyleSheet.create({
     borderColor: colors.grey,
     borderBottomWidth: 0.5,
   },
+  infoWrapper: {
+    flex: 1,
+  },
   info: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'flex-end',
   },
   title: {
     fontSize: 20,
+    lineHeight: 24,
     ...fonts.medium,
-    marginTop: 4,
   },
   subtitle: {
     fontSize: 16,
+    lineHeight: 20,
     ...fonts.medium,
     color: colors.primary,
-    paddingVertical: 4,
+    paddingTop: 4,
     alignSelf: 'flex-start',
   },
   contentWrapper: {
@@ -177,7 +191,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   shareWrapper: {
-    width: '100%',
     flexDirection: 'row',
     borderTopWidth: 0.5,
     borderColor: colors.grey,
@@ -206,7 +219,7 @@ const styles = StyleSheet.create({
   },
   shareText: {
     color: colors.primary,
-    ...fonts.regular,
+    ...fonts.medium,
   },
   footer: {
     width: '100%',
@@ -225,7 +238,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
   },
   footerLabel: {
-    fontSize: 12,
-    ...fonts.light,
+    ...fonts.medium,
   },
 });

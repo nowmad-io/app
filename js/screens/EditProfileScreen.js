@@ -78,8 +78,8 @@ class EditProfileScreen extends Component {
     const { navigation, me } = this.props;
     const { firstName, lastName, photoURL } = this.state;
 
-    const valid = ((firstName !== me.first_name) && !!firstName)
-      || ((lastName !== me.last_name) && !!lastName)
+    const valid = ((firstName !== me.firstName) && !!firstName)
+      || ((lastName !== me.lastName) && !!lastName)
       || (photoURL !== me.photoURL);
 
     return (

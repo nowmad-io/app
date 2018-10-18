@@ -17,14 +17,14 @@ export const selectReview = () => createSelector(
 );
 
 export const selectPlace = () => createSelector(
-  [getPlace, getFriends],
-  (place, friends) => ({
+  [getPlace, getFriends, getMe],
+  (place, friends, me) => ({
     ...place,
     friends: (
       place.own
         ? [_.head(place.friends), ..._.reverse(_.tail(place.friends) || [])]
         : _.reverse(place.friends.slice())
-    ).map(uid => (friends[uid] || { uid })),
+    ).map(uid => ({ ...me, ...friends }[uid] || { uid })),
   }),
 );
 
@@ -49,7 +49,7 @@ export const selectMarkers = () => createSelector(
         }
         return false;
       }, []))[0];
-      const user = friends[userUid] || {};
+      const user = { ...me, ...friends }[userUid] || {};
 
       text = (userUid === me.uid) ? 'me' : `${user.firstName[0]}${user.lastName[0]}`;
       picture = user && user.photoURL;
