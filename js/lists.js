@@ -18,4 +18,10 @@ export const NOTIFICATIONS = {
     senderId,
     { headings: { en: `${me.firstName} ${me.lastName}` } },
   ],
+  acceptFriendRequest: (me, senderId) => [
+    { en: 'accepted your a Friend Request' },
+    {},
+    senderId,
+    { headings: { en: `${me.firstName} ${me.lastName}` } },
+  ],
 };

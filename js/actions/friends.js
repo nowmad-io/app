@@ -1,30 +1,67 @@
 import { eventChannel } from 'redux-saga';
+import _ from 'lodash';
 
 import Firebase from '../libs/firebase';
 
 import {
   FETCH_FRIENDSHIPS_SUCCESS,
   FETCH_REQUESTS_SUCCESS,
-  SEND_FRIEND_REQUEST_NOTIFICATION,
+  SEND_NOTIFICATION,
+  SEND_REQUEST,
+  SEEN_REQUESTS,
 } from '../constants/friends';
 
-export function sendFriendRequestNotification(senderId) {
+export function sendNotification(senderId, notificationType) {
   return {
-    type: SEND_FRIEND_REQUEST_NOTIFICATION,
+    type: SEND_NOTIFICATION,
     senderId,
+    notificationType,
   };
 }
 
 export function sendRequest(uid) {
+  return {
+    type: SEND_REQUEST,
+    uid,
+  };
+}
+
+export function seenRequests() {
+  return {
+    type: SEEN_REQUESTS,
+  };
+}
+
+export const apiSeenRequests = (incomings) => {
+  const requests = {};
+
+  _.forOwn(incomings, (value, uid) => {
+    requests[`/${Firebase.userUID()}/incomings/${uid}/seen`] = true;
+  });
+
+  return Firebase.requests.update(requests);
+};
+
+export const apiSendRequest = ({
+  firstName, lastName, photoURL, senderId,
+}) => ({ uid }) => {
   const request = {
     [`/${Firebase.userUID()}/outgoings/${uid}`]: true,
-    [`/${uid}/incomings/${Firebase.userUID()}`]: true,
+    [`/${uid}/incomings/${Firebase.userUID()}`]: {
+      uid: Firebase.userUID(),
+      firstName,
+      lastName,
+      photoURL,
+      senderId,
+      seen: false,
+      timestamp: Firebase.database.ServerValue.TIMESTAMP,
+    },
   };
 
   return Firebase.requests.update(request);
-}
+};
 
-export function acceptRequest(uid) {
+export function apiAcceptRequest(uid) {
   const request = {
     [`/friendships/${Firebase.userUID()}/${uid}`]: true,
     [`/friendships/${uid}/${Firebase.userUID()}`]: true,
@@ -34,7 +71,7 @@ export function acceptRequest(uid) {
   return Firebase.database().ref().update(request);
 }
 
-export function rejectRequest(uid) {
+export function apiRejectRequest(uid) {
   const request = {
     [`/requests/${Firebase.userUID()}/incomings/${uid}`]: null,
     [`/requests/${uid}/outgoings/${Firebase.userUID()}`]: null,
@@ -42,7 +79,7 @@ export function rejectRequest(uid) {
   return Firebase.database().ref().update(request);
 }
 
-export function cancelRequest(uid) {
+export function apiCancelRequest(uid) {
   const request = {
     [`/requests/${Firebase.userUID()}/outgoings/${uid}`]: null,
     [`/requests/${uid}/incomings/${Firebase.userUID()}`]: null,
@@ -50,7 +87,7 @@ export function cancelRequest(uid) {
   return Firebase.database().ref().update(request);
 }
 
-export function fetchUser(uid) {
+export function apiFetchUser(uid) {
   return Firebase.users.child(uid).once('value')
     .then(user => ({
       ...user.val(),
@@ -66,7 +103,7 @@ export function fetchRequestsSuccess(requests) {
 }
 
 export function requestsListener(uid) {
-  const query = Firebase.requests.child(uid);
+  const query = Firebase.requests.child(uid).orderByChild('timestamp');
   const listener = eventChannel((emit) => {
     query.on(
       'child_added',
@@ -107,7 +144,7 @@ export function friendshipsListener(uid) {
   const listener = eventChannel((emit) => {
     query.on(
       'child_added',
-      data => fetchUser(data.key).then(friend => emit({
+      data => apiFetchUser(data.key).then(friend => emit({
         [friend.uid]: friend,
       })),
     );

@@ -15,7 +15,6 @@ function* profileFlow(action) {
   let { photoURL, ...user } = action.user;
 
   if (photoURL && !photoURL.startsWith('http')) {
-    console.log('here ?');
     try {
       photoURL = yield call(PictureUpload, photoURL);
     } catch (error) {

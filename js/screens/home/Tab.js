@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 
 import {
-  sendFriendRequestNotification,
+  sendNotification,
   sendRequest,
-  acceptRequest,
-  cancelRequest,
-  rejectRequest,
+  apiAcceptRequest,
+  apiCancelRequest,
+  apiRejectRequest,
 } from '../../actions/friends';
 
 import Text from '../../components/Text';
@@ -41,15 +41,18 @@ class Tab extends PureComponent {
   onGPlacePress = place => () => this.props.screenProps.onGPlacePress(place);;
 
   sendFriendRequest = (uid, senderId) => () => {
-    sendRequest(uid);
-    this.props.dispatch(sendFriendRequestNotification(senderId));
+    this.props.dispatch(sendRequest(uid));
+    this.props.dispatch(sendNotification(senderId, 'friendRequest'));
   };
 
-  acceptFriendRequest = uid => () => acceptRequest(uid);
+  acceptFriendRequest = (uid, senderId) => () => {
+    apiAcceptRequest(uid);
+    this.props.dispatch(sendNotification(senderId, 'acceptFriendRequest'));
+  };
 
-  rejectFriendRequest = uid => () => rejectRequest(uid);
+  rejectFriendRequest = uid => () => apiRejectRequest(uid);
 
-  cancelFriendRequest = uid => () => cancelRequest(uid);
+  cancelFriendRequest = uid => () => apiCancelRequest(uid);
 
   render() {
     const {
@@ -122,7 +125,7 @@ class Tab extends PureComponent {
                         icon="check"
                         style={styles.requestButton}
                         iconStyle={styles.requestIcon}
-                        onPress={this.acceptFriendRequest(result.uid)}
+                        onPress={this.acceptFriendRequest(result.uid, result.senderId)}
                       />
                     </View>
                   )}

@@ -7,11 +7,6 @@ import {
   UPLOAD_PICTURES,
 } from '../constants/entities';
 
-export function fetchFriendships() {
-  return Firebase.friendships.child(Firebase.userUID()).once('value')
-    .then(friends => friends.val());
-}
-
 export function fetchReviewSuccess(review, removed, own) {
   return {
     type: FETCH_REVIEW_SUCCESS,

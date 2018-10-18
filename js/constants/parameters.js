@@ -13,6 +13,7 @@ function rgba(hex, a = null) {
 const plain = {
   primary: '#1DA07F',
   primaryLight: '#BBE2D8',
+  primaryDark: '#5E8C7F',
   white: '#fff',
   black: '#000',
   grey: '#BCB9B9',
@@ -25,6 +26,7 @@ const plain = {
 
 export const colors = {
   ...plain,
+  primaryShadowLight: rgba(plain.primary, 0.2),
   primaryShadow: rgba(plain.primary, 0.4),
   primaryShadowDark: rgba(plain.primary, 0.8),
   whiteTransparent: rgba(plain.white, 0.8),

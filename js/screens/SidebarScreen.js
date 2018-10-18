@@ -1,19 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, View, Share, TouchableOpacity,
+  StyleSheet, View, Share, TouchableOpacity, ScrollView,
 } from 'react-native';
 import { connect } from 'react-redux';
-import OneSignal from 'react-native-onesignal';
 import _ from 'lodash';
 
 import { apiLogout } from '../actions/auth';
-import { runSagas, stopSagas } from '../actions/utils';
+import {
+  sendNotification,
+  apiAcceptRequest,
+  apiRejectRequest,
+} from '../actions/friends';
 
 import Icon from '../components/Icon';
 import Text from '../components/Text';
 import Button from '../components/Button';
 import Avatar from '../components/Avatar';
+import Accordion from '../components/Accordion';
 
 import { colors, fonts } from '../constants/parameters';
 
@@ -30,24 +34,9 @@ class SidebarScreen extends React.Component {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
     me: PropTypes.object,
-    friends: PropTypes.object,
+    friendsCount: PropTypes.number,
     incomings: PropTypes.object,
-    outgoings: PropTypes.object,
   };
-
-  componentWillMount() {
-    this.props.navigation.openDrawer();
-    OneSignal.addEventListener('opened', () => this.props.navigation.openDrawer());
-  }
-
-  componentDidMount() {
-    this.props.dispatch(runSagas());
-  }
-
-  componentWillUnmount() {
-    OneSignal.removeEventListener('opened', this.onOpened);
-    this.props.dispatch(stopSagas());
-  }
 
   onSharePress = () => {
     Share.share({
@@ -67,13 +56,62 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
       });
   }
 
+  acceptFriendRequest = (uid, senderId) => () => {
+    apiAcceptRequest(uid);
+    this.props.dispatch(sendNotification(senderId, 'acceptFriendRequest'));
+  };
+
+  rejectFriendRequest = uid => () => apiRejectRequest(uid);
+
+  renderIncomingRequest = request => (
+    <View
+      key={request.uid}
+      style={[
+        styles.notification,
+        !request.seen && styles.notificationUnseen,
+      ]}
+    >
+      <Avatar
+        uri={request.photoURL}
+        text={SidebarScreen.initials(request)}
+        size={36}
+      />
+      <View style={styles.notificationTextWrapper}>
+        <Text style={styles.notificationText}>
+          <Text
+            style={[
+              styles.notificationText,
+              styles.notificationTextPrimary,
+            ]}
+          >
+            {`${request.firstName} ${request.lastName} `}
+          </Text>
+          sent you a Friend Request.
+        </Text>
+      </View>
+      <View style={styles.notificationActions}>
+        <Button
+          transparent
+          icon="close"
+          style={styles.requestButton}
+          iconStyle={styles.requestIcon}
+          onPress={this.rejectFriendRequest(request.uid)}
+        />
+        <Button
+          transparent
+          icon="check"
+          style={styles.requestButton}
+          iconStyle={styles.requestIcon}
+          onPress={this.acceptFriendRequest(request.uid, request.senderId)}
+        />
+      </View>
+    </View>
+  );
+
   render() {
     const {
-      me, friends, incomings, outgoings,
+      me, friendsCount, incomings,
     } = this.props;
-
-    console.log('incomings', incomings);
-    console.log('outgoings', outgoings);
 
     return (
       <View style={styles.container}>
@@ -91,7 +129,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
                 style={styles.subtitle}
                 onPress={this.navigateToFriends}
               >
-                {`${_.size(friends)} Friend${_.size(friends) === 1 ? '' : 's'}`}
+                {`${friendsCount} Friend${friendsCount === 1 ? '' : 's'}`}
               </Text>
             </View>
           </View>
@@ -109,7 +147,11 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             </View>
           </View>
         </TouchableOpacity>
-        <View style={styles.contentWrapper} />
+        <ScrollView style={styles.contentWrapper}>
+          <Accordion label="Pending friend requests" style={styles.accordion}>
+            {_.map(incomings, this.renderIncomingRequest)}
+          </Accordion>
+        </ScrollView>
         <View style={styles.shareWrapper}>
           <Button
             transparent
@@ -142,9 +184,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
 const mapStateToProps = state => ({
   me: state.auth.me,
-  friends: state.friends.all,
+  friendsCount: _.size(state.friends.all),
   incomings: state.friends.incomings,
-  outgoings: state.friends.outgoings,
 });
 
 export default connect(mapStateToProps, null)(SidebarScreen);
@@ -185,10 +226,52 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   contentWrapper: {
-    paddingTop: 32,
-    paddingHorizontal: 20,
+    paddingVertical: 16,
     flex: 1,
-    width: '100%',
+  },
+  accordion: {
+    paddingHorizontal: 16,
+  },
+  notification: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  notificationUnseen: {
+    backgroundColor: colors.primaryShadowLight,
+  },
+  notificationTextWrapper: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  notificationText: {
+    fontSize: 14,
+    lineHeight: 18,
+  },
+  notificationTextPrimary: {
+    color: colors.primary,
+  },
+  notificationActions: {
+    flexDirection: 'row',
+  },
+  requestButton: {
+    height: 20,
+    width: 20,
+    marginLeft: 8,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: 50,
+    backgroundColor: colors.white,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  requestIcon: {
+    color: colors.primary,
+    fontSize: 14,
   },
   shareWrapper: {
     flexDirection: 'row',

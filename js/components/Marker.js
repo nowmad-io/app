@@ -50,10 +50,7 @@ export default class Marker extends React.Component {
 
     if (!prefetched) {
       Image.prefetch(picture, (prefetchId) => { this.prefetchId = prefetchId; })
-        .then(() => {
-          onPrefetched(picture);
-          this.setState({ prefetched: true });
-        });
+        .then(() => onPrefetched(picture));
     }
   }
 
