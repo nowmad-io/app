@@ -58,7 +58,7 @@ export const fonts = {
 export const sizes = {
   height: Platform.OS === 'ios' ? height : height - StatusBar.currentHeight,
   width,
-  headerHeight: 56,
+  headerHeight: 48,
   drawerWidth: width * 0.9,
   searchBarPadding: 8,
 };

@@ -46,7 +46,6 @@ class MapWrapper extends React.Component {
   constructor(props) {
     super(props);
 
-    this.prefetchedPictures = {};
     this._map = React.createRef();
   }
 
@@ -69,10 +68,6 @@ class MapWrapper extends React.Component {
     this._map.current = ref;
     this.props.onRef(ref);
   }
-
-  onPrefetched = (picture) => {
-    this.prefetchedPictures[picture] = true;
-  };
 
   onMarkerPress = uid => this.props.dispatch(selectPlace(uid));
 
@@ -146,8 +141,6 @@ class MapWrapper extends React.Component {
               picture={picture}
               selected={selectedPlace === uid}
               onMarkerPress={this.onMarkerPress}
-              prefetched={this.prefetchedPictures[picture]}
-              onPrefetched={this.onPrefetched}
             />
           ))}
           {geolocation && geolocation.coords && (

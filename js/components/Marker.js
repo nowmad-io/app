@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import _ from 'lodash';
 
@@ -13,7 +13,6 @@ const triangleHelper = 10;
 export default class Marker extends React.Component {
   static propTypes = {
     onMarkerPress: PropTypes.func,
-    onPrefetched: PropTypes.func,
     uid: PropTypes.string,
     latitude: PropTypes.number,
     longitude: PropTypes.number,
@@ -26,42 +25,15 @@ export default class Marker extends React.Component {
       PropTypes.object,
     ]),
     selected: PropTypes.bool,
-    prefetched: PropTypes.bool,
     google: PropTypes.bool,
   };
 
   static defaultProps = {
     onMarkerPress: () => true,
-    onPrefetched: () => true,
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      prefetched: !props.picture || props.prefetched,
-    };
-    this.prefetchId = null;
-  }
-
-  componentDidMount() {
-    const { onPrefetched, picture } = this.props;
-    const { prefetched } = this.state;
-
-    if (!prefetched) {
-      Image.prefetch(picture, (prefetchId) => { this.prefetchId = prefetchId; })
-        .then(() => onPrefetched(picture));
-    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return (!_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state));
-  }
-
-  componentWillUnmount() {
-    if (this.prefetchId) {
-      Image.abortPrefetch(this.prefetchId);
-    }
   }
 
   onMarkerPress = () => this.props.onMarkerPress(this.props.uid);
@@ -75,14 +47,13 @@ export default class Marker extends React.Component {
       selected,
       google,
     } = this.props;
-    const { prefetched } = this.state;
 
     const me = (text === 'me');
     const avatarSize = me ? 36 : 40;
     const height = !selected
       ? (avatarSize + triangleHelper - 1) : (avatarSize + 2 * (triangleHelper + 1));
 
-    return prefetched && (
+    return (
       <MapView.Marker
         coordinate={{ latitude, longitude }}
         onPress={this.onMarkerPress}
@@ -112,6 +83,7 @@ export default class Marker extends React.Component {
             ]}
             set="FontAwesome"
             icon={google && 'google' || ''}
+            marker
           />
           <View
             style={[
