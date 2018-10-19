@@ -117,14 +117,13 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
     return (
       <View style={styles.container}>
-        <TouchableOpacity
+        <View
           activeOpacity={0.6}
           style={styles.profileWrapper}
-          onPress={this.navigateToProfile}
         >
           <View style={styles.infoWrapper}>
             <View style={styles.info}>
-              <Text style={styles.title}>
+              <Text style={styles.title} onPress={this.navigateToProfile}>
                 {`${me.firstName} ${me.lastName}`}
               </Text>
               <Text
@@ -135,7 +134,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
               </Text>
             </View>
           </View>
-          <View style={styles.avatarWrapper}>
+          <TouchableOpacity style={styles.avatarWrapper} onPress={this.navigateToProfile}>
             <Avatar
               uri={me.photoURL}
               text={SidebarScreen.initials(me)}
@@ -147,8 +146,8 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
                 name="camera-alt"
               />
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
         <ScrollView style={styles.contentWrapper}>
           <Accordion label="Pending friend requests" style={styles.accordion}>
             {_.map(incomings, this.renderIncomingRequest)}

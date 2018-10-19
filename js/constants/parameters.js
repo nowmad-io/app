@@ -3,12 +3,12 @@ import hexRgb from 'hex-rgb';
 
 const { width, height } = Dimensions.get('window');
 
-function rgba(hex, a = null) {
+export const rgba = (hex, a = null) => {
   const {
     red, green, blue, alpha,
   } = hexRgb(hex);
   return `rgba(${red}, ${green}, ${blue}, ${a !== null ? a : alpha})`;
-}
+};
 
 const plain = {
   primary: '#1DA07F',
@@ -59,7 +59,8 @@ export const sizes = {
   height: Platform.OS === 'ios' ? height : height - StatusBar.currentHeight,
   width,
   headerHeight: 56,
-  drawerWidth: 304,
+  drawerWidth: width * 0.9,
+  searchBarPadding: 8,
 };
 
 const ITEM_SPACING = 8;

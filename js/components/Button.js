@@ -15,21 +15,9 @@ export default class Button extends PureComponent {
       PropTypes.object,
     ]),
     onPress: PropTypes.func,
-    style: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.number,
-      PropTypes.array,
-    ]),
-    iconStyle: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.number,
-      PropTypes.array,
-    ]),
-    buttonStyle: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.number,
-      PropTypes.array,
-    ]),
+    style: PropTypes.any,
+    iconStyle: PropTypes.any,
+    buttonStyle: PropTypes.any,
     transparent: PropTypes.bool,
     light: PropTypes.bool,
     rounded: PropTypes.bool,
@@ -128,7 +116,7 @@ export default class Button extends PureComponent {
                 name={icon}
                 style={[
                   styles.text,
-                  { fontSize: 22 },
+                  { fontSize: 24 },
                   fab && styles.fab_icon,
                   iconStyle && iconStyle,
                 ]}

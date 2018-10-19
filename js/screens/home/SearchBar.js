@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextInput, BackHandler, StyleSheet, View,
+  TextInput, BackHandler, StyleSheet, View, Animated,
 } from 'react-native';
 import _ from 'lodash';
 
 import { placeDetails, peopleSearch, placesSearch } from '../../actions/search';
 
 import SearchNavigation from '../../navigation/SearchNavigation';
-import Header from '../../components/Header';
 import Button from '../../components/Button';
 import Spinner from '../../components/Spinner';
 
-import { colors, sizes } from '../../constants/parameters';
+import { rgba, colors, sizes } from '../../constants/parameters';
 
 export default class SearchBar extends Component {
   search = _.debounce(this.searchDebounced, 300)
@@ -41,6 +40,7 @@ export default class SearchBar extends Component {
       peopleLoading: false,
       places: [],
       placesLoading: false,
+      animation: new Animated.Value(sizes.searchBarPadding),
     };
 
     this._searchNavigation = React.createRef();
@@ -63,6 +63,10 @@ export default class SearchBar extends Component {
   onMenuPress = () => this.props.navigation.openDrawer();
 
   onFocus = () => {
+    Animated.timing(this.state.animation, {
+      duration: 200,
+      toValue: 0,
+    }).start();
     this.setState({ focused: true });
     this.searchDebounced(this.state.text);
   }
@@ -159,6 +163,10 @@ export default class SearchBar extends Component {
   }
 
   blur() {
+    Animated.timing(this.state.animation, {
+      duration: 200,
+      toValue: sizes.searchBarPadding,
+    }).start();
     this.setState({ focused: false, loading: false });
     this.textInput.blur();
   }
@@ -173,14 +181,30 @@ export default class SearchBar extends Component {
       peopleLoading,
       places,
       placesLoading,
+      animation,
     } = this.state;
+    const searchBarColor = animation.interpolate({
+      inputRange: [0, sizes.searchBarPadding],
+      outputRange: [rgba(colors.primary), colors.whiteTransparent],
+    });
 
     return (
       <View style={styles.container}>
-        <Header>
+        <Animated.View
+          style={[
+            styles.header,
+            {
+              top: animation,
+              left: animation,
+              right: animation,
+              backgroundColor: searchBarColor,
+            },
+          ]}
+        >
           <Button
             transparent
             style={styles.headerButton}
+            iconStyle={!focused && { color: colors.greyDark }}
             onPress={this.onLeftButtonPress}
             icon={focused ? 'arrow-back' : 'search'}
             header
@@ -192,8 +216,11 @@ export default class SearchBar extends Component {
             autoCorrect={false}
             placeholder="Search for people and places"
             selectionColor={colors.whiteTransparent}
-            placeholderTextColor={colors.white}
-            style={styles.searchInput}
+            placeholderTextColor={focused ? colors.white : colors.greyDark}
+            style={[
+              styles.searchInput,
+              !focused && { color: colors.greyDark },
+            ]}
             value={text}
             onFocus={this.onFocus}
             onChangeText={this.onChangeText}
@@ -204,6 +231,7 @@ export default class SearchBar extends Component {
             <Button
               transparent
               style={styles.headerButton}
+              iconStyle={!focused && { color: colors.greyDark }}
               onPress={this.onClearPress}
               icon="close"
               header
@@ -213,17 +241,25 @@ export default class SearchBar extends Component {
             <Button
               transparent
               style={styles.headerButton}
+              iconStyle={!focused && { color: colors.greyDark }}
               onPress={this.onMenuPress}
               icon="menu"
               header
             />
           )}
-        </Header>
+        </Animated.View>
         {children}
-        <View
+        <Animated.View
           style={[
             styles.tabs,
-            focused && { top: sizes.headerHeight },
+            {
+              transform: [{
+                translateY: animation.interpolate({
+                  inputRange: [0, sizes.searchBarPadding],
+                  outputRange: [sizes.headerHeight, sizes.height],
+                }),
+              }],
+            },
           ]}
         >
           <SearchNavigation
@@ -237,7 +273,7 @@ export default class SearchBar extends Component {
             }}
           />
           <Spinner overlay visible={loading} />
-        </View>
+        </Animated.View>
       </View>
     );
   }
@@ -246,6 +282,16 @@ export default class SearchBar extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    position: 'absolute',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: sizes.headerHeight,
+    zIndex: 9,
+    elevation: 4,
   },
   headerButton: {
     display: 'flex',
@@ -261,7 +307,6 @@ const styles = StyleSheet.create({
   },
   tabs: {
     ...StyleSheet.absoluteFillObject,
-    top: sizes.height,
     backgroundColor: colors.white,
   },
 });

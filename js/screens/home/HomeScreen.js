@@ -33,7 +33,6 @@ class HomeScreen extends React.PureComponent {
   }
 
   componentWillMount() {
-    this.props.navigation.openDrawer();
     OneSignal.addEventListener('opened', this.onNitificationOpened);
     Dispatch.initialize(this.props.dispatch);
   }

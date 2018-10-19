@@ -21,7 +21,7 @@ import MarkerPosition from '../../components/MarkerPosition';
 import { carousel, sizes } from '../../constants/parameters';
 
 const INITIAL_PADDING = {
-  top: sizes.headerHeight,
+  top: sizes.headerHeight + sizes.searchBarPadding,
   bottom: carousel.level2,
 };
 
