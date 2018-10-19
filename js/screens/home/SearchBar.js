@@ -140,7 +140,7 @@ export default class SearchBar extends Component {
     this.searchDebounced(coordinatesQuery);
     this.setState({ text: coordinatesQuery });
     this._searchNavigation.current._navigation.navigate('Places');
-    this.setState({ focused: true });
+    this.onFocus();
   }
 
   searchDebounced(query) {
