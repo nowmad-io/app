@@ -12,6 +12,7 @@ import {
   apiCancelRequest,
   apiRejectRequest,
 } from '../../actions/friends';
+import { filtersChange } from '../../actions/home';
 
 import Text from '../../components/Text';
 import List from '../../components/List';
@@ -38,7 +39,7 @@ class Tab extends PureComponent {
 
   navigate = tab => () => this.props.navigation.navigate(tab);
 
-  onGPlacePress = place => () => this.props.screenProps.onGPlacePress(place);;
+  onGPlacePress = place => () => this.props.screenProps.onGPlacePress(place);
 
   sendFriendRequest = (uid, senderId) => () => {
     this.props.dispatch(sendRequest(uid));
@@ -53,6 +54,13 @@ class Tab extends PureComponent {
   rejectFriendRequest = uid => () => apiRejectRequest(uid);
 
   cancelFriendRequest = uid => () => apiCancelRequest(uid);
+
+  onFriendPress = friend => () => {
+    this.props.screenProps.onFriendPress(friend);
+    this.props.dispatch(filtersChange({
+      friend: friend.uid,
+    }));
+  }
 
   render() {
     const {
@@ -92,6 +100,7 @@ class Tab extends PureComponent {
                   key={result.uid}
                   text={`${result.firstName} ${result.lastName}`}
                   thumbnail={result.photoUrl}
+                  onPress={friends[result.uid] && this.onFriendPress(result)}
                 >
                   {!friends[result.uid] && !incomings[result.uid] && !outgoings[result.uid] && (
                     <Button

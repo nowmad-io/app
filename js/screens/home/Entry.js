@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { selectPlace } from '../../reducers/entities';
+import { selectPlace } from '../../reducers/home';
 
 import Review from '../../components/Review';
 import ReviewGoogle from '../../components/ReviewGoogle';

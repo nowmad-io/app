@@ -4,6 +4,7 @@ import {
   GET_GEOLOCATION,
   SET_GEOLOCATION,
   G_PLACE,
+  FILTERS_CHANGE,
 } from '../constants/home';
 
 export function getGeolocation() {
@@ -38,5 +39,12 @@ export function setGPlace(gPlace, partial) {
     type: G_PLACE,
     gPlace,
     partial,
+  };
+}
+
+export function filtersChange(filters) {
+  return {
+    type: FILTERS_CHANGE,
+    ...filters,
   };
 }

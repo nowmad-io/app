@@ -24,7 +24,8 @@ import Map from '../components/Map';
 import Marker from '../components/Marker';
 
 import { pushReview, uploadPictures } from '../actions/entities';
-import { selectReview, selectMarkers } from '../reducers/entities';
+import { selectReview } from '../reducers/entities';
+import { selectMarkers } from '../reducers/home';
 
 import { colors } from '../constants/parameters';
 

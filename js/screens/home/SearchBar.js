@@ -132,6 +132,15 @@ export default class SearchBar extends Component {
     placeDetails(place.placeId).then(action);
   }
 
+  onFriendPress = ({ firstName, lastName }) => {
+    const text = `${firstName} ${lastName}`;
+    this.blur();
+    this.setState({
+      text,
+      previousValue: text,
+    });
+  }
+
   searchNearby(coordinatesQuery) {
     this.setState({
       peopleLoading: true,
@@ -271,6 +280,7 @@ export default class SearchBar extends Component {
               places,
               placesLoading,
               onGPlacePress: this.onGPlacePress,
+              onFriendPress: this.onFriendPress,
             }}
           />
           <Spinner overlay visible={loading} />

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import OneSignal from 'react-native-onesignal';
 import Dispatch from '../../libs/dispatch';
 
-import { setGPlace } from '../../actions/home';
+import { setGPlace, filtersChange } from '../../actions/home';
 import { runSagas, stopSagas } from '../../actions/utils';
 
 import MapWrapper from './MapWrapper';
@@ -65,7 +65,10 @@ class HomeScreen extends React.PureComponent {
 
   onGplace = name => this._searchBar.current.onChangeText(name || '');
 
-  onClear = () => this.props.dispatch(setGPlace());
+  onClear = () => {
+    this.props.dispatch(setGPlace());
+    this.props.dispatch(filtersChange({}));
+  };
 
   render() {
     const { navigation } = this.props;

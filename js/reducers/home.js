@@ -7,14 +7,18 @@ import {
   GET_GEOLOCATION,
   SET_GEOLOCATION,
   G_PLACE,
+  FILTERS_CHANGE,
 } from '../constants/home';
 import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
 import { LOGOUT } from '../constants/auth';
 
-import { getPlaces } from './entities';
+import { getPlace, getPlaces } from './entities';
+import { getFriends } from './friends';
+import { getMe } from './auth';
 
 const getRegion = state => state.home.region;
 const getGPlace = state => state.home.gPlace;
+const getFilters = state => state.home.filters;
 
 export const selectVisiblePlaces = () => createSelector(
   [getPlaces, getRegion, getGPlace],
@@ -36,6 +40,63 @@ export const selectVisiblePlaces = () => createSelector(
   },
 );
 
+export const selectPlace = () => createSelector(
+  [getPlace, getFriends, getMe],
+  (place, friends, me) => ({
+    ...place,
+    friends: (
+      place.own
+        ? [_.head(place.friends), ..._.reverse(_.tail(place.friends) || [])]
+        : _.reverse(place.friends.slice())
+    ).map(uid => ({ ...me, ...friends }[uid] || { uid })),
+  }),
+);
+
+export const selectMarkers = () => createSelector(
+  [getPlaces, getMe, getFriends, getFilters],
+  (places, me, friends, { friend }) => _.compact(
+    _.map(places, ({ longitude, latitude, reviews }, placeUid) => {
+      let i = 0;
+      let text;
+      let picture;
+
+      if (friend && !_.find(reviews, { createdBy: friend })) {
+        return null;
+      }
+
+      if (_.size(reviews) <= 1) {
+        const userUid = (_.transform(reviews, (result, { createdBy }) => {
+          if (i === 0) {
+            result.push(createdBy);
+            i += 1;
+          }
+
+          if (createdBy === me.uid) {
+            result.pop();
+            result.push(createdBy);
+            return true;
+          }
+          return false;
+        }, []))[0];
+        const user = { ...me, ...friends }[userUid] || {};
+
+        text = (userUid === me.uid) ? 'me' : `${user.firstName[0]}${user.lastName[0]}`;
+        picture = user && user.photoURL;
+      } else {
+        text = reviews.length;
+      }
+
+      return {
+        uid: placeUid,
+        longitude,
+        latitude,
+        text,
+        picture,
+      };
+    }),
+  ),
+);
+
 const initialState = {
   region: {
     longitudeDelta: 126.56254928559065,
@@ -49,6 +110,9 @@ const initialState = {
   },
   selectedPlace: null,
   gPlace: null,
+  filters: {
+    friend: null,
+  },
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -96,6 +160,13 @@ const homeReducer = (state = initialState, action) => {
         gPlace: state.gPlace && review && review.place.uid !== state.gPlace.uid || null,
       };
     }
+    case FILTERS_CHANGE:
+      return {
+        ...state,
+        filters: {
+          friend: action.friend,
+        },
+      };
     case `${LOGOUT}_REQUEST`:
       return initialState;
     default:

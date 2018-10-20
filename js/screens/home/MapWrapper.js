@@ -11,7 +11,7 @@ import {
 
 import { poiToPlace, placeDetails } from '../../actions/search';
 
-import { selectMarkers } from '../../reducers/entities';
+import { selectMarkers } from '../../reducers/home';
 
 import Map from '../../components/Map';
 import Marker from '../../components/Marker';
@@ -31,6 +31,7 @@ class MapWrapper extends React.Component {
     onRef: PropTypes.func,
     searchNearby: PropTypes.func,
     onPoiPress: PropTypes.func,
+    filters: PropTypes.object,
     gPlace: PropTypes.object,
     geolocation: PropTypes.object,
     places: PropTypes.array,
@@ -49,7 +50,7 @@ class MapWrapper extends React.Component {
     this._map = React.createRef();
   }
 
-  componentWillReceiveProps({ geolocation, gPlace }) {
+  componentWillReceiveProps({ filters, geolocation, places }) {
     if (geolocation && geolocation.coords
         && !geolocation.loading && this.props.geolocation.loading) {
       this._map.current.getRef().animateToRegion({
@@ -59,8 +60,11 @@ class MapWrapper extends React.Component {
       }, 1000);
     }
 
-    if (gPlace && (!this.props.gPlace || gPlace.uid !== this.props.gPlace.uid)) {
-      this._map.current.getRef().animateToCoordinate(gPlace);
+    if (filters.friend && places.length !== this.props.places.length) {
+      this._map.current.getRef().fitToCoordinates(
+        _.map(places, ({ longitude, latitude }) => ({ longitude, latitude })),
+        { animated: true },
+      );
     }
   }
 
@@ -183,6 +187,7 @@ const makeMapStateToProps = () => {
     places: markersSelector(state),
     geolocation: state.home.geolocation,
     gPlace: state.home.gPlace,
+    filters: state.home.filters,
   });
 };
 

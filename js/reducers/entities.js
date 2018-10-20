@@ -1,70 +1,16 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
-import { getMe } from './auth';
-import { getFriends } from './friends';
-
 import { LOGOUT } from '../constants/auth';
 import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
 
-const getPlace = (state, uid) => state.entities.places[uid];
-const getReview = (state, uid) => state.entities.reviews[uid];
+export const getPlace = (state, uid) => state.entities.places[uid];
 export const getPlaces = state => state.entities.places;
+const getReview = (state, uid) => state.entities.reviews[uid];
 
 export const selectReview = () => createSelector(
   [getReview],
   review => review,
-);
-
-export const selectPlace = () => createSelector(
-  [getPlace, getFriends, getMe],
-  (place, friends, me) => ({
-    ...place,
-    friends: (
-      place.own
-        ? [_.head(place.friends), ..._.reverse(_.tail(place.friends) || [])]
-        : _.reverse(place.friends.slice())
-    ).map(uid => ({ ...me, ...friends }[uid] || { uid })),
-  }),
-);
-
-export const selectMarkers = () => createSelector(
-  [getPlaces, getMe, getFriends],
-  (places, me, friends) => _.map(places, ({ longitude, latitude, reviews }, placeUid) => {
-    let i = 0;
-    let text;
-    let picture;
-
-    if (_.size(reviews) <= 1) {
-      const userUid = (_.transform(reviews, (result, { createdBy }) => {
-        if (i === 0) {
-          result.push(createdBy);
-          i += 1;
-        }
-
-        if (createdBy === me.uid) {
-          result.pop();
-          result.push(createdBy);
-          return true;
-        }
-        return false;
-      }, []))[0];
-      const user = { ...me, ...friends }[userUid] || {};
-
-      text = (userUid === me.uid) ? 'me' : `${user.firstName[0]}${user.lastName[0]}`;
-      picture = user && user.photoURL;
-    } else {
-      text = reviews.length;
-    }
-
-    return {
-      uid: placeUid,
-      longitude,
-      latitude,
-      text,
-      picture,
-    };
-  }),
 );
 
 const initialState = {
