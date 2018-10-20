@@ -13,7 +13,10 @@ const triangleHelper = 10;
 export default class Marker extends React.Component {
   static propTypes = {
     onMarkerPress: PropTypes.func,
-    uid: PropTypes.string,
+    uid: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
     latitude: PropTypes.number,
     longitude: PropTypes.number,
     text: PropTypes.oneOfType([

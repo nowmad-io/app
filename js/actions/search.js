@@ -72,7 +72,7 @@ export function placesSearch(query) {
     params = `${location}&${rankby}&${type}`;
     parser = nearByToPlace;
   }
-
+  console.log('url', url);
   return Api.get(`${url}?${key}&${params}`)
     .then(parser);
 }

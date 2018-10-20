@@ -20,8 +20,17 @@ const getRegion = state => state.home.region;
 const getGPlace = state => state.home.gPlace;
 const getFilters = state => state.home.filters;
 
+export const selectFilteredPlaces = createSelector(
+  [getPlaces, getFilters],
+  (places, { friend }) => (
+    friend
+      ? _.pickBy(places, place => _.find(place.reviews, { createdBy: friend }))
+      : places
+  ),
+);
+
 export const selectVisiblePlaces = () => createSelector(
-  [getPlaces, getRegion, getGPlace],
+  [selectFilteredPlaces, getRegion, getGPlace],
   (places, region, gPlace) => {
     const southWest = {
       latitude: region.latitude - region.latitudeDelta / 2,
@@ -53,48 +62,42 @@ export const selectPlace = () => createSelector(
 );
 
 export const selectMarkers = () => createSelector(
-  [getPlaces, getMe, getFriends, getFilters],
-  (places, me, friends, { friend }) => _.compact(
-    _.map(places, ({ longitude, latitude, reviews }, placeUid) => {
-      let i = 0;
-      let text;
-      let picture;
+  [selectFilteredPlaces, getMe, getFriends],
+  (places, me, friends) => _.map(places, ({ longitude, latitude, reviews }, placeUid) => {
+    let i = 0;
+    let text;
+    let picture;
 
-      if (friend && !_.find(reviews, { createdBy: friend })) {
-        return null;
-      }
+    if (_.size(reviews) <= 1) {
+      const userUid = (_.transform(reviews, (result, { createdBy }) => {
+        if (i === 0) {
+          result.push(createdBy);
+          i += 1;
+        }
 
-      if (_.size(reviews) <= 1) {
-        const userUid = (_.transform(reviews, (result, { createdBy }) => {
-          if (i === 0) {
-            result.push(createdBy);
-            i += 1;
-          }
+        if (createdBy === me.uid) {
+          result.pop();
+          result.push(createdBy);
+          return true;
+        }
+        return false;
+      }, []))[0];
+      const user = { ...me, ...friends }[userUid] || {};
 
-          if (createdBy === me.uid) {
-            result.pop();
-            result.push(createdBy);
-            return true;
-          }
-          return false;
-        }, []))[0];
-        const user = { ...me, ...friends }[userUid] || {};
+      text = (userUid === me.uid) ? 'me' : `${user.firstName[0]}${user.lastName[0]}`;
+      picture = user && user.photoURL;
+    } else {
+      text = reviews.length;
+    }
 
-        text = (userUid === me.uid) ? 'me' : `${user.firstName[0]}${user.lastName[0]}`;
-        picture = user && user.photoURL;
-      } else {
-        text = reviews.length;
-      }
-
-      return {
-        uid: placeUid,
-        longitude,
-        latitude,
-        text,
-        picture,
-      };
-    }),
-  ),
+    return {
+      uid: placeUid,
+      longitude,
+      latitude,
+      text,
+      picture,
+    };
+  }),
 );
 
 const initialState = {

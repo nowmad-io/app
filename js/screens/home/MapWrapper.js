@@ -61,10 +61,7 @@ class MapWrapper extends React.Component {
     }
 
     if (filters.friend && places.length !== this.props.places.length) {
-      this._map.current.getRef().fitToCoordinates(
-        _.map(places, ({ longitude, latitude }) => ({ longitude, latitude })),
-        { animated: true },
-      );
+      this._map.current.getRef().fitToCoordinates(places);
     }
   }
 
