@@ -28,6 +28,8 @@
     },
     "globals": {
         "fetch": false,
-        "navigator": false
+        "navigator": false,
+        "window": false,
+        "__DEV__": false
     }
 }

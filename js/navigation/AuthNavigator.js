@@ -1,9 +1,15 @@
 import { createStackNavigator } from 'react-navigation';
 
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import RegisterScreen from '../screens/auth/RegisterScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import ProfileScreen from '../screens/auth/ProfileScreen';
 
 export default createStackNavigator({
-  Login: LoginScreen,
-  Register: RegisterScreen,
+  RegisterScreen,
+  LoginScreen,
+  ProfileScreen,
+}, {
+  navigationOptions: {
+    header: null,
+  },
 });

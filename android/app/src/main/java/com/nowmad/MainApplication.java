@@ -3,6 +3,13 @@ package com.nowmad;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
+import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.dylanvann.fastimage.FastImageViewPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -24,6 +31,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SvgPackage(),
+            new ReactNativeOneSignalPackage(),
+            new MapsPackage(),
+            new RNFetchBlobPackage(),
+            new ImagePickerPackage(),
+            new FastImageViewPackage(),
+            new VectorIconsPackage(),
             new ReactNativeConfigPackage()
       );
     }
