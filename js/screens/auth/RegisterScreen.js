@@ -34,10 +34,10 @@ class RegisterScreen extends Component {
     const { params } = this.props.navigation.state;
 
     this.state = {
-      email: params && params.email || 'j@j.com',
-      password: 'jjjjjj',
-      firstName: 'julien',
-      lastName: 'rougeron',
+      email: params && params.email || '',
+      password: '',
+      firstName: '',
+      lastName: '',
       loading: false,
       error: null,
     };
