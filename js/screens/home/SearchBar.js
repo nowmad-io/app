@@ -67,8 +67,7 @@ export default class SearchBar extends Component {
       duration: 200,
       toValue: 0,
     }).start();
-    this.setState({ focused: true });
-    this.searchDebounced(this.state.text);
+    this.setState({ focused: true }, () => this.searchDebounced(this.state.text));
   }
 
   onChangeText = (text, previous = false) => {
