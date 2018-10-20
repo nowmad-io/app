@@ -38,9 +38,9 @@ class Entry extends PureComponent {
     } = this.props;
 
     if (place.reviews.length > 1) {
-      navigation.navigate('PlaceDetailsScreen', { placeId: place.uid });
+      navigation.navigate('PlaceDetailsScreen', { placeUid: place.uid });
     } else {
-      navigation.navigate('ReviewDetailsScreen', { reviewId: place.reviews[0].uid });
+      navigation.navigate('ReviewDetailsScreen', { reviewUid: place.reviews[0].uid });
     }
   }
 

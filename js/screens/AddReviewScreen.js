@@ -24,8 +24,7 @@ import Map from '../components/Map';
 import Marker from '../components/Marker';
 
 import { pushReview, uploadPictures } from '../actions/entities';
-import { selectReview } from '../reducers/entities';
-import { selectMarkers } from '../reducers/home';
+import { selectMarkers, selectReview } from '../reducers/home';
 
 import { colors } from '../constants/parameters';
 
@@ -378,14 +377,13 @@ class AddReviewScreen extends Component {
 }
 
 const makeMapStateToProps = () => {
-  const reviewSelector = selectReview();
   const markersSelector = selectMarkers();
 
   return (state, props) => {
     const { reviewId, place } = props.navigation.state.params;
 
     return {
-      review: reviewId ? reviewSelector(state, reviewId) : {},
+      review: reviewId ? selectReview(state)(reviewId) : {},
       place: _.isObject(place)
         ? place : _.find(markersSelector(state), { uid: place }),
     };

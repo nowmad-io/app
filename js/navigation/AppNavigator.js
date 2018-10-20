@@ -6,6 +6,7 @@ import AddImageScreen from '../screens/AddImageScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import FriendsScreen from '../screens/FriendsScreen';
 import PlaceDetailsScreen from '../screens/PlaceDetailsScreen';
+import ReviewDetailsScreen from '../screens/ReviewDetailsScreen';
 
 export default createStackNavigator({
   Home: HomeNavigator,
@@ -14,6 +15,7 @@ export default createStackNavigator({
   AddImageScreen,
   EditProfileScreen,
   PlaceDetailsScreen,
+  ReviewDetailsScreen,
 }, {
   navigationOptions: {
     header: null,

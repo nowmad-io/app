@@ -1,4 +1,3 @@
-import { createSelector } from 'reselect';
 import _ from 'lodash';
 
 import { LOGOUT } from '../constants/auth';
@@ -7,12 +6,7 @@ import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
 export const getPlace = (state, uid) => state.entities.places[uid];
 export const getPlaces = state => state.entities.places;
 export const getReviews = state => state.entities.reviews;
-const getReview = (state, uid) => state.entities.reviews[uid];
-
-export const selectReview = () => createSelector(
-  [getReview],
-  review => review,
-);
+export const getReview = (state, uid) => state.entities.reviews[uid];
 
 const initialState = {
   reviews: {},

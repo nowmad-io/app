@@ -8,7 +8,6 @@ import {
 import Header from '../components/Header';
 import Review from '../components/Review';
 import Button from '../components/Button';
-import Text from '../components/Text';
 
 import { selectPlaceReviews } from '../reducers/home';
 
@@ -33,15 +32,8 @@ class PlaceDetailsScreen extends Component {
     return true;
   }
 
-  goToDetails = (reviewId) => {
-    this.props.navigation.navigate('ReviewDetails', { reviewId });
-  }
-
-  addOrEditReview = () => {
-    // const { review: { place } } = this.props;
-    // this.props.navigation.navigate('AddReview', {
-    //   placeId: place,
-    // });
+  goToDetails = reviewUid => () => {
+    this.props.navigation.navigate('ReviewDetailsScreen', { reviewUid });
   }
 
   render() {
@@ -59,13 +51,13 @@ class PlaceDetailsScreen extends Component {
               style={styles.review}
             >
               <Review
-                onPress={this.goToDetails}
                 own={!!own}
                 categories={categories}
                 createdBy={createdBy}
                 shortDescription={shortDescription}
                 status={status}
                 pictures={pictures || []}
+                onPress={this.goToDetails(uid)}
               />
             </View>
           ))}
@@ -79,10 +71,10 @@ const makeMapStateToProps = () => {
   const placeSelector = selectPlaceReviews();
 
   const mapStateToProps = (state, props) => {
-    const { placeId } = props.navigation.state.params;
+    const { placeUid } = props.navigation.state.params;
 
     return {
-      reviews: placeSelector(state, placeId),
+      reviews: placeSelector(state, placeUid),
     };
   };
 

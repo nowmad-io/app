@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import _ from 'lodash';
 
 import Text from './Text';
 import Avatar from './Avatar';
@@ -129,7 +130,7 @@ export default class Review extends PureComponent {
                 {shortDescription}
               </Text>
               <Text style={styles.categories}>
-                {categories.map((name, index) => (
+                {_.map(categories, (name, index) => (
                   <Text key={name} style={styles.categorie}>
                     {`${name}${(index !== categories.length - 1) ? ' · ' : ''}`}
                   </Text>

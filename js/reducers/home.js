@@ -12,7 +12,9 @@ import {
 import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
 import { LOGOUT } from '../constants/auth';
 
-import { getPlace, getPlaces, getReviews } from './entities';
+import {
+  getPlace, getPlaces, getReviews,
+} from './entities';
 import { getFriends } from './friends';
 import { getMe } from './auth';
 
@@ -20,22 +22,26 @@ const getRegion = state => state.home.region;
 const getGPlace = state => state.home.gPlace;
 const getFilters = state => state.home.filters;
 
-export const selectPlaceReviews = () => createSelector(
-  [getPlace, getReviews, getMe, getFriends],
-  (place, reviews, me, friends) => {
+export const selectReview = createSelector(
+  [getReviews, getMe, getFriends],
+  (reviews, me, friends) => (uid) => {
+    const review = reviews[uid];
     const { [Object.keys(me)[0]]: meObject } = me;
+    const own = (review.createdBy === meObject.uid);
 
-    return place.reviews.map(({ uid, createdBy }) => {
-      const own = (createdBy === meObject.uid);
-
-      return ({
-        ...reviews[uid],
-        createdBy: own ? meObject : friends[createdBy],
-        categories: _.keys(reviews[uid].categories || {}),
-        own,
-      });
+    return ({
+      ...review,
+      createdBy: own ? meObject : friends[review.createdBy],
+      categories: _.keys(review.categories || {}),
+      pictures: _.map(review.pictures, picture => picture),
+      own,
     });
   },
+);
+
+export const selectPlaceReviews = () => createSelector(
+  [getPlace, getReviews, selectReview, getMe, getFriends],
+  (place, reviews, getReview) => place.reviews.map(({ uid }) => getReview(uid)),
 );
 
 export const selectFilteredPlaces = createSelector(
