@@ -70,7 +70,7 @@ class Tab extends PureComponent {
 
     const allPage = navigation.state.routeName === 'All';
     const peoplePage = navigation.state.routeName === 'People';
-    const placesPage = navigation.state.routeName === 'Places';
+    const placesPage = navigation.state.routeName === 'Google Places';
 
     return (
       <View style={styles.container}>
@@ -139,7 +139,7 @@ class Tab extends PureComponent {
               style={styles.list}
               action="see all"
               actionDisable={places.length <= MAX_LIST}
-              onActionPress={this.navigate('Places')}
+              onActionPress={this.navigate('Google Places')}
             >
               <Image source={poweredByGoogle} style={styles.poweredByGoogle} />
               <Spinner visible={placesLoading} />

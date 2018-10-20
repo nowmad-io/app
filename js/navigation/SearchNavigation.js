@@ -10,7 +10,7 @@ import { colors, fonts } from '../constants/parameters';
 export default createMaterialTopTabNavigator({
   All: Tab,
   People: Tab,
-  Places: Tab,
+  'Google Places': Tab,
 }, {
   navigationOptions: ({ navigation }) => ({
     tabBarLabel: (tab) => {
