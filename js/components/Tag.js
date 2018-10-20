@@ -46,8 +46,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 28,
     backgroundColor: colors.white,
-    paddingTop: 5,
-    paddingBottom: 6,
+    paddingVertical: 3,
     paddingHorizontal: 9,
     marginRight: 8,
   },
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 10,
     color: colors.black,
-    lineHeight: 12,
   },
   textSelected: {
     color: colors.white,
