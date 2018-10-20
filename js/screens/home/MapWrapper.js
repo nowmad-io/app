@@ -202,7 +202,7 @@ export default connect(makeMapStateToProps, null)(MapWrapper);
 
 const styles = StyleSheet.create({
   container: {
-    height: sizes.height - sizes.headerHeight,
+    height: sizes.height,
   },
   buttonControls: {
     position: 'absolute',
