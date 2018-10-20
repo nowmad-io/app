@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   regular: {
     fontSize: 14,
     ...fonts.medium,
-    color: colors.grey,
+    color: colors.greyDark,
   },
   focused: {
     color: colors.black,

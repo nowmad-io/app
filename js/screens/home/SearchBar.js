@@ -199,6 +199,7 @@ export default class SearchBar extends Component {
               right: animation,
               backgroundColor: searchBarColor,
             },
+            !focused && { elevation: 4 },
           ]}
         >
           <Button
@@ -291,7 +292,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: sizes.headerHeight,
     zIndex: 9,
-    elevation: 4,
   },
   headerButton: {
     display: 'flex',
