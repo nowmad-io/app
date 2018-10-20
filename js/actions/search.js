@@ -1,5 +1,7 @@
 import Config from 'react-native-config';
+import _ from 'lodash';
 
+import Firebase from '../libs/firebase';
 import Api from '../libs/requests';
 
 export const COORD_REGEX = /^([-+]?[\d]{1,2}\.\d+),\s*([-+]?[\d]{1,3}\.\d+)?$/;
@@ -49,7 +51,9 @@ const nearByToPlace = nearby => (!nearby
 
 export function peopleSearch(query) {
   return Api.get(`search?user=${query}`)
-    .then(({ hits, nbHits }) => (nbHits ? hits : []));
+    .then(
+      ({ hits, nbHits }) => (nbHits ? _.filter(hits, hit => hit.uid !== Firebase.userUID()) : []),
+    );
 }
 
 export function placesSearch(query) {
