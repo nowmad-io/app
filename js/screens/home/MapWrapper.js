@@ -50,7 +50,9 @@ class MapWrapper extends React.Component {
     this._map = React.createRef();
   }
 
-  componentWillReceiveProps({ filters, geolocation, places }) {
+  componentWillReceiveProps({
+    filters, geolocation, places, gPlace,
+  }) {
     if (geolocation && geolocation.coords
         && !geolocation.loading && this.props.geolocation.loading) {
       this._map.current.getRef().animateToRegion({
@@ -62,6 +64,14 @@ class MapWrapper extends React.Component {
 
     if (filters.friend && places.length !== this.props.places.length) {
       this._map.current.getRef().fitToCoordinates(places);
+    }
+
+    if (gPlace && (!this.props.gPlace || gPlace.uid !== this.props.gPlace.uid)) {
+      this._map.current.getRef().animateToCoordinate(gPlace);
+    }
+
+    if (!gPlace && this.props.gPlace) {
+      this.props.onPoiPress();
     }
   }
 
