@@ -33,7 +33,7 @@ class HomeScreen extends React.PureComponent {
   }
 
   componentWillMount() {
-    OneSignal.addEventListener('opened', this.onNitificationOpened);
+    OneSignal.addEventListener('opened', this.onNotificationOpened);
     Dispatch.initialize(this.props.dispatch);
   }
 
@@ -46,7 +46,7 @@ class HomeScreen extends React.PureComponent {
     this.props.dispatch(stopSagas());
   }
 
-  onNitificationOpened = () => {
+  onNotificationOpened = () => {
     Keyboard.dismiss();
     this.props.navigation.openDrawer();
     this._searchBar.current.blur();
