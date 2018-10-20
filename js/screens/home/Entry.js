@@ -15,6 +15,7 @@ import { colors, carousel } from '../../constants/parameters';
 class Entry extends PureComponent {
   static propTypes = {
     style: PropTypes.any,
+    navigation: PropTypes.object,
     onActionPress: PropTypes.func,
     // eslint-disable-next-line
     placeUid: PropTypes.string,
@@ -30,6 +31,18 @@ class Entry extends PureComponent {
       place: google ? place : place.uid,
     });
   };
+
+  goToDetails = () => {
+    const {
+      navigation, place,
+    } = this.props;
+
+    if (place.reviews.length > 1) {
+      navigation.navigate('PlaceDetailsScreen', { placeId: place.uid });
+    } else {
+      navigation.navigate('ReviewDetailsScreen', { reviewId: place.reviews[0].uid });
+    }
+  }
 
   render() {
     const {
@@ -57,6 +70,7 @@ class Entry extends PureComponent {
         >
           {!google ? (
             <Review
+              onPress={this.goToDetails}
               own={!!own}
               categories={categories}
               createdBy={_.head(friends)}

@@ -81,7 +81,9 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
   }
 
   render() {
-    const { panY, visiblePlaces, gPlace } = this.props;
+    const {
+      navigation, panY, visiblePlaces, gPlace,
+    } = this.props;
 
     return (
       <PanController
@@ -111,6 +113,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             style={styles.entryWrapper}
             onActionPress={this.onActionPress}
             google={google}
+            navigation={navigation}
           />
         ))}
       </PanController>

@@ -55,11 +55,11 @@ class MapWrapper extends React.Component {
   }) {
     if (geolocation && geolocation.coords
         && !geolocation.loading && this.props.geolocation.loading) {
-      this._map.current.getRef().animateToRegion({
-        ...geolocation.coords,
-        latitudeDelta: 0.0043,
-        longitudeDelta: 0.0034,
-      }, 1000);
+      // this._map.current.getRef().animateToRegion({
+      //   ...geolocation.coords,
+      //   latitudeDelta: 0.0043,
+      //   longitudeDelta: 0.0034,
+      // }, 1000);
     }
 
     if (filters.friend && places.length !== this.props.places.length) {

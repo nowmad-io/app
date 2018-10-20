@@ -74,9 +74,9 @@ export default class Review extends PureComponent {
                 <Text style={styles.user_text} capitalize>
                   {`${own ? 'me' : createdBy.firstName}`}
                 </Text>
-                {friends.length ? ` and ${friends.length} more friend${friends.length > 1 ? 's' : ''}` : ''}
+                {friends && friends.length ? ` and ${friends.length} more friend${friends.length > 1 ? 's' : ''}` : ''}
               </Text>
-              {friends.length ? (
+              {friends && friends.length ? (
                 <View style={styles.others}>
                   { friends.map(({ uid, photoURL, ...friend }) => (
                     <Avatar

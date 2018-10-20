@@ -12,13 +12,31 @@ import {
 import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
 import { LOGOUT } from '../constants/auth';
 
-import { getPlace, getPlaces } from './entities';
+import { getPlace, getPlaces, getReviews } from './entities';
 import { getFriends } from './friends';
 import { getMe } from './auth';
 
 const getRegion = state => state.home.region;
 const getGPlace = state => state.home.gPlace;
 const getFilters = state => state.home.filters;
+
+export const selectPlaceReviews = () => createSelector(
+  [getPlace, getReviews, getMe, getFriends],
+  (place, reviews, me, friends) => {
+    const { [Object.keys(me)[0]]: meObject } = me;
+
+    return place.reviews.map(({ uid, createdBy }) => {
+      const own = (createdBy === meObject.uid);
+
+      return ({
+        ...reviews[uid],
+        createdBy: own ? meObject : friends[createdBy],
+        categories: _.keys(reviews[uid].categories || {}),
+        own,
+      });
+    });
+  },
+);
 
 export const selectFilteredPlaces = createSelector(
   [getPlaces, getFilters],
@@ -75,7 +93,7 @@ export const selectMarkers = () => createSelector(
           i += 1;
         }
 
-        if (createdBy === me.uid) {
+        if (createdBy === Object.keys(me)[0].uid) {
           result.pop();
           result.push(createdBy);
           return true;
