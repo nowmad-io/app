@@ -72,7 +72,7 @@ export function placesSearch(query) {
     params = `${location}&${rankby}&${type}`;
     parser = nearByToPlace;
   }
-  console.log('url', url);
+
   return Api.get(`${url}?${key}&${params}`)
     .then(parser);
 }
@@ -95,7 +95,7 @@ export function placeDetails(placeId, poiName = null) {
       name: poiName || name,
       latitude: location.lat,
       longitude: location.lng,
-      pictures: photos.map(photoUrl),
+      pictures: photos && photos.map(photoUrl),
       google: true,
       ...place,
     }));
