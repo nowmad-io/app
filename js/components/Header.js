@@ -6,16 +6,24 @@ import { colors, sizes } from '../constants/parameters';
 
 export default class Spinner extends PureComponent {
   static propTypes = {
+    style: PropTypes.any,
     children: PropTypes.any,
     left: PropTypes.object,
     right: PropTypes.object,
   };
 
   render() {
-    const { children, left, right } = this.props;
+    const {
+      style, children, left, right,
+    } = this.props;
 
     return (
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          style,
+        ]}
+      >
         {left && (
           <View style={styles.left}>
             {left}

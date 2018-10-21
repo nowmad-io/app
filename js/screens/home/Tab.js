@@ -22,6 +22,7 @@ import Button from '../../components/Button';
 
 import { colors, fonts } from '../../constants/parameters';
 
+const poweredByAlgolia = require('../../../assets/images/powered_by_algolia.png');
 const poweredByGoogle = require('../../../assets/images/powered_by_google.png');
 const googleImage = require('../../../assets/images/icons/google.png');
 
@@ -94,6 +95,11 @@ class Tab extends PureComponent {
               actionDisable={people.length <= MAX_LIST}
               onActionPress={this.navigate('People')}
             >
+              <Image
+                source={poweredByAlgolia}
+                style={styles.poweredBy}
+                resizeMode="contain"
+              />
               <Spinner visible={peopleLoading} />
               {!peopleLoading && (allPage ? people.slice(0, MAX_LIST) : people).map(result => (
                 <ListItem
@@ -150,7 +156,11 @@ class Tab extends PureComponent {
               actionDisable={places.length <= MAX_LIST}
               onActionPress={this.navigate('Google Places')}
             >
-              <Image source={poweredByGoogle} style={styles.poweredByGoogle} />
+              <Image
+                source={poweredByGoogle}
+                style={styles.poweredBy}
+                resizeMode="contain"
+              />
               <Spinner visible={placesLoading} />
               {!placesLoading && (allPage ? places.slice(0, MAX_LIST) : places).map(place => (
                 <ListItem
@@ -222,7 +232,7 @@ const styles = StyleSheet.create({
   buttonText: {
     marginRight: 4,
   },
-  poweredByGoogle: {
+  poweredBy: {
     marginBottom: 12,
   },
   thumbnailStyle: {
