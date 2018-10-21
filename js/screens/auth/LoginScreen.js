@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Keyboard } from 'react-native';
+import {
+  View, StyleSheet, Keyboard, Image,
+} from 'react-native';
 import { connect } from 'react-redux';
-import FastImage from 'react-native-fast-image';
 
 import Content from '../../components/Content';
 import Text from '../../components/Text';
@@ -31,8 +32,8 @@ class LoginScreen extends Component {
     const { params } = this.props.navigation.state;
 
     this.state = {
-      email: params && params.email || 'j@j.com',
-      password: 'jjjjjj',
+      email: params && params.email || '',
+      password: '',
       loading: false,
       error: null,
     };
@@ -89,8 +90,8 @@ class LoginScreen extends Component {
       <Content>
         <View style={styles.container}>
           <View style={styles.logoWrapper}>
-            <FastImage
-              resizeMode={FastImage.resizeMode.contain}
+            <Image
+              resizeMode="contain"
               source={logo}
               style={styles.logo}
             />
