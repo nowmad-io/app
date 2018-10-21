@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Keyboard } from 'react-native';
+import {
+  View, StyleSheet, Keyboard, Image,
+} from 'react-native';
 import { connect } from 'react-redux';
-import FastImage from 'react-native-fast-image';
 
 import Content from '../../components/Content';
 import Text from '../../components/Text';
@@ -112,8 +113,8 @@ class RegisterScreen extends Component {
       <Content>
         <View style={styles.container}>
           <View style={styles.logoWrapper}>
-            <FastImage
-              resizeMode={FastImage.resizeMode.contain}
+            <Image
+              resizeMode="contain"
               source={logo}
               style={styles.logo}
             />

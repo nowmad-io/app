@@ -30,7 +30,7 @@ class Firebase {
   }
 
   userUID() {
-    return this.auth().currentUser && this.auth().currentUser.email.replace('.', ',');
+    return this.auth().currentUser && this.auth().currentUser.email.replace(/\./g, ',');
   }
 }
 

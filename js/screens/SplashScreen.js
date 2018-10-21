@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import { View, StyleSheet, Image } from 'react-native';
 
 import { colors } from '../constants/parameters';
 
@@ -8,10 +7,10 @@ const logo = require('../../assets/images/logos/logo_white.png');
 
 const SplashScreen = () => (
   <View style={styles.container}>
-    <FastImage
+    <Image
       source={logo}
       style={styles.logo}
-      resizeMode={FastImage.resizeMode.contain}
+      resizeMode="contain"
     />
   </View>
 );
