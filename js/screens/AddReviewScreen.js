@@ -95,20 +95,31 @@ class AddReviewScreen extends Component {
   onPublish = () => {
     const {
       place: {
-        uid,
+        uid: placeUid,
         latitude,
         longitude,
       },
       review: {
+        uid: reviewUid,
+        shortDescription,
+        information,
+        status,
+        categories,
+        link1,
+        link2,
         pictures,
-        ...review
       },
     } = this.state;
     const newReview = {
-      uid: shortid.generate(),
-      ...review,
+      uid: reviewUid || shortid.generate(),
+      shortDescription,
+      information,
+      status,
+      categories,
+      link1,
+      link2,
       place: {
-        uid,
+        uid: placeUid,
         latitude,
         longitude,
       },
