@@ -99,6 +99,7 @@ apply from: "../../node_modules/react-native/react.gradle"
  * the correct one based on the CPU architecture of their device.
  */
 def enableSeparateBuildPerCPUArchitecture = false
+def pass = getPassword("nowmad","android_keystore")
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
@@ -113,7 +114,7 @@ android {
         applicationId "com.nowmad"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
+        versionCode 22
         versionName "0.0.22"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -127,10 +128,19 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            storeFile file(UNIVERSAL_RELEASE_STORE_FILE)
+            storePassword pass
+            keyAlias UNIVERSAL_RELEASE_KEY_ALIAS
+            keyPassword pass
+        }
+    }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -149,14 +159,14 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-svg')
-    compile project(':react-native-onesignal')
-    compile project(':react-native-maps')
-    compile project(':rn-fetch-blob')
-    compile project(':react-native-image-picker')
-    compile project(':react-native-fast-image')
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-config')
+    implementation project(':react-native-svg')
+    implementation project(':react-native-onesignal')
+    implementation project(':react-native-maps')
+    implementation project(':rn-fetch-blob')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-fast-image')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-config')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -167,4 +177,17 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
+}
+
+def getPassword(String currentUser, String keyChain) {
+   def stdout = new ByteArrayOutputStream()
+   def stderr = new ByteArrayOutputStream()
+   exec {
+       commandLine 'security', '-q', 'find-generic-password', '-a', currentUser, '-s', keyChain, '-w'
+       standardOutput = stdout
+       errorOutput = stderr
+       ignoreExitValue true
+   }
+   //noinspection GroovyAssignabilityCheck
+      stdout.toString().trim()
 }
