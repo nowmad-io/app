@@ -95,7 +95,11 @@ class Tab extends PureComponent {
               actionDisable={people.length <= MAX_LIST}
               onActionPress={this.navigate('People')}
             >
-              <Image source={poweredByAlgolia} style={styles.poweredBy} />
+              <Image
+                source={poweredByAlgolia}
+                style={styles.poweredBy}
+                resizeMode="contain"
+              />
               <Spinner visible={peopleLoading} />
               {!peopleLoading && (allPage ? people.slice(0, MAX_LIST) : people).map(result => (
                 <ListItem
@@ -152,7 +156,11 @@ class Tab extends PureComponent {
               actionDisable={places.length <= MAX_LIST}
               onActionPress={this.navigate('Google Places')}
             >
-              <Image source={poweredByGoogle} style={styles.poweredBy} />
+              <Image
+                source={poweredByGoogle}
+                style={styles.poweredBy}
+                resizeMode="contain"
+              />
               <Spinner visible={placesLoading} />
               {!placesLoading && (allPage ? places.slice(0, MAX_LIST) : places).map(place => (
                 <ListItem
