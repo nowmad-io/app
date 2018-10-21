@@ -15,6 +15,7 @@ export default class Review extends PureComponent {
   }
 
   static propTypes = {
+    style: PropTypes.any,
     onPress: PropTypes.func,
     categories: PropTypes.array,
     own: PropTypes.bool,
@@ -42,6 +43,7 @@ export default class Review extends PureComponent {
   render() {
     const { xHeaderRight } = this.state;
     const {
+      style,
       onPress,
       own,
       shortDescription,
@@ -55,7 +57,12 @@ export default class Review extends PureComponent {
     } = this.props;
 
     return (
-      <View style={styles.review}>
+      <View
+        style={[
+          styles.review,
+          style,
+        ]}
+      >
         <TouchableOpacity
           onPress={onPress}
           activeOpacity={onPress ? 0.8 : 1}

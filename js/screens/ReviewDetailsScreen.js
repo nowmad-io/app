@@ -89,6 +89,7 @@ class ReviewDetailsScreen extends Component {
             <Button
               transparent
               onPress={this.onBackPress}
+              iconStyle={styles.backButton}
               icon="close"
               header
             />
@@ -187,6 +188,10 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: colors.white,
+    paddingHorizontal: 0,
+  },
+  backButton: {
+    color: colors.primary,
   },
   actionButton: {
     elevation: 8,
