@@ -8,6 +8,8 @@ import { selectPlace } from '../../reducers/home';
 
 import Review from '../../components/Review';
 import ReviewGoogle from '../../components/ReviewGoogle';
+import Button from '../../components/Button';
+import Text from '../../components/Text';
 import Icon from '../../components/Icon';
 
 import { colors, carousel } from '../../constants/parameters';
@@ -87,19 +89,13 @@ class Entry extends PureComponent {
               loading={loading}
             />
           )}
-          <TouchableOpacity
-            style={styles.cta}
-            activeOpacity={0.8}
+          <Button
+            light
             onPress={this.onActionPress}
+            style={styles.cta}
           >
-            <Icon
-              name={own ? 'edit' : 'playlist-add'}
-              style={[
-                styles.cta_icon,
-                own && styles.cta_edit,
-              ]}
-            />
-          </TouchableOpacity>
+            <Text uppercase={false}>{own ? 'Edit' : 'Add Review'}</Text>
+          </Button>
         </View>
       </View>
     );
@@ -121,9 +117,6 @@ const styles = StyleSheet.create({
     height: carousel.level2,
     backgroundColor: colors.white,
     position: 'relative',
-    borderColor: colors.primary,
-    borderTopWidth: carousel.border,
-    borderRadius: 2,
     elevation: 3,
   },
   googleCard: {
@@ -131,23 +124,6 @@ const styles = StyleSheet.create({
     borderColor: colors.primaryLight,
   },
   cta: {
-    backgroundColor: colors.yellowTransparent,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    height: 64,
-    width: 64,
-    borderTopRightRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingRight: 10,
-  },
-  cta_icon: {
-    color: colors.white,
-    fontSize: 32,
-  },
-  cta_edit: {
-    fontSize: 28,
+    alignSelf: 'flex-start',
   },
 });
