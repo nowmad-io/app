@@ -184,7 +184,8 @@ const homeReducer = (state = initialState, action) => {
       const { [Object.keys(action.review)[0]]: review } = action.review;
       return {
         ...state,
-        gPlace: state.gPlace && review && review.place.uid !== state.gPlace.uid || null,
+        gPlace: (state.gPlace && review && review.place.uid !== state.gPlace.uid)
+          ? state.gPlace : null,
       };
     }
     case FILTERS_CHANGE:
