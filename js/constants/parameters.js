@@ -49,10 +49,9 @@ export const fonts = {
   light: { fontFamily: `${fontFamily}-Light`, fontWeight: undefined },
   regular: { fontFamily: `${fontFamily}-Regular`, fontWeight: undefined },
   medium: { fontFamily: `${fontFamily}-Medium`, fontWeight: undefined },
-  semiBold: { fontFamily: `${fontFamily}-SemiBold`, fontWeight: undefined },
+  demiBold: { fontFamily: `${fontFamily}-Demi`, fontWeight: undefined },
   bold: { fontFamily: `${fontFamily}-Bold`, fontWeight: undefined },
-  extraBold: { fontFamily: `${fontFamily}-ExtraBold`, fontWeight: undefined },
-  black: { fontFamily: `${fontFamily}-Black`, fontWeight: undefined },
+  heavy: { fontFamily: `${fontFamily}-Heavy`, fontWeight: undefined },
 };
 
 export const sizes = {
