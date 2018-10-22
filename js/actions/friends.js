@@ -51,7 +51,7 @@ export const apiSendRequest = ({
       uid: Firebase.userUID(),
       firstName,
       lastName,
-      photoURL,
+      photoURL: photoURL || null,
       senderId,
       seen: false,
       timestamp: Firebase.database.ServerValue.TIMESTAMP,
