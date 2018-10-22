@@ -159,6 +159,8 @@ const styles = StyleSheet.create({
   fab: {
     ...colors.blackShadow,
     height: 56,
+    paddingHorizontal: 0,
+    justifyContent: 'center',
   },
   fab_text: {
     color: colors.black,
