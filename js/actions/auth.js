@@ -23,7 +23,7 @@ export function updateProfile(user) {
   };
 }
 
-export function apiUpdateProfile({ firstName, lastName, ...profileToUpdate }) {
+function updateAuthProfile({ firstName, lastName, ...profileToUpdate }) {
   const identity = {
     ...(firstName ? { firstName: _.upperFirst(firstName) } : {}),
     ...(lastName ? { lastName: _.upperFirst(lastName) } : {}),
@@ -35,16 +35,13 @@ export function apiUpdateProfile({ firstName, lastName, ...profileToUpdate }) {
   };
 
   return Firebase.auth().currentUser.updateProfile(profile)
-    .then(() => Firebase.users.child(Firebase.userUID()).update({
-      ...profile,
-      uid: Firebase.userUID(),
-    }))
-    .then(() => ({
-      [Firebase.userUID()]: {
-        ...profile,
-        uid: Firebase.userUID(),
-      },
-    }));
+    .then(() => profile);
+}
+
+export function apiUpdateProfile(profile) {
+  return updateAuthProfile(profile)
+    .then(myProfile => Firebase.users.child(Firebase.userUID()).update(myProfile)
+      .then(() => ({ [Firebase.userUID()]: profile })));
 }
 
 export function apiRestoreSession() {
@@ -80,11 +77,24 @@ export function apiRegister({ password, ...profile }) {
     .createUserWithEmailAndPassword(profile.email, password)
     .then(getSenderId)
     .then(({ userId: senderId }) => {
-      OneSignal.sendTag('userId', Firebase.userUID());
-      return apiUpdateProfile({
+      const uid = Firebase.userUID();
+      const myProfile = {
         ...profile,
+        uid,
         senderId,
-      });
+      };
+      const requests = {
+        [`/users/${uid}`]: myProfile,
+        [`/reviews/${uid}`]: true,
+        [`/friendships/${uid}`]: true,
+        [`/requests/${uid}`]: true,
+      };
+
+      OneSignal.sendTag('userId', uid);
+
+      return updateAuthProfile(myProfile)
+        .then(() => Firebase.database().ref().update(requests))
+        .then(() => ({ [uid]: myProfile }));
     });
 }
 
