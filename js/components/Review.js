@@ -73,12 +73,13 @@ export default class Review extends PureComponent {
               uri={createdBy.photoURL}
               text={own ? 'me' : Review.initials(createdBy)}
               uppercase={!own}
+              size={36}
             />
             <View
               style={styles.header_right}
               onLayout={this._onLayout}
             >
-              <Text>
+              <Text style={styles.text}>
                 <Text style={styles.user_text} capitalize>
                   {`${own ? 'me' : createdBy.firstName}`}
                 </Text>
@@ -101,7 +102,7 @@ export default class Review extends PureComponent {
                   )) }
                 </View>
               ) : (
-                <Text lowercase>
+                <Text lowercase style={styles.text}>
                   {`was ${status}`}
                 </Text>
               )}
@@ -166,7 +167,11 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     justifyContent: 'space-between',
   },
+  text: {
+    lineHeight: 20,
+  },
   user_text: {
+    lineHeight: 20,
     ...fonts.medium,
   },
   others: {
