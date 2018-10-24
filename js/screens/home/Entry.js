@@ -123,6 +123,8 @@ const styles = StyleSheet.create({
     borderColor: colors.primaryLight,
   },
   cta: {
+    backgroundColor: colors.transparent,
+    borderWidth: 0,
     alignSelf: 'flex-start',
     height: 44,
     paddingVertical: 12,

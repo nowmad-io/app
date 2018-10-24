@@ -30,7 +30,7 @@ export default class ReviewGoogle extends PureComponent {
             style={styles.header_right}
             onLayout={this._onLayout}
           >
-            <Text style={styles.user_text} capitalize>
+            <Text style={styles.user_text} capitalize numberOfLines={1}>
               {name}
             </Text>
             <Text>Google</Text>
@@ -46,6 +46,7 @@ export default class ReviewGoogle extends PureComponent {
                 styles.picture,
                 { marginRight: 0 },
               ]}
+              resizeMode="cover"
             />
           ))}
         </View>
@@ -57,7 +58,6 @@ export default class ReviewGoogle extends PureComponent {
 const styles = StyleSheet.create({
   review: {
     paddingTop: 10,
-    marginBottom: 16,
     marginHorizontal: 16,
     flex: 1,
   },

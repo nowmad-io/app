@@ -118,6 +118,7 @@ export default class Review extends PureComponent {
               <FastImage
                 source={{ uri: pictures[0].uri }}
                 style={detail ? styles.picture_detail : styles.picture}
+                resizeMode="cover"
               />
             )}
             <View
