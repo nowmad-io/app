@@ -19,6 +19,7 @@ class CarouselScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
+    onAddLocationPress: PropTypes.func,
     visiblePlaces: PropTypes.array,
     selectedPlace: PropTypes.string,
     gPlace: PropTypes.object,
@@ -82,7 +83,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
   render() {
     const {
-      navigation, panY, visiblePlaces, gPlace,
+      navigation, panY, visiblePlaces, gPlace, onAddLocationPress,
     } = this.props;
 
     return (
@@ -101,7 +102,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
             style={styles.entryWrapper}
           >
             <EmptyEntry
-              onAddLocationPress={this.onAddLocationPress}
+              onAddLocationPress={onAddLocationPress}
               onSharePress={this.onSharePress}
             />
           </View>
