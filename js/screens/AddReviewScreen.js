@@ -89,7 +89,7 @@ class AddReviewScreen extends Component {
   onMapReady = () => {
     const { place: { longitude, latitude } } = this.state;
 
-    this._map.animateToCoordinate({ latitude, longitude });
+    this._map.fitToCoordinates([{ latitude, longitude }], { animated: false });
   }
 
   onPublish = () => {

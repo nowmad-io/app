@@ -43,7 +43,6 @@ export default class App extends Component {
   componentWillMount() {
     OneSignal.init(Config.ONESIGNAL_APPID);
     OneSignal.inFocusDisplaying(2);
-    console.log('here ?');
   }
 
   render() {

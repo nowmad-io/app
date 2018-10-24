@@ -44,10 +44,10 @@ class ReviewDetailsScreen extends Component {
   onMapReady = () => {
     const { review: { place } } = this.props;
 
-    this._map.animateToCoordinate({
-      longitude: place.longitude,
+    this._map.fitToCoordinates([{
       latitude: place.latitude,
-    });
+      longitude: place.longitude,
+    }], { animated: false });
   }
 
   onAddressLayout = (event) => {
