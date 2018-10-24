@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   categorie: {
-    color: colors.primary,
+    color: colors.primaryDark,
     fontSize: 12,
     lineHeight: 14,
   },
