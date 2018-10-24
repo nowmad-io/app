@@ -13,6 +13,7 @@ import {
   apiRejectRequest,
 } from '../../actions/friends';
 import { filtersChange } from '../../actions/home';
+import { COORD_REGEX } from '../../actions/search';
 
 import Text from '../../components/Text';
 import List from '../../components/List';
@@ -20,7 +21,7 @@ import ListItem from '../../components/ListItem';
 import Spinner from '../../components/Spinner';
 import Button from '../../components/Button';
 
-import { colors, fonts } from '../../constants/parameters';
+import { colors, fonts, sizes } from '../../constants/parameters';
 
 const poweredByAlgolia = require('../../../assets/images/powered_by_algolia.png');
 const poweredByGoogle = require('../../../assets/images/powered_by_google.png');
@@ -60,6 +61,14 @@ class Tab extends PureComponent {
     this.props.dispatch(filtersChange({ friend }));
   }
 
+  onCustomPress = (latitude, longitude) => () => this.props.screenProps.onCustomPress({
+    latitude,
+    longitude,
+    name: '',
+    vicinity: `${latitude}, ${longitude}`,
+    google: true,
+  });
+
   render() {
     const {
       navigation,
@@ -68,6 +77,7 @@ class Tab extends PureComponent {
         peopleLoading,
         places,
         placesLoading,
+        text,
       },
       friends,
       incomings,
@@ -77,6 +87,7 @@ class Tab extends PureComponent {
     const allPage = navigation.state.routeName === 'All';
     const peoplePage = navigation.state.routeName === 'People';
     const placesPage = navigation.state.routeName === 'Google Places';
+    const coords = COORD_REGEX.exec(text);
 
     return (
       <View style={styles.container}>
@@ -171,6 +182,18 @@ class Tab extends PureComponent {
             </List>
           )}
         </ScrollView>
+        {placesPage && coords && coords.length >= 3 && (
+          <View
+            style={styles.customWrapper}
+          >
+            <Button
+              onPress={this.onCustomPress(+coords[1], +coords[2])}
+              style={styles.customButton}
+            >
+              <Text>Add a New Place</Text>
+            </Button>
+          </View>
+        )}
       </View>
     );
   }
@@ -190,12 +213,12 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     paddingHorizontal: 16,
-    paddingVertical: 22,
+    paddingTop: 16,
     flex: 1,
   },
   list: {
     minHeight: 62,
-    marginBottom: 16,
+    paddingBottom: 72,
   },
   icon: {
     fontSize: 24,
@@ -235,5 +258,17 @@ const styles = StyleSheet.create({
   thumbnailStyle: {
     height: 16,
     width: 16,
+  },
+  customWrapper: {
+    position: 'absolute',
+    bottom: 16,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  customButton: {
+    width: sizes.width * 0.62,
+    height: 40,
   },
 });

@@ -60,6 +60,7 @@ export const sizes = {
   headerHeight: 48,
   drawerWidth: width * 0.9,
   searchBarPadding: 8,
+  toolBar: 48,
 };
 
 export const carousel = {

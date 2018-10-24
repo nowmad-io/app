@@ -141,6 +141,8 @@ class SearchBar extends Component {
     placeDetails(place.placeId).then(action);
   }
 
+  onCustomPress = place => this.props.navigation.navigate('AddReviewScreen', { place });
+
   searchNearby(coordinatesQuery) {
     this.setState({
       peopleLoading: true,
@@ -287,7 +289,9 @@ class SearchBar extends Component {
               peopleLoading,
               places,
               placesLoading,
+              text,
               onGPlacePress: this.onGPlacePress,
+              onCustomPress: this.onCustomPress,
             }}
           />
           <Spinner overlay visible={loading} />
@@ -330,7 +334,11 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   tabs: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    bottom: sizes.toolBar,
+    left: 0,
+    right: 0,
     backgroundColor: colors.white,
   },
   badge: {
