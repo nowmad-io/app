@@ -155,7 +155,6 @@ export default class Review extends PureComponent {
 const styles = StyleSheet.create({
   review: {
     paddingTop: 10,
-    marginBottom: 16,
     marginHorizontal: 16,
     flex: 1,
   },
@@ -181,8 +180,8 @@ const styles = StyleSheet.create({
     marginRight: 2,
   },
   others_avatar_text: {
-    fontSize: 9,
-    lineHeight: 11,
+    fontSize: 8,
+    lineHeight: 12,
   },
   others_avatar_image: {
     borderWidth: 1,

@@ -46,6 +46,7 @@ export default class Text extends Component {
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
+    lineHeight: 20,
     ...fonts.regular,
     color: colors.black,
   },

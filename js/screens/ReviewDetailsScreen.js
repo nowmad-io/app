@@ -102,11 +102,11 @@ class ReviewDetailsScreen extends Component {
             <View>
               <Review
                 own={!!own}
-                categories={categories || []}
+                categories={categories}
                 createdBy={createdBy}
                 shortDescription={shortDescription}
                 status={status}
-                pictures={pictures || []}
+                pictures={pictures}
                 style={styles.review}
                 detail
               />

@@ -8,13 +8,18 @@ export const getPlaces = state => state.entities.places;
 export const getReviews = state => state.entities.reviews;
 export const getReview = (state, uid) => state.entities.reviews[uid];
 
-const initialState = {
-  reviews: {},
-  places: {},
+const initialPlace = {
+  own: null,
+  reviews: [],
+  pictures: [],
+  categories: [],
+  friends: [],
+  shortDescription: '',
+  status: '',
 };
 
-const updatePlaces = (
-  places,
+const updatePlace = (
+  prevPlace = initialPlace,
   {
     uid: reviewUid,
     createdBy,
@@ -23,43 +28,42 @@ const updatePlaces = (
     status,
     ...review
   },
-  removed,
   own,
 ) => ({
-  ...places,
   [place.uid]: {
-    ...(places[place.uid] || {}),
+    ...prevPlace,
     ...place,
-    reviews: !removed ? _.uniqBy([
+    own: own ? reviewUid : prevPlace.own,
+    reviews: _.uniqBy([
       { uid: reviewUid, createdBy },
-      ...(places[place.uid] && places[place.uid].reviews || []),
-    ], 'uid') : _.filter(places[place.uid].reviews, { uid: reviewUid }),
-    own: own && reviewUid || (places[place.uid] || {}).own,
+      ...prevPlace.reviews,
+    ], 'uid'),
     pictures: _.uniqBy((
       own
         ? [
           ...(_.values(review.pictures) || []),
-          ...(places[place.uid] && places[place.uid].pictures || []),
+          ...prevPlace.pictures,
         ] : [
-          ...(places[place.uid] && places[place.uid].pictures || []),
+          ...prevPlace.pictures,
           ...(_.values(review.pictures) || []),
         ]
     ), 'uri'),
     friends: _.uniq(own
-      ? [own, ...(places[place.uid] && places[place.uid].friends || [])]
-      : [...(places[place.uid] && places[place.uid].friends || []), createdBy]),
-    categories: _.uniq(own
-      ? [
-        ...(_.keys(review.categories) || []),
-        ...(places[place.uid] && places[place.uid].categories || []),
-      ] : [
-        ...(places[place.uid] && places[place.uid].categories || []),
-        ...(_.keys(review.categories) || []),
-      ]),
-    shortDescription: (!(places[place.uid] || {}).own || own) ? shortDescription : (places[place.uid] && places[place.uid].shortDescription || ''),
-    status: (!(places[place.uid] || {}).own || own) ? status : (places[place.uid] && places[place.uid].status || ''),
+      ? [own, ...prevPlace.friends]
+      : [...prevPlace.friends, createdBy]),
+    categories: _.uniq([
+      ..._.keys(review.categories),
+      ...prevPlace.categories,
+    ]),
+    shortDescription: (!prevPlace.own || own) ? shortDescription : prevPlace.shortDescription,
+    status: (!prevPlace.own || own) ? status : prevPlace.status,
   },
 });
+
+const initialState = {
+  reviews: {},
+  places: {},
+};
 
 const entitiesReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -68,7 +72,10 @@ const entitiesReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        places: updatePlaces(state.places, review, action.removed, action.own),
+        places: {
+          ...state.places,
+          ...updatePlace(state.places[review.place.uid], review, action.own),
+        },
         reviews: !action.removed ? {
           ...state.reviews,
           [review.uid]: review,

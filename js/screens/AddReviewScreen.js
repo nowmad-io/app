@@ -57,8 +57,8 @@ class AddReviewScreen extends Component {
       shortDescription: '',
       information: '',
       status: STATUS[0],
-      categories: {},
-      pictures: {},
+      categories: [],
+      pictures: [],
       link1: '',
       link2: '',
     };
@@ -115,7 +115,10 @@ class AddReviewScreen extends Component {
       shortDescription,
       information,
       status,
-      categories,
+      categories: _.reduce(categories, (result, value) => ({
+        ...result,
+        [value]: true,
+      }), {}),
       link1,
       link2,
       place: {
@@ -124,6 +127,7 @@ class AddReviewScreen extends Component {
         longitude,
       },
     };
+
     Keyboard.dismiss();
     pushReview(newReview);
     this.props.dispatch(uploadPictures(newReview.uid, pictures));
@@ -143,7 +147,7 @@ class AddReviewScreen extends Component {
       this.setState(({ review }) => ({
         review: {
           ...review,
-          pictures: _.omit(pictures, image.uid),
+          pictures: _.filter(pictures, pic => pic.uid !== image.uid),
         },
       }));
 
@@ -153,13 +157,18 @@ class AddReviewScreen extends Component {
     this.setState(({ review }) => ({
       review: {
         ...review,
-        pictures: {
-          ...review.pictures,
-          [image.uid]: {
-            ...review.pictures[image.uid],
-            ...image,
-          },
-        },
+        pictures: _.find(pictures, pic => pic.uid === image.uid)
+          ? _.map(pictures, (pic) => {
+            if (pic.uid === image.uid) {
+              return {
+                ...pic,
+                ...image,
+              };
+            }
+
+            return pic;
+          })
+          : [...pictures, image],
       },
     }));
   }
@@ -197,12 +206,9 @@ class AddReviewScreen extends Component {
     this.setState(({ review }) => ({
       review: {
         ...review,
-        categories: categories[category]
-          ? _.omit(categories, category)
-          : {
-            ...review.categories,
-            [category]: true,
-          },
+        categories: _.find(categories, cat => cat === category)
+          ? _.without(categories, category)
+          : _.uniq([category, ...review.categories]),
       },
     }));
   }
@@ -312,7 +318,7 @@ class AddReviewScreen extends Component {
                   <Tag
                     key={category}
                     text={category}
-                    selected={categories[category]}
+                    selected={!!_.find(categories, cat => cat === category)}
                     onPress={this.toggleCategory(category)}
                   />
                 ))}

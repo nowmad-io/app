@@ -32,7 +32,7 @@ export const selectReview = createSelector(
     return ({
       ...review,
       createdBy: own ? meObject : friends[review.createdBy],
-      categories: _.keys(review.categories || {}),
+      categories: _.keys(review.categories),
       pictures: _.map(review.pictures, picture => picture),
       own,
     });

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -10,7 +10,6 @@ import Review from '../../components/Review';
 import ReviewGoogle from '../../components/ReviewGoogle';
 import Button from '../../components/Button';
 import Text from '../../components/Text';
-import Icon from '../../components/Icon';
 
 import { colors, carousel } from '../../constants/parameters';
 
@@ -125,5 +124,7 @@ const styles = StyleSheet.create({
   },
   cta: {
     alignSelf: 'flex-start',
+    height: 44,
+    paddingVertical: 12,
   },
 });
