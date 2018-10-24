@@ -62,7 +62,7 @@ class MapWrapper extends React.Component {
       }, 1000);
     }
 
-    if (filters.friend && places.length !== this.props.places.length) {
+    if (filters.friend && places.length && places.length !== this.props.places.length) {
       this._map.current.getRef().fitToCoordinates(places);
     }
 

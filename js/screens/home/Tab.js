@@ -57,10 +57,7 @@ class Tab extends PureComponent {
   cancelFriendRequest = uid => () => apiCancelRequest(uid);
 
   onFriendPress = friend => () => {
-    this.props.screenProps.onFriendPress(friend);
-    this.props.dispatch(filtersChange({
-      friend: friend.uid,
-    }));
+    this.props.dispatch(filtersChange({ friend }));
   }
 
   render() {

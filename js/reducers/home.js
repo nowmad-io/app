@@ -140,6 +140,7 @@ const initialState = {
   filters: {
     friend: null,
   },
+  searchText: null,
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -192,8 +193,9 @@ const homeReducer = (state = initialState, action) => {
       return {
         ...state,
         filters: {
-          friend: action.friend,
+          friend: action.friend && action.friend.uid,
         },
+        searchText: action.friend && action.friend.firstName,
       };
     case LOGOUT:
       return initialState;

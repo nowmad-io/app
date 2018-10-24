@@ -26,6 +26,7 @@ class SearchBar extends Component {
     onAddFriendPress: PropTypes.func,
     onClear: PropTypes.func,
     notifications: PropTypes.number,
+    searchText: PropTypes.string,
   }
 
   static defaultProps = {
@@ -52,6 +53,16 @@ class SearchBar extends Component {
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+  }
+
+  componentWillReceiveProps({ searchText }) {
+    if (searchText && searchText !== this.props.searchText) {
+      this.blur();
+      this.setState({
+        text: searchText,
+        previousValue: searchText,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -100,11 +111,6 @@ class SearchBar extends Component {
     this.props.onClear();
   }
 
-  onFriendPress = (friend) => {
-    this.blur();
-    this.onChangeText(friend.first_name, true);
-  }
-
   onPlacePress = (place) => {
     this.blur();
     this.onChangeText(place.name, true);
@@ -133,15 +139,6 @@ class SearchBar extends Component {
     }
 
     placeDetails(place.placeId).then(action);
-  }
-
-  onFriendPress = ({ firstName, lastName }) => {
-    const text = `${firstName} ${lastName}`;
-    this.blur();
-    this.setState({
-      text,
-      previousValue: text,
-    });
   }
 
   searchNearby(coordinatesQuery) {
@@ -291,7 +288,6 @@ class SearchBar extends Component {
               places,
               placesLoading,
               onGPlacePress: this.onGPlacePress,
-              onFriendPress: this.onFriendPress,
             }}
           />
           <Spinner overlay visible={loading} />
@@ -302,6 +298,7 @@ class SearchBar extends Component {
 }
 
 const makeMapStateToProps = state => ({
+  searchText: state.home.searchText,
   notifications: selectNotifications(state),
 });
 
