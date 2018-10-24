@@ -87,7 +87,9 @@ export const selectPlace = () => createSelector(
 
 export const selectMarkers = () => createSelector(
   [selectFilteredPlaces, getMe, getFriends],
-  (places, me, friends) => _.map(places, ({ longitude, latitude, reviews }, placeUid) => {
+  (places, me, friends) => _.map(places, ({
+    longitude, latitude, reviews, name, vicinity,
+  }, placeUid) => {
     let i = 0;
     let text;
     let picture;
@@ -120,6 +122,8 @@ export const selectMarkers = () => createSelector(
       latitude,
       text,
       picture,
+      name,
+      vicinity,
     };
   }),
 );

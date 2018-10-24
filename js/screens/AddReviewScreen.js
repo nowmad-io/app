@@ -252,7 +252,7 @@ class AddReviewScreen extends Component {
       addingImage,
     } = this.state;
 
-    const valid = !!shortDescription && !!information;
+    const valid = !!information;
 
     return (
       <View style={styles.container}>
