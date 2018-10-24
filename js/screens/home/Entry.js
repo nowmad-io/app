@@ -113,7 +113,7 @@ export default connect(makeMapStateToProps)(Entry);
 
 const styles = StyleSheet.create({
   card: {
-    height: carousel.level2,
+    height: carousel.height,
     backgroundColor: colors.white,
     position: 'relative',
     elevation: 3,

@@ -62,13 +62,9 @@ export const sizes = {
   searchBarPadding: 8,
 };
 
-const ITEM_SPACING = 8;
-
 export const carousel = {
-  sliderWidth: sizes.width,
-  itemSpacing: ITEM_SPACING,
-  itemWidth: sizes.width - (ITEM_SPACING * 2),
-  level1: 80,
-  level2: 166,
+  entryMargin: Math.floor(width * 0.011),
+  entryWidth: Math.floor(width * 0.88),
+  height: 168,
   border: 4,
 };

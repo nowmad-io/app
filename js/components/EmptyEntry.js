@@ -49,7 +49,7 @@ export default class EmptyEntry extends PureComponent {
 
 const styles = StyleSheet.create({
   card: {
-    height: carousel.level2,
+    height: carousel.height,
     backgroundColor: colors.yellowDark,
     position: 'relative',
     borderColor: colors.yellowDark,

@@ -22,7 +22,7 @@ import { carousel, sizes } from '../../constants/parameters';
 
 const INITIAL_PADDING = {
   top: sizes.headerHeight + sizes.searchBarPadding,
-  bottom: carousel.level2,
+  bottom: carousel.height,
 };
 
 class MapWrapper extends React.Component {

@@ -26,7 +26,7 @@ class HomeScreen extends React.PureComponent {
     super(props);
 
     this.state = {
-      panY: new Animated.Value(-carousel.level2),
+      panY: new Animated.Value(-carousel.height),
     };
 
     this._map = React.createRef();
