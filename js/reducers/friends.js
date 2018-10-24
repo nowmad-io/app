@@ -31,7 +31,7 @@ const friendsReducer = (state = initialState, action) => {
         outgoings: !removed ? (outgoings || state.outgoings) : {},
       };
     }
-    case `${LOGOUT}_REQUEST`:
+    case LOGOUT:
       return initialState;
     default:
       return state;
