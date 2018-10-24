@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     height: carousel.height,
     backgroundColor: colors.white,
     position: 'relative',
-    elevation: 3,
+    elevation: 6,
   },
   googleCard: {
     backgroundColor: colors.primaryLight,
