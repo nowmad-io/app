@@ -161,8 +161,8 @@ class ReviewDetailsScreen extends Component {
             </Map>
             <View style={styles.addressWrapper} onLayout={this.onAddressLayout}>
               <Icon style={styles.addressIcon} name="location-on" />
-              <Text style={styles.addressText}>
-                {place.address}
+              <Text style={styles.addressText} numberOfLines={1}>
+                {place.vicinity}
               </Text>
             </View>
           </View>
@@ -246,11 +246,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whiteTransparent,
   },
   addressIcon: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.grey,
   },
   addressText: {
-    fontSize: 10,
-    marginLeft: 8,
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 18,
+    paddingLeft: 8,
   },
 });
