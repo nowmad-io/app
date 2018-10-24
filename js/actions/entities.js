@@ -7,10 +7,11 @@ import {
   UPLOAD_PICTURES,
 } from '../constants/entities';
 
-export function fetchReviewSuccess(review, removed, own) {
+export function fetchReviewSuccess(review, updated, removed, own) {
   return {
     type: FETCH_REVIEW_SUCCESS,
     review,
+    updated,
     removed,
     own,
   };
@@ -30,11 +31,12 @@ export function pushReview(review) {
 
 export function userReviewsListener(uid) {
   const query = Firebase.reviews.child(uid);
-  const emitData = (emit, data, removed) => emit({
+  const emitData = (emit, data, updated, removed) => emit({
     [data.key]: {
       ...data.val(),
       createdBy: data.ref.parent.key,
     },
+    updated,
     removed,
   });
 
@@ -45,7 +47,11 @@ export function userReviewsListener(uid) {
     );
     query.on(
       'child_changed',
-      data => emitData(emit, data),
+      data => emitData(emit, data, true),
+    );
+    query.on(
+      'child_removed',
+      data => emitData(emit, data, false, true),
     );
 
     return () => query.off();
