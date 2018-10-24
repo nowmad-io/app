@@ -159,7 +159,10 @@ class Tab extends PureComponent {
           { (placesPage || allPage) && (
             <List
               label={allPage ? 'RESULTS BY PLACES' : null}
-              style={styles.list}
+              style={[
+                styles.list,
+                placesPage && coords && coords.length >= 3 && styles.listCoords,
+              ]}
               action="see all"
               actionDisable={places.length <= MAX_LIST}
               onActionPress={this.navigate('Google Places')}
@@ -217,8 +220,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   list: {
-    minHeight: 62,
-    paddingBottom: 72,
+    marginBottom: 16,
+  },
+  listCoords: {
+    marginBottom: 72,
   },
   icon: {
     fontSize: 24,
