@@ -66,7 +66,7 @@ class FriendsScreen extends Component {
               underlayColor={colors.primaryShadowLight}
               onPress={this.onFriendPress(friend)}
             >
-              <View style={styles.row}>
+              <View style={[styles.row, styles.friendRow]}>
                 <Avatar
                   uri={friend.photoURL}
                   text={FriendsScreen.initials(friend)}
@@ -107,6 +107,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
+  },
+  friendRow: {
     paddingHorizontal: 16,
   },
   friendText: {

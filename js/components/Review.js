@@ -196,6 +196,8 @@ const styles = StyleSheet.create({
   },
   picture: {
     flex: 1,
+    width: '100%',
+    height: '100%',
     marginRight: 12,
   },
   picture_detail: {
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   categorie: {
-    color: colors.primaryShadowDark,
+    color: colors.primaryShadowDarker,
     fontSize: 14,
     lineHeight: 16,
   },

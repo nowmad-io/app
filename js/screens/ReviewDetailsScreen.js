@@ -14,7 +14,7 @@ import Marker from '../components/Marker';
 import Icon from '../components/Icon';
 import Review from '../components/Review';
 
-import { colors, sizes } from '../constants/parameters';
+import { colors, sizes, fonts } from '../constants/parameters';
 
 import { selectReview } from '../reducers/home';
 
@@ -243,16 +243,19 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: colors.whiteTransparent,
+    backgroundColor: colors.primaryShadowDark,
   },
   addressIcon: {
-    fontSize: 16,
-    color: colors.grey,
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.white,
+    ...fonts.medium,
   },
   addressText: {
     flex: 1,
     fontSize: 14,
     lineHeight: 18,
     paddingLeft: 8,
+    color: colors.white,
   },
 });

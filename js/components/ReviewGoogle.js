@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import _ from 'lodash';
 
 import Text from './Text';
 import Avatar from './Avatar';
@@ -37,14 +38,14 @@ export default class ReviewGoogle extends PureComponent {
           </View>
         </View>
         <View style={styles.body}>
-          <Spinner visible={loading} />
-          {pictures && pictures.slice(0, 1).map(({ uid, uri }) => (
+          <Spinner visible={loading} color={colors.white} />
+          {_.map(pictures, ({ uid, uri }, index) => (
             <FastImage
               key={uid}
               source={{ uri }}
               style={[
                 styles.picture,
-                { marginRight: 0 },
+                (index === _.size(pictures) - 1) && { marginRight: 0 },
               ]}
               resizeMode="cover"
             />
@@ -72,61 +73,16 @@ const styles = StyleSheet.create({
   user_text: {
     ...fonts.medium,
   },
-  others: {
-    flexDirection: 'row',
-  },
-  others_avatar: {
-    marginRight: 2,
-  },
-  others_avatar_text: {
-    fontSize: 9,
-    lineHeight: 11,
-  },
-  others_avatar_image: {
-    borderWidth: 1,
-  },
   body: {
     flex: 1,
-  },
-  bodyNoDetail: {
-    maxHeight: 84,
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   picture: {
+    width: '100%',
+    height: '100%',
     flex: 1,
-    marginRight: 12,
-  },
-  picture_detail: {
-    height: 150,
-    marginBottom: 12,
-  },
-  body_right: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  description: {
-    fontSize: 18,
-    lineHeight: 24,
-    ...fonts.medium,
-    color: colors.greyDark,
-  },
-  description_noimage: {
-    fontSize: 22,
-    lineHeight: 28,
-    ...fonts.regular,
-  },
-  description_detail: {
-    marginBottom: 12,
-  },
-  categories: {
-    flexDirection: 'row',
-  },
-  categorie: {
-    color: colors.primaryShadowDark,
-    fontSize: 14,
-    lineHeight: 16,
-  },
-  googleAvatar: {
-    color: colors.greyDark,
+    marginRight: 8,
   },
 });

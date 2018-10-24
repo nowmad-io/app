@@ -28,7 +28,7 @@ import Marker from '../components/Marker';
 import { pushReview, uploadPictures } from '../actions/entities';
 import { selectMarkers, selectReview } from '../reducers/home';
 
-import { colors } from '../constants/parameters';
+import { colors, fonts, sizes } from '../constants/parameters';
 
 const MAX_LENGTH_PICTURES = 5;
 const STATUS = [
@@ -56,11 +56,11 @@ class AddReviewScreen extends Component {
     const { review, place } = props;
 
     const defaultReview = {
-      shortDescription: '',
+      shortDescription: place.name || '',
       information: '',
       status: STATUS[0],
       categories: [],
-      pictures: [],
+      pictures: place.pictures || [],
       link1: '',
       link2: '',
     };
@@ -239,6 +239,7 @@ class AddReviewScreen extends Component {
   render() {
     const {
       review: {
+        uid: reviewUid,
         shortDescription,
         information,
         categories,
@@ -251,20 +252,16 @@ class AddReviewScreen extends Component {
       addingImage,
     } = this.state;
 
-    const valid = !!shortDescription;
+    const valid = !!shortDescription && !!information;
 
     return (
       <View style={styles.container}>
         <Header
           left={(
-            <Button transparent onPress={this.onBackPress} icon="arrow-back" header />
-          )}
-          right={(
-            <Button transparent onPress={this.onPublish} disabled={!valid}>
-              <Text>
-                PUBLISH
-              </Text>
-            </Button>
+            <View style={styles.row}>
+              <Button transparent onPress={this.onBackPress} icon="arrow-back" header />
+              <Text style={styles.headerText}>{`${!reviewUid ? 'New' : 'Update'} Experience`}</Text>
+            </View>
           )}
         />
         <Content style={styles.content}>
@@ -289,29 +286,35 @@ class AddReviewScreen extends Component {
             </View>
           </View>
           <View style={styles.reviewWrapper}>
-            <Text style={styles.title}>
-              My review
-            </Text>
+            <FormInput
+              defaultValue={shortDescription}
+              placeholder="Where were you ?"
+              onChangeText={
+                short => this.setState(({ review }) => ({
+                  review: {
+                    ...review,
+                    shortDescription: short,
+                  },
+                }))
+              }
+              maxLength={50}
+            />
             <View>
-              <Label
-                text="Add a short description about this place"
-                required
-              />
+              <Label text="Tell your friends about your experience" required />
               <FormInput
-                defaultValue={shortDescription}
-                placeholder="E.g: Beautiful water mirror ! Chill and peaceful..."
-                onChangeText={
-                  short => this.setState(({ review }) => ({
-                    review: {
-                      ...review,
-                      shortDescription: short,
-                    },
-                  }))
-                }
-                maxLength={50}
+                defaultValue={information}
+                multiline
+                placeholder="What made it special ?"
+                onChangeText={info => this.setState(({ review }) => ({
+                  review: {
+                    ...review,
+                    information: info,
+                  },
+                }))}
+                maxLength={300}
               />
             </View>
-            <View style={styles.group}>
+            <View>
               <Label text="You were..." required />
               {STATUS.map(stat => (
                 <RadioButton
@@ -339,21 +342,6 @@ class AddReviewScreen extends Component {
                   />
                 ))}
               </View>
-            </View>
-            <View style={styles.group}>
-              <Label text="Tell your friends about your experience" />
-              <FormInput
-                defaultValue={information}
-                multiline
-                placeholder="What made that experience mad awesome ?"
-                onChangeText={info => this.setState(({ review }) => ({
-                  review: {
-                    ...review,
-                    information: info,
-                  },
-                }))}
-                maxLength={300}
-              />
             </View>
             <View style={styles.group}>
               <Label text="Add some pictures with a caption" />
@@ -402,6 +390,15 @@ class AddReviewScreen extends Component {
               )}
             </View>
           </View>
+          <View style={styles.ctaWrapper}>
+            <Button
+              onPress={this.onPublish}
+              disabled={!valid}
+              style={styles.ctaButton}
+            >
+              <Text uppercase={false}>Publish</Text>
+            </Button>
+          </View>
         </Content>
         <Spinner overlay visible={addingImage} />
       </View>
@@ -429,6 +426,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
   mapWrapper: {
     height: 150,
   },
@@ -447,26 +449,25 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: colors.whiteTransparent,
+    backgroundColor: colors.primaryShadowDark,
   },
   addressIcon: {
-    fontSize: 16,
-    color: colors.grey,
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.white,
+    ...fonts.medium,
   },
   addressText: {
     flex: 1,
     fontSize: 14,
     lineHeight: 18,
     paddingLeft: 8,
+    color: colors.white,
   },
   reviewWrapper: {
     paddingTop: 16,
     paddingHorizontal: 16,
-    paddingBottom: 50,
-  },
-  title: {
-    fontSize: 24,
-    lineHeight: 26,
+    paddingBottom: 20,
   },
   tagWrapper: {
     marginTop: 12,
@@ -480,14 +481,17 @@ const styles = StyleSheet.create({
   image: {
     marginLeft: 8,
   },
-  imagesCaption: {
-    fontSize: 14,
-    fontWeight: '400',
-    paddingBottom: 4,
-    borderBottomWidth: 1,
-    borderColor: colors.grey,
-  },
-  icon: {
+  headerText: {
+    marginLeft: 4,
+    ...fonts.medium,
     color: colors.white,
+  },
+  ctaWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 16,
+  },
+  ctaButton: {
+    width: sizes.width * 0.62,
   },
 });

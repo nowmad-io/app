@@ -5,7 +5,7 @@ import { TextInput, View, StyleSheet } from 'react-native';
 import Text from './Text';
 import Icon from './Icon';
 
-import { colors } from '../constants/parameters';
+import { colors, fonts } from '../constants/parameters';
 
 export default class FormInput extends Component {
   static propTypes = {
@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginRight: 4,
     fontSize: 10,
-    fontWeight: '500',
     color: colors.greyDark,
+    ...fonts.medium,
   },
   showPassword: {
     fontSize: 10,

@@ -94,7 +94,7 @@ export function placeDetails(placeId, poiName = null) {
       name: poiName || name || '',
       latitude: location.lat,
       longitude: location.lng,
-      pictures: photos && photos.map(photoUrl),
+      pictures: photos && photos.slice(0, 1).map(photoUrl),
       google: true,
       vicinity: vicinity || `${location.lat}, ${location.lng}`,
       ...place,
