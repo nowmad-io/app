@@ -53,6 +53,7 @@ class Entry extends PureComponent {
         friends,
         status,
         shortDescription,
+        information,
         pictures,
         categories,
         name,
@@ -77,6 +78,7 @@ class Entry extends PureComponent {
               createdBy={_.head(friends)}
               friends={_.tail(friends)}
               shortDescription={shortDescription}
+              information={information}
               status={status}
               pictures={pictures}
               cover
@@ -93,7 +95,12 @@ class Entry extends PureComponent {
             onPress={this.onActionPress}
             style={styles.cta}
           >
-            <Text uppercase={false}>{own ? 'Edit' : 'Add Review'}</Text>
+            <Text
+              uppercase={false}
+              style={styles.ctaText}
+            >
+              {own ? 'Edit' : 'Add Review'}
+            </Text>
           </Button>
         </View>
       </View>
@@ -126,7 +133,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.transparent,
     borderWidth: 0,
     alignSelf: 'flex-start',
-    height: 44,
-    paddingVertical: 12,
+    alignItems: 'center',
+    height: 36,
+    paddingVertical: 0,
+  },
+  ctaText: {
+    fontSize: 14,
+    lineHeight: 18,
   },
 });

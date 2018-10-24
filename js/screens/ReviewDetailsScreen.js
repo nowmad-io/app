@@ -105,20 +105,13 @@ class ReviewDetailsScreen extends Component {
                 categories={categories}
                 createdBy={createdBy}
                 shortDescription={shortDescription}
+                information={information}
                 status={status}
                 pictures={pictures}
                 style={styles.review}
                 detail
               />
             </View>
-            <Text
-              style={[
-                styles.text,
-                styles.information,
-              ]}
-            >
-              {information}
-            </Text>
             {!_.isEmpty(link1) && (
               <TouchableOpacity
                 onPress={this.openUrl(link1)}
@@ -130,7 +123,7 @@ class ReviewDetailsScreen extends Component {
                 </Text>
               </TouchableOpacity>
             )}
-            {!_.isEmpty(link1) && (
+            {!_.isEmpty(link2) && (
               <TouchableOpacity
                 onPress={this.openUrl(link2)}
                 style={[
@@ -213,15 +206,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   text: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  information: {
-    marginTop: 12,
+    fontSize: 16,
+    lineHeight: 18,
   },
   links: {
     flexDirection: 'row',
-    marginTop: 22,
+    alignItems: 'center',
+    marginTop: 18,
   },
   link2: {
     marginTop: 12,

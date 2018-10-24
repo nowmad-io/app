@@ -15,6 +15,7 @@ const initialPlace = {
   categories: [],
   friends: [],
   shortDescription: '',
+  information: '',
   status: '',
 };
 
@@ -25,6 +26,7 @@ const updatePlace = (
     createdBy,
     place,
     shortDescription,
+    information,
     status,
     ...review
   },
@@ -56,6 +58,7 @@ const updatePlace = (
       ...prevPlace.categories,
     ]),
     shortDescription: (!prevPlace.own || own) ? shortDescription : prevPlace.shortDescription,
+    information: (!prevPlace.own || own) ? information : prevPlace.information,
     status: (!prevPlace.own || own) ? status : prevPlace.status,
   },
 });

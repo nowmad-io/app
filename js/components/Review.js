@@ -22,6 +22,7 @@ export default class Review extends PureComponent {
     createdBy: PropTypes.object,
     friends: PropTypes.array,
     shortDescription: PropTypes.string,
+    information: PropTypes.string,
     status: PropTypes.string,
     pictures: PropTypes.array,
     cover: PropTypes.bool,
@@ -47,6 +48,7 @@ export default class Review extends PureComponent {
       onPress,
       own,
       shortDescription,
+      information,
       createdBy,
       friends,
       categories,
@@ -132,18 +134,29 @@ export default class Review extends PureComponent {
               <Text
                 style={[
                   styles.description,
-                  (detail || !pictures || !pictures.length) && styles.description_noimage,
-                  detail && styles.description_detail,
+                  detail && styles.descriptionDetail,
                 ]}
+                numberOfLines={detail ? null : 1}
               >
                 {shortDescription}
               </Text>
-              <Text style={styles.categories}>
-                {_.map(categories, (name, index) => (
-                  <Text key={name} style={styles.categorie}>
-                    {`${name}${(index !== categories.length - 1) ? ' · ' : ''}`}
-                  </Text>
-                ))}
+              <Text
+                style={[
+                  styles.information,
+                  detail && styles.informationDetail,
+                ]}
+                numberOfLines={detail ? null : 2}
+              >
+                {information}
+              </Text>
+              <Text
+                style={[
+                  styles.categorie,
+                  detail && styles.categorieDetail,
+                ]}
+                numberOfLines={detail ? null : 1}
+              >
+                {_.join(categories, ' · ')}
               </Text>
             </View>
           </View>
@@ -160,7 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    marginBottom: 12,
+    marginBottom: 10,
     flexDirection: 'row',
   },
   header_right: {
@@ -168,10 +181,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
-    lineHeight: 20,
+    lineHeight: 18,
   },
   user_text: {
-    lineHeight: 20,
+    lineHeight: 18,
     ...fonts.medium,
   },
   others: {
@@ -209,28 +222,36 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   description: {
-    fontSize: 18,
-    lineHeight: 24,
-    ...fonts.medium,
-    color: colors.greyDark,
-  },
-  description_noimage: {
-    fontSize: 22,
-    lineHeight: 28,
-    ...fonts.regular,
-  },
-  description_detail: {
-    marginBottom: 12,
-  },
-  categories: {
-    flexDirection: 'row',
-  },
-  categorie: {
-    color: colors.primaryShadowDarker,
     fontSize: 14,
     lineHeight: 16,
+    marginBottom: 4,
   },
-  googleAvatar: {
-    color: colors.greyDark,
+  descriptionDetail: {
+    fontSize: 22,
+    lineHeight: 26,
+    ...fonts.regular,
+    marginBottom: 12,
+  },
+  information: {
+    fontSize: 18,
+    lineHeight: 22,
+    ...fonts.medium,
+    marginBottom: 2,
+  },
+  informationDetail: {
+    fontSize: 16,
+    lineHeight: 20,
+    ...fonts.regular,
+    marginBottom: 12,
+  },
+  categorie: {
+    color: colors.primary,
+    fontSize: 12,
+    lineHeight: 14,
+  },
+  categorieDetail: {
+    fontSize: 16,
+    lineHeight: 20,
+    ...fonts.medium,
   },
 });
