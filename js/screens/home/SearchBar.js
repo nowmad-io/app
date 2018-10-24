@@ -4,16 +4,19 @@ import {
   TextInput, BackHandler, StyleSheet, View, Animated,
 } from 'react-native';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 
 import { placeDetails, peopleSearch, placesSearch } from '../../actions/search';
+import { selectNotifications } from '../../reducers/friends';
 
 import SearchNavigation from '../../navigation/SearchNavigation';
 import Button from '../../components/Button';
+import Badge from '../../components/Badge';
 import Spinner from '../../components/Spinner';
 
 import { rgba, colors, sizes } from '../../constants/parameters';
 
-export default class SearchBar extends Component {
+class SearchBar extends Component {
   search = _.debounce(this.searchDebounced, 300)
 
   static propTypes = {
@@ -22,6 +25,7 @@ export default class SearchBar extends Component {
     children: PropTypes.any,
     onAddFriendPress: PropTypes.func,
     onClear: PropTypes.func,
+    notifications: PropTypes.number,
   }
 
   static defaultProps = {
@@ -180,7 +184,7 @@ export default class SearchBar extends Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, notifications } = this.props;
     const {
       loading,
       text,
@@ -247,14 +251,22 @@ export default class SearchBar extends Component {
             />
           )}
           { (!focused || text.length === 0) && (
-            <Button
-              transparent
-              style={styles.headerButton}
-              iconStyle={!focused && { color: colors.greyDark }}
-              onPress={this.onMenuPress}
-              icon="menu"
-              header
-            />
+            <View>
+              <Button
+                transparent
+                style={styles.headerButton}
+                iconStyle={!focused && { color: colors.greyDark }}
+                onPress={this.onMenuPress}
+                icon="menu"
+                header
+              />
+              {notifications && (
+                <Badge
+                  style={styles.badge}
+                  count={notifications}
+                />
+              )}
+            </View>
           )}
         </Animated.View>
         {children}
@@ -289,6 +301,12 @@ export default class SearchBar extends Component {
   }
 }
 
+const makeMapStateToProps = state => ({
+  notifications: selectNotifications(state),
+});
+
+export default connect(makeMapStateToProps, null, null, { withRef: true })(SearchBar);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -317,5 +335,10 @@ const styles = StyleSheet.create({
   tabs: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: colors.white,
+  },
+  badge: {
+    position: 'absolute',
+    top: 10,
+    left: 4,
   },
 });

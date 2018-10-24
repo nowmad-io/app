@@ -1,3 +1,6 @@
+import { createSelector } from 'reselect';
+import _ from 'lodash';
+
 import {
   FETCH_FRIENDSHIPS_SUCCESS,
   FETCH_REQUESTS_SUCCESS,
@@ -5,6 +8,12 @@ import {
 import { LOGOUT } from '../constants/auth';
 
 export const getFriends = state => state.friends.all;
+const getIncomings = state => state.friends.incomings;
+
+export const selectNotifications = createSelector(
+  [getIncomings],
+  incomings => _.size(_.filter(incomings, { seen: false })) || null,
+);
 
 const initialState = {
   all: {},

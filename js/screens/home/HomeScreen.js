@@ -70,13 +70,17 @@ class HomeScreen extends React.PureComponent {
     this.props.dispatch(filtersChange({}));
   };
 
+  onSearchBarRef = (ref) => {
+    this._searchBar.current = ref.getWrappedInstance();
+  }
+
   render() {
     const { navigation } = this.props;
     const { panY } = this.state;
 
     return (
       <SearchBar
-        ref={this._searchBar}
+        ref={this.onSearchBarRef}
         navigation={navigation}
         onClear={this.onClear}
         onGPlacePress={this.onGPlacePress}

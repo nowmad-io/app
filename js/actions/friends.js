@@ -35,7 +35,7 @@ export function seenRequests() {
 export const apiSeenRequests = (incomings) => {
   const requests = {};
 
-  _.forOwn(incomings, (value, uid) => {
+  _.map(incomings, (value, uid) => {
     requests[`/${Firebase.userUID()}/incomings/${uid}/seen`] = true;
   });
 
