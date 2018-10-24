@@ -2,6 +2,7 @@ import { eventChannel } from 'redux-saga';
 import _ from 'lodash';
 
 import Firebase from '../libs/firebase';
+import { inviteFriendsEvent, incrementFriends } from '../libs/mixpanel';
 
 import {
   FETCH_FRIENDSHIPS_SUCCESS,
@@ -45,6 +46,8 @@ export const apiSeenRequests = (incomings) => {
 export const apiSendRequest = ({
   firstName, lastName, photoURL, senderId,
 }) => ({ uid }) => {
+  inviteFriendsEvent();
+
   const request = {
     [`/${Firebase.userUID()}/outgoings/${uid}`]: true,
     [`/${uid}/incomings/${Firebase.userUID()}`]: {
@@ -62,6 +65,8 @@ export const apiSendRequest = ({
 };
 
 export function apiAcceptRequest(uid) {
+  incrementFriends();
+
   const request = {
     [`/friendships/${Firebase.userUID()}/${uid}`]: true,
     [`/friendships/${uid}/${Firebase.userUID()}`]: true,

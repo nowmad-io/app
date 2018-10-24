@@ -7,6 +7,7 @@ import OneSignal from 'react-native-onesignal';
 
 import Api from './libs/requests';
 import Firebase from './libs/firebase';
+import Mixpanel from './libs/mixpanel';
 
 import { apiRestoreSession } from './actions/auth';
 
@@ -25,6 +26,8 @@ const { polyfill } = require('rn-fetch-blob').default;
 const { Blob, XMLHttpRequest } = polyfill;
 window.XMLHttpRequest = XMLHttpRequest;
 window.Blob = Blob;
+
+Mixpanel.initialize(Config.MIXPANEL_KEY);
 
 Api.initialize(Config.API_URL).setAuthorisation(Config.API_TOKEN);
 

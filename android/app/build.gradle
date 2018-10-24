@@ -159,6 +159,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-mixpanel')
     implementation project(':react-native-svg')
     implementation project(':react-native-onesignal')
     implementation project(':react-native-maps')

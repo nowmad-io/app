@@ -9,6 +9,8 @@ import shortid from 'shortid';
 import Config from 'react-native-config';
 import ImagePicker from 'react-native-image-picker';
 
+import { publishReviewEvent } from '../libs/mixpanel';
+
 import Content from '../components/Content';
 import Header from '../components/Header';
 import Text from '../components/Text';
@@ -70,6 +72,7 @@ class AddReviewScreen extends Component {
         ...review,
       },
       place,
+      time: Date.now(),
     };
   }
 
@@ -111,6 +114,7 @@ class AddReviewScreen extends Component {
         link2,
         pictures,
       },
+      time,
     } = this.state;
     const newReview = {
       uid: reviewUid || shortid.generate(),
@@ -135,6 +139,14 @@ class AddReviewScreen extends Component {
     Keyboard.dismiss();
     pushReview(newReview);
     this.props.dispatch(uploadPictures(newReview.uid, pictures));
+
+    if (!reviewUid) {
+      publishReviewEvent({
+        vicinity: newReview.vicinity,
+        timeSpent: Math.floor((Date.now() - time) / 1000),
+        categories: newReview.categories,
+      });
+    }
     this.props.navigation.goBack();
   }
 

@@ -2,6 +2,13 @@ import OneSignal from 'react-native-onesignal';
 import _ from 'lodash';
 
 import Firebase from '../libs/firebase';
+import {
+  identifyEvent,
+  setProfile,
+  registerSuperProperties,
+  loginEvent,
+  registerEvent,
+} from '../libs/mixpanel';
 
 import {
   UPDATE_PROFILE_SUCCESS,
@@ -58,6 +65,7 @@ function getSenderId() {
 }
 
 export function apiLogin(email, password) {
+  loginEvent();
   return Firebase.auth()
     .setPersistence('local')
     .then(() => Firebase.auth().signInWithEmailAndPassword(email, password))
@@ -73,6 +81,11 @@ export function apiLogin(email, password) {
 }
 
 export function apiRegister({ password, ...profile }) {
+  identifyEvent(profile.email);
+  registerEvent(profile);
+  registerSuperProperties(profile);
+  setProfile(profile);
+
   return Firebase.auth()
     .createUserWithEmailAndPassword(profile.email, password)
     .then(getSenderId)

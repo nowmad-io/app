@@ -86,16 +86,17 @@ export function placeDetails(placeId, poiName = null) {
   return Api.get(`${url}?${key}&${placeid}&${fields}`)
     .then(({
       result: {
-        name, geometry: { location }, photos, ...place
+        name, geometry: { location }, photos, vicinity, ...place
       },
     }) => ({
       uid: getUid(location),
       placeId,
-      name: poiName || name,
+      name: poiName || name || '',
       latitude: location.lat,
       longitude: location.lng,
       pictures: photos && photos.map(photoUrl),
       google: true,
+      vicinity: vicinity || `${location.lat}, ${location.lng}`,
       ...place,
     }));
 }
