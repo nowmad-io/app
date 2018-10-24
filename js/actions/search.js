@@ -81,22 +81,22 @@ export function placeDetails(placeId, poiName = null) {
   const url = 'https://maps.googleapis.com/maps/api/place/details/json';
   const key = `key=${Config.PLACES_API_KEY}`;
   const placeid = `placeid=${placeId}`;
-  const fields = 'fields=name,geometry,photos';
+  const fields = 'fields=name,vicinity,geometry,photos';
 
-  return fetch(`${url}?${key}&${placeid}&${fields}`)
-    .then(response => response.json())
+  return Api.get(`${url}?${key}&${placeid}&${fields}`)
     .then(({
       result: {
-        name, geometry: { location }, photos, ...place
+        name, geometry: { location }, photos, vicinity, ...place
       },
     }) => ({
       uid: getUid(location),
       placeId,
-      name: poiName || name,
+      name: poiName || name || '',
       latitude: location.lat,
       longitude: location.lng,
-      pictures: photos && photos.map(photoUrl),
+      pictures: photos && photos.slice(0, 2).map(photoUrl),
       google: true,
+      vicinity: vicinity || `${location.lat}, ${location.lng}`,
       ...place,
     }));
 }

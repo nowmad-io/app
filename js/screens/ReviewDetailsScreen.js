@@ -14,7 +14,7 @@ import Marker from '../components/Marker';
 import Icon from '../components/Icon';
 import Review from '../components/Review';
 
-import { colors, sizes } from '../constants/parameters';
+import { colors, sizes, fonts } from '../constants/parameters';
 
 import { selectReview } from '../reducers/home';
 
@@ -44,10 +44,10 @@ class ReviewDetailsScreen extends Component {
   onMapReady = () => {
     const { review: { place } } = this.props;
 
-    this._map.animateToCoordinate({
-      longitude: place.longitude,
+    this._map.fitToCoordinates([{
       latitude: place.latitude,
-    });
+      longitude: place.longitude,
+    }], { animated: false });
   }
 
   onAddressLayout = (event) => {
@@ -102,23 +102,16 @@ class ReviewDetailsScreen extends Component {
             <View>
               <Review
                 own={!!own}
-                categories={categories || []}
+                categories={categories}
                 createdBy={createdBy}
                 shortDescription={shortDescription}
+                information={information}
                 status={status}
-                pictures={pictures || []}
+                pictures={pictures}
                 style={styles.review}
                 detail
               />
             </View>
-            <Text
-              style={[
-                styles.text,
-                styles.information,
-              ]}
-            >
-              {information}
-            </Text>
             {!_.isEmpty(link1) && (
               <TouchableOpacity
                 onPress={this.openUrl(link1)}
@@ -130,7 +123,7 @@ class ReviewDetailsScreen extends Component {
                 </Text>
               </TouchableOpacity>
             )}
-            {!_.isEmpty(link1) && (
+            {!_.isEmpty(link2) && (
               <TouchableOpacity
                 onPress={this.openUrl(link2)}
                 style={[
@@ -161,8 +154,8 @@ class ReviewDetailsScreen extends Component {
             </Map>
             <View style={styles.addressWrapper} onLayout={this.onAddressLayout}>
               <Icon style={styles.addressIcon} name="location-on" />
-              <Text style={styles.addressText}>
-                {place.address}
+              <Text style={styles.addressText} numberOfLines={1}>
+                {place.vicinity}
               </Text>
             </View>
           </View>
@@ -213,15 +206,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   text: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  information: {
-    marginTop: 12,
+    fontSize: 16,
+    lineHeight: 18,
   },
   links: {
     flexDirection: 'row',
-    marginTop: 22,
+    alignItems: 'center',
+    marginTop: 18,
   },
   link2: {
     marginTop: 12,
@@ -243,14 +234,19 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: colors.whiteTransparent,
+    backgroundColor: colors.primaryShadowDark,
   },
   addressIcon: {
-    fontSize: 14,
-    color: colors.grey,
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.white,
+    ...fonts.medium,
   },
   addressText: {
-    fontSize: 10,
-    marginLeft: 8,
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 18,
+    paddingLeft: 8,
+    color: colors.white,
   },
 });

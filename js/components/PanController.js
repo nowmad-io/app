@@ -25,9 +25,9 @@ export default class PanController extends PureComponent {
     }
   }
 
-  static closestCenter(x, spacing) {
+  static closestCenter(x, spacing, exact = true) {
     const plus = (x % spacing) < spacing / 2 ? 0 : spacing;
-    return Math.floor(x / spacing) * spacing + plus;
+    return Math[exact ? 'floor' : 'round'](x / spacing) * spacing + plus;
   }
 
   _responder = null;
@@ -447,7 +447,7 @@ export default class PanController extends PureComponent {
       }
       x1 = x;
     }
-    return PanController.closestCenter(x1, spacing);
+    return PanController.closestCenter(x1, spacing, false);
   }
 
   velocityAtBounds(x0, vx, bounds) {

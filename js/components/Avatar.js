@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.primary,
-    fontSize: 20,
+    fontSize: 18,
     lineHeight: 26,
   },
   image: {

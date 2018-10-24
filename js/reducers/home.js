@@ -32,7 +32,7 @@ export const selectReview = createSelector(
     return ({
       ...review,
       createdBy: own ? meObject : friends[review.createdBy],
-      categories: _.keys(review.categories || {}),
+      categories: _.keys(review.categories),
       pictures: _.map(review.pictures, picture => picture),
       own,
     });
@@ -87,7 +87,9 @@ export const selectPlace = () => createSelector(
 
 export const selectMarkers = () => createSelector(
   [selectFilteredPlaces, getMe, getFriends],
-  (places, me, friends) => _.map(places, ({ longitude, latitude, reviews }, placeUid) => {
+  (places, me, friends) => _.map(places, ({
+    longitude, latitude, reviews, name, vicinity,
+  }, placeUid) => {
     let i = 0;
     let text;
     let picture;
@@ -120,6 +122,8 @@ export const selectMarkers = () => createSelector(
       latitude,
       text,
       picture,
+      name,
+      vicinity,
     };
   }),
 );
@@ -140,6 +144,7 @@ const initialState = {
   filters: {
     friend: null,
   },
+  searchText: null,
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -184,17 +189,19 @@ const homeReducer = (state = initialState, action) => {
       const { [Object.keys(action.review)[0]]: review } = action.review;
       return {
         ...state,
-        gPlace: state.gPlace && review && review.place.uid !== state.gPlace.uid || null,
+        gPlace: (state.gPlace && review && review.place.uid !== state.gPlace.uid)
+          ? state.gPlace : null,
       };
     }
     case FILTERS_CHANGE:
       return {
         ...state,
         filters: {
-          friend: action.friend,
+          friend: action.friend && action.friend.uid,
         },
+        searchText: action.friend && action.friend.firstName,
       };
-    case `${LOGOUT}_REQUEST`:
+    case LOGOUT:
       return initialState;
     default:
       return state;

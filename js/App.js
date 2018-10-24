@@ -7,6 +7,7 @@ import OneSignal from 'react-native-onesignal';
 
 import Api from './libs/requests';
 import Firebase from './libs/firebase';
+import Mixpanel from './libs/mixpanel';
 
 import { apiRestoreSession } from './actions/auth';
 
@@ -26,6 +27,8 @@ const { Blob, XMLHttpRequest } = polyfill;
 window.XMLHttpRequest = XMLHttpRequest;
 window.Blob = Blob;
 
+Mixpanel.initialize(Config.MIXPANEL_KEY);
+
 Api.initialize(Config.API_URL).setAuthorisation(Config.API_TOKEN);
 
 Firebase.initialize({
@@ -39,7 +42,7 @@ Firebase.initialize({
 
 const { persistor, store } = configureStore();
 
-export default class App extends Component {
+class App extends Component {
   componentWillMount() {
     OneSignal.init(Config.ONESIGNAL_APPID);
     OneSignal.inFocusDisplaying(2);
@@ -59,3 +62,8 @@ export default class App extends Component {
     );
   }
 }
+
+export {
+  persistor,
+  App,
+};

@@ -89,6 +89,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-sentry/sentry.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -114,8 +115,8 @@ android {
         applicationId "com.nowmad"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 25
-        versionName "0.0.25"
+        versionCode 26
+        versionName "0.0.26"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -159,6 +160,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-exception-handler')
+    compile project(':react-native-sentry')
+    compile project(':react-native-mixpanel')
     implementation project(':react-native-svg')
     implementation project(':react-native-onesignal')
     implementation project(':react-native-maps')

@@ -22,6 +22,7 @@ export default class Review extends PureComponent {
     createdBy: PropTypes.object,
     friends: PropTypes.array,
     shortDescription: PropTypes.string,
+    information: PropTypes.string,
     status: PropTypes.string,
     pictures: PropTypes.array,
     cover: PropTypes.bool,
@@ -47,6 +48,7 @@ export default class Review extends PureComponent {
       onPress,
       own,
       shortDescription,
+      information,
       createdBy,
       friends,
       categories,
@@ -73,12 +75,13 @@ export default class Review extends PureComponent {
               uri={createdBy.photoURL}
               text={own ? 'me' : Review.initials(createdBy)}
               uppercase={!own}
+              size={36}
             />
             <View
               style={styles.header_right}
               onLayout={this._onLayout}
             >
-              <Text>
+              <Text style={styles.text}>
                 <Text style={styles.user_text} capitalize>
                   {`${own ? 'me' : createdBy.firstName}`}
                 </Text>
@@ -101,7 +104,7 @@ export default class Review extends PureComponent {
                   )) }
                 </View>
               ) : (
-                <Text lowercase>
+                <Text lowercase style={styles.text}>
                   {`was ${status}`}
                 </Text>
               )}
@@ -117,6 +120,7 @@ export default class Review extends PureComponent {
               <FastImage
                 source={{ uri: pictures[0].uri }}
                 style={detail ? styles.picture_detail : styles.picture}
+                resizeMode="cover"
               />
             )}
             <View
@@ -130,18 +134,29 @@ export default class Review extends PureComponent {
               <Text
                 style={[
                   styles.description,
-                  (detail || !pictures || !pictures.length) && styles.description_noimage,
-                  detail && styles.description_detail,
+                  detail && styles.descriptionDetail,
                 ]}
+                numberOfLines={detail ? null : 1}
               >
                 {shortDescription}
               </Text>
-              <Text style={styles.categories}>
-                {_.map(categories, (name, index) => (
-                  <Text key={name} style={styles.categorie}>
-                    {`${name}${(index !== categories.length - 1) ? ' · ' : ''}`}
-                  </Text>
-                ))}
+              <Text
+                style={[
+                  styles.information,
+                  detail && styles.informationDetail,
+                ]}
+                numberOfLines={detail ? null : 2}
+              >
+                {information}
+              </Text>
+              <Text
+                style={[
+                  styles.categorie,
+                  detail && styles.categorieDetail,
+                ]}
+                numberOfLines={detail ? null : 1}
+              >
+                {_.join(categories, ' · ')}
               </Text>
             </View>
           </View>
@@ -154,19 +169,22 @@ export default class Review extends PureComponent {
 const styles = StyleSheet.create({
   review: {
     paddingTop: 10,
-    marginBottom: 16,
     marginHorizontal: 16,
     flex: 1,
   },
   header: {
-    marginBottom: 12,
+    marginBottom: 10,
     flexDirection: 'row',
   },
   header_right: {
     marginLeft: 12,
     justifyContent: 'space-between',
   },
+  text: {
+    lineHeight: 18,
+  },
   user_text: {
+    lineHeight: 18,
     ...fonts.medium,
   },
   others: {
@@ -176,8 +194,8 @@ const styles = StyleSheet.create({
     marginRight: 2,
   },
   others_avatar_text: {
-    fontSize: 9,
-    lineHeight: 11,
+    fontSize: 8,
+    lineHeight: 12,
   },
   others_avatar_image: {
     borderWidth: 1,
@@ -191,6 +209,8 @@ const styles = StyleSheet.create({
   },
   picture: {
     flex: 1,
+    width: '100%',
+    height: '100%',
     marginRight: 12,
   },
   picture_detail: {
@@ -202,28 +222,36 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   description: {
-    fontSize: 18,
-    lineHeight: 24,
-    ...fonts.medium,
-    color: colors.greyDark,
-  },
-  description_noimage: {
-    fontSize: 22,
-    lineHeight: 28,
-    ...fonts.regular,
-  },
-  description_detail: {
-    marginBottom: 12,
-  },
-  categories: {
-    flexDirection: 'row',
-  },
-  categorie: {
-    color: colors.primaryShadowDark,
     fontSize: 14,
     lineHeight: 16,
+    marginBottom: 4,
   },
-  googleAvatar: {
-    color: colors.greyDark,
+  descriptionDetail: {
+    fontSize: 22,
+    lineHeight: 26,
+    ...fonts.regular,
+    marginBottom: 12,
+  },
+  information: {
+    fontSize: 18,
+    lineHeight: 22,
+    ...fonts.medium,
+    marginBottom: 2,
+  },
+  informationDetail: {
+    fontSize: 16,
+    lineHeight: 20,
+    ...fonts.regular,
+    marginBottom: 12,
+  },
+  categorie: {
+    color: colors.primaryDark,
+    fontSize: 12,
+    lineHeight: 14,
+  },
+  categorieDetail: {
+    fontSize: 16,
+    lineHeight: 20,
+    ...fonts.medium,
   },
 });

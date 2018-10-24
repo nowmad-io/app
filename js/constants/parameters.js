@@ -28,7 +28,8 @@ export const colors = {
   ...plain,
   primaryShadowLight: rgba(plain.primary, 0.2),
   primaryShadow: rgba(plain.primary, 0.4),
-  primaryShadowDark: rgba(plain.primary, 0.8),
+  primaryShadowDark: rgba(plain.primary, 0.6),
+  primaryShadowDarker: rgba(plain.primary, 0.8),
   whiteTransparent: rgba(plain.white, 0.8),
   blackTransparentLight: rgba(plain.black, 0.2),
   blackTransparent: rgba(plain.black, 0.6),
@@ -49,10 +50,9 @@ export const fonts = {
   light: { fontFamily: `${fontFamily}-Light`, fontWeight: undefined },
   regular: { fontFamily: `${fontFamily}-Regular`, fontWeight: undefined },
   medium: { fontFamily: `${fontFamily}-Medium`, fontWeight: undefined },
-  semiBold: { fontFamily: `${fontFamily}-SemiBold`, fontWeight: undefined },
+  demiBold: { fontFamily: `${fontFamily}-Demi`, fontWeight: undefined },
   bold: { fontFamily: `${fontFamily}-Bold`, fontWeight: undefined },
-  extraBold: { fontFamily: `${fontFamily}-ExtraBold`, fontWeight: undefined },
-  black: { fontFamily: `${fontFamily}-Black`, fontWeight: undefined },
+  heavy: { fontFamily: `${fontFamily}-Heavy`, fontWeight: undefined },
 };
 
 export const sizes = {
@@ -61,15 +61,12 @@ export const sizes = {
   headerHeight: 48,
   drawerWidth: width * 0.9,
   searchBarPadding: 8,
+  toolBar: 48,
 };
 
-const ITEM_SPACING = 8;
-
 export const carousel = {
-  sliderWidth: sizes.width,
-  itemSpacing: ITEM_SPACING,
-  itemWidth: sizes.width - (ITEM_SPACING * 2),
-  level1: 80,
-  level2: 166,
+  entryMargin: Math.floor(width * 0.011),
+  entryWidth: Math.floor(width * 0.88),
+  height: 168,
   border: 4,
 };

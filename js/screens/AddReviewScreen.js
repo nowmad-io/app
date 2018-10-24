@@ -9,6 +9,8 @@ import shortid from 'shortid';
 import Config from 'react-native-config';
 import ImagePicker from 'react-native-image-picker';
 
+import { publishReviewEvent } from '../libs/mixpanel';
+
 import Content from '../components/Content';
 import Header from '../components/Header';
 import Text from '../components/Text';
@@ -26,7 +28,7 @@ import Marker from '../components/Marker';
 import { pushReview, uploadPictures } from '../actions/entities';
 import { selectMarkers, selectReview } from '../reducers/home';
 
-import { colors } from '../constants/parameters';
+import { colors, fonts, sizes } from '../constants/parameters';
 
 const MAX_LENGTH_PICTURES = 5;
 const STATUS = [
@@ -54,11 +56,11 @@ class AddReviewScreen extends Component {
     const { review, place } = props;
 
     const defaultReview = {
-      shortDescription: '',
+      shortDescription: place.name || '',
       information: '',
       status: STATUS[0],
-      categories: {},
-      pictures: {},
+      categories: [],
+      pictures: place.pictures || [],
       link1: '',
       link2: '',
     };
@@ -70,6 +72,7 @@ class AddReviewScreen extends Component {
         ...review,
       },
       place,
+      time: Date.now(),
     };
   }
 
@@ -89,7 +92,7 @@ class AddReviewScreen extends Component {
   onMapReady = () => {
     const { place: { longitude, latitude } } = this.state;
 
-    this._map.animateToCoordinate({ latitude, longitude });
+    this._map.fitToCoordinates([{ latitude, longitude }], { animated: false });
   }
 
   onPublish = () => {
@@ -98,6 +101,8 @@ class AddReviewScreen extends Component {
         uid: placeUid,
         latitude,
         longitude,
+        name,
+        vicinity,
       },
       review: {
         uid: reviewUid,
@@ -109,24 +114,39 @@ class AddReviewScreen extends Component {
         link2,
         pictures,
       },
+      time,
     } = this.state;
     const newReview = {
       uid: reviewUid || shortid.generate(),
       shortDescription,
       information,
       status,
-      categories,
+      categories: _.reduce(categories, (result, value) => ({
+        ...result,
+        [value]: true,
+      }), {}),
       link1,
       link2,
       place: {
         uid: placeUid,
         latitude,
         longitude,
+        name,
+        vicinity,
       },
     };
+
     Keyboard.dismiss();
     pushReview(newReview);
     this.props.dispatch(uploadPictures(newReview.uid, pictures));
+
+    if (!reviewUid) {
+      publishReviewEvent({
+        vicinity: newReview.vicinity,
+        timeSpent: Math.floor((Date.now() - time) / 1000),
+        categories: newReview.categories,
+      });
+    }
     this.props.navigation.goBack();
   }
 
@@ -143,7 +163,7 @@ class AddReviewScreen extends Component {
       this.setState(({ review }) => ({
         review: {
           ...review,
-          pictures: _.omit(pictures, image.uid),
+          pictures: _.filter(pictures, pic => pic.uid !== image.uid),
         },
       }));
 
@@ -153,13 +173,18 @@ class AddReviewScreen extends Component {
     this.setState(({ review }) => ({
       review: {
         ...review,
-        pictures: {
-          ...review.pictures,
-          [image.uid]: {
-            ...review.pictures[image.uid],
-            ...image,
-          },
-        },
+        pictures: _.find(pictures, pic => pic.uid === image.uid)
+          ? _.map(pictures, (pic) => {
+            if (pic.uid === image.uid) {
+              return {
+                ...pic,
+                ...image,
+              };
+            }
+
+            return pic;
+          })
+          : [...pictures, image],
       },
     }));
   }
@@ -197,12 +222,9 @@ class AddReviewScreen extends Component {
     this.setState(({ review }) => ({
       review: {
         ...review,
-        categories: categories[category]
-          ? _.omit(categories, category)
-          : {
-            ...review.categories,
-            [category]: true,
-          },
+        categories: _.find(categories, cat => cat === category)
+          ? _.without(categories, category)
+          : _.uniq([category, ...review.categories]),
       },
     }));
   }
@@ -217,6 +239,7 @@ class AddReviewScreen extends Component {
   render() {
     const {
       review: {
+        uid: reviewUid,
         shortDescription,
         information,
         categories,
@@ -229,20 +252,16 @@ class AddReviewScreen extends Component {
       addingImage,
     } = this.state;
 
-    const valid = !!shortDescription;
+    const valid = !!information;
 
     return (
       <View style={styles.container}>
         <Header
           left={(
-            <Button transparent onPress={this.onBackPress} icon="arrow-back" header />
-          )}
-          right={(
-            <Button transparent onPress={this.onPublish} disabled={!valid}>
-              <Text>
-                PUBLISH
-              </Text>
-            </Button>
+            <View style={styles.row}>
+              <Button transparent onPress={this.onBackPress} icon="arrow-back" header />
+              <Text style={styles.headerText}>{`${!reviewUid ? 'New' : 'Update'} Experience`}</Text>
+            </View>
           )}
         />
         <Content style={styles.content}>
@@ -261,35 +280,41 @@ class AddReviewScreen extends Component {
             </Map>
             <View style={styles.addressWrapper} onLayout={this.onAddressLayout}>
               <Icon style={styles.addressIcon} name="location-on" />
-              <Text style={styles.addressText}>
-                {place.address}
+              <Text style={styles.addressText} numberOfLines={1}>
+                {place.vicinity}
               </Text>
             </View>
           </View>
           <View style={styles.reviewWrapper}>
-            <Text style={styles.title}>
-              My review
-            </Text>
+            <FormInput
+              defaultValue={shortDescription}
+              placeholder="Where were you ?"
+              onChangeText={
+                short => this.setState(({ review }) => ({
+                  review: {
+                    ...review,
+                    shortDescription: short,
+                  },
+                }))
+              }
+              maxLength={50}
+            />
             <View>
-              <Label
-                text="Add a short description about this place"
-                required
-              />
+              <Label text="Tell your friends about your experience" required />
               <FormInput
-                defaultValue={shortDescription}
-                placeholder="E.g: Beautiful water mirror ! Chill and peaceful..."
-                onChangeText={
-                  short => this.setState(({ review }) => ({
-                    review: {
-                      ...review,
-                      shortDescription: short,
-                    },
-                  }))
-                }
-                maxLength={50}
+                defaultValue={information}
+                multiline
+                placeholder="What made it special ?"
+                onChangeText={info => this.setState(({ review }) => ({
+                  review: {
+                    ...review,
+                    information: info,
+                  },
+                }))}
+                maxLength={300}
               />
             </View>
-            <View style={styles.group}>
+            <View>
               <Label text="You were..." required />
               {STATUS.map(stat => (
                 <RadioButton
@@ -312,26 +337,11 @@ class AddReviewScreen extends Component {
                   <Tag
                     key={category}
                     text={category}
-                    selected={categories[category]}
+                    selected={!!_.find(categories, cat => cat === category)}
                     onPress={this.toggleCategory(category)}
                   />
                 ))}
               </View>
-            </View>
-            <View style={styles.group}>
-              <Label text="Tell your friends about your experience" />
-              <FormInput
-                defaultValue={information}
-                multiline
-                placeholder="What made that experience mad awesome ?"
-                onChangeText={info => this.setState(({ review }) => ({
-                  review: {
-                    ...review,
-                    information: info,
-                  },
-                }))}
-                maxLength={300}
-              />
             </View>
             <View style={styles.group}>
               <Label text="Add some pictures with a caption" />
@@ -380,6 +390,15 @@ class AddReviewScreen extends Component {
               )}
             </View>
           </View>
+          <View style={styles.ctaWrapper}>
+            <Button
+              onPress={this.onPublish}
+              disabled={!valid}
+              style={styles.ctaButton}
+            >
+              <Text uppercase={false}>Publish</Text>
+            </Button>
+          </View>
         </Content>
         <Spinner overlay visible={addingImage} />
       </View>
@@ -407,6 +426,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
   mapWrapper: {
     height: 150,
   },
@@ -425,24 +449,25 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: colors.whiteTransparent,
+    backgroundColor: colors.primaryShadowDark,
   },
   addressIcon: {
-    fontSize: 14,
-    color: colors.grey,
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.white,
+    ...fonts.medium,
   },
   addressText: {
-    fontSize: 10,
-    marginLeft: 8,
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 18,
+    paddingLeft: 8,
+    color: colors.white,
   },
   reviewWrapper: {
     paddingTop: 16,
     paddingHorizontal: 16,
-    paddingBottom: 50,
-  },
-  title: {
-    fontSize: 24,
-    lineHeight: 26,
+    paddingBottom: 20,
   },
   tagWrapper: {
     marginTop: 12,
@@ -456,14 +481,17 @@ const styles = StyleSheet.create({
   image: {
     marginLeft: 8,
   },
-  imagesCaption: {
-    fontSize: 14,
-    fontWeight: '400',
-    paddingBottom: 4,
-    borderBottomWidth: 1,
-    borderColor: colors.grey,
-  },
-  icon: {
+  headerText: {
+    marginLeft: 4,
+    ...fonts.medium,
     color: colors.white,
+  },
+  ctaWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 16,
+  },
+  ctaButton: {
+    width: sizes.width * 0.62,
   },
 });

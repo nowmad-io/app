@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -8,7 +8,8 @@ import { selectPlace } from '../../reducers/home';
 
 import Review from '../../components/Review';
 import ReviewGoogle from '../../components/ReviewGoogle';
-import Icon from '../../components/Icon';
+import Button from '../../components/Button';
+import Text from '../../components/Text';
 
 import { colors, carousel } from '../../constants/parameters';
 
@@ -52,6 +53,7 @@ class Entry extends PureComponent {
         friends,
         status,
         shortDescription,
+        information,
         pictures,
         categories,
         name,
@@ -76,6 +78,7 @@ class Entry extends PureComponent {
               createdBy={_.head(friends)}
               friends={_.tail(friends)}
               shortDescription={shortDescription}
+              information={information}
               status={status}
               pictures={pictures}
               cover
@@ -87,19 +90,18 @@ class Entry extends PureComponent {
               loading={loading}
             />
           )}
-          <TouchableOpacity
-            style={styles.cta}
-            activeOpacity={0.8}
+          <Button
+            light
             onPress={this.onActionPress}
+            style={styles.cta}
           >
-            <Icon
-              name={own ? 'edit' : 'playlist-add'}
-              style={[
-                styles.cta_icon,
-                own && styles.cta_edit,
-              ]}
-            />
-          </TouchableOpacity>
+            <Text
+              uppercase={false}
+              style={styles.ctaText}
+            >
+              {own ? 'Edit' : 'Add Review'}
+            </Text>
+          </Button>
         </View>
       </View>
     );
@@ -118,36 +120,25 @@ export default connect(makeMapStateToProps)(Entry);
 
 const styles = StyleSheet.create({
   card: {
-    height: carousel.level2,
+    height: carousel.height,
     backgroundColor: colors.white,
     position: 'relative',
-    borderColor: colors.primary,
-    borderTopWidth: carousel.border,
-    borderRadius: 2,
-    elevation: 3,
+    elevation: 6,
   },
   googleCard: {
     backgroundColor: colors.primaryLight,
     borderColor: colors.primaryLight,
   },
   cta: {
-    backgroundColor: colors.yellowTransparent,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    height: 64,
-    width: 64,
-    borderTopRightRadius: 100,
-    justifyContent: 'center',
+    backgroundColor: colors.transparent,
+    borderWidth: 0,
+    alignSelf: 'flex-start',
     alignItems: 'center',
-    paddingTop: 10,
-    paddingRight: 10,
+    height: 36,
+    paddingVertical: 0,
   },
-  cta_icon: {
-    color: colors.white,
-    fontSize: 32,
-  },
-  cta_edit: {
-    fontSize: 28,
+  ctaText: {
+    fontSize: 14,
+    lineHeight: 18,
   },
 });

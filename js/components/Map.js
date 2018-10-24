@@ -89,12 +89,16 @@ export default class Map extends React.PureComponent {
     this._ref.current.animateToCoordinate(place, duration);
   }
 
-  fitToCoordinates(coordinates) {
-    this._ref.current.fitToCoordinates(coordinates);
+  fitToCoordinates(coordinates, options) {
+    this._ref.current.fitToCoordinates(coordinates, options);
   }
 
   zoomBy(zoom) {
     this._ref.current.zoomBy(zoom);
+  }
+
+  zoomTo(zoomLevel) {
+    this._ref.current.zoomTo(zoomLevel);
   }
 
   render() {

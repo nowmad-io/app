@@ -4,16 +4,19 @@ import {
   TextInput, BackHandler, StyleSheet, View, Animated,
 } from 'react-native';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 
 import { placeDetails, peopleSearch, placesSearch } from '../../actions/search';
+import { selectNotifications } from '../../reducers/friends';
 
 import SearchNavigation from '../../navigation/SearchNavigation';
 import Button from '../../components/Button';
+import Badge from '../../components/Badge';
 import Spinner from '../../components/Spinner';
 
 import { rgba, colors, sizes } from '../../constants/parameters';
 
-export default class SearchBar extends Component {
+class SearchBar extends Component {
   search = _.debounce(this.searchDebounced, 300)
 
   static propTypes = {
@@ -22,6 +25,8 @@ export default class SearchBar extends Component {
     children: PropTypes.any,
     onAddFriendPress: PropTypes.func,
     onClear: PropTypes.func,
+    notifications: PropTypes.number,
+    searchText: PropTypes.string,
   }
 
   static defaultProps = {
@@ -48,6 +53,16 @@ export default class SearchBar extends Component {
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+  }
+
+  componentWillReceiveProps({ searchText }) {
+    if (searchText && searchText !== this.props.searchText) {
+      this.blur();
+      this.setState({
+        text: searchText,
+        previousValue: searchText,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -96,11 +111,6 @@ export default class SearchBar extends Component {
     this.props.onClear();
   }
 
-  onFriendPress = (friend) => {
-    this.blur();
-    this.onChangeText(friend.first_name, true);
-  }
-
   onPlacePress = (place) => {
     this.blur();
     this.onChangeText(place.name, true);
@@ -131,14 +141,7 @@ export default class SearchBar extends Component {
     placeDetails(place.placeId).then(action);
   }
 
-  onFriendPress = ({ firstName, lastName }) => {
-    const text = `${firstName} ${lastName}`;
-    this.blur();
-    this.setState({
-      text,
-      previousValue: text,
-    });
-  }
+  onCustomPress = place => this.props.navigation.navigate('AddReviewScreen', { place });
 
   searchNearby(coordinatesQuery) {
     this.setState({
@@ -180,7 +183,7 @@ export default class SearchBar extends Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, notifications } = this.props;
     const {
       loading,
       text,
@@ -247,14 +250,22 @@ export default class SearchBar extends Component {
             />
           )}
           { (!focused || text.length === 0) && (
-            <Button
-              transparent
-              style={styles.headerButton}
-              iconStyle={!focused && { color: colors.greyDark }}
-              onPress={this.onMenuPress}
-              icon="menu"
-              header
-            />
+            <View>
+              <Button
+                transparent
+                style={styles.headerButton}
+                iconStyle={!focused && { color: colors.greyDark }}
+                onPress={this.onMenuPress}
+                icon="menu"
+                header
+              />
+              {notifications && (
+                <Badge
+                  style={styles.badge}
+                  count={notifications}
+                />
+              )}
+            </View>
           )}
         </Animated.View>
         {children}
@@ -278,8 +289,9 @@ export default class SearchBar extends Component {
               peopleLoading,
               places,
               placesLoading,
+              text,
               onGPlacePress: this.onGPlacePress,
-              onFriendPress: this.onFriendPress,
+              onCustomPress: this.onCustomPress,
             }}
           />
           <Spinner overlay visible={loading} />
@@ -288,6 +300,13 @@ export default class SearchBar extends Component {
     );
   }
 }
+
+const makeMapStateToProps = state => ({
+  searchText: state.home.searchText,
+  notifications: selectNotifications(state),
+});
+
+export default connect(makeMapStateToProps, null, null, { withRef: true })(SearchBar);
 
 const styles = StyleSheet.create({
   container: {
@@ -315,7 +334,16 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   tabs: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    bottom: sizes.toolBar,
+    left: 0,
+    right: 0,
     backgroundColor: colors.white,
+  },
+  badge: {
+    position: 'absolute',
+    top: 10,
+    left: 4,
   },
 });

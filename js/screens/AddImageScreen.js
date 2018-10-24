@@ -68,7 +68,7 @@ class AddImageScreen extends Component {
       <View style={styles.container}>
         <Header
           left={(
-            <Button transparent onPress={this.onBackPress} icon="arrow-back" header />
+            <Button transparent onPress={this.onSavePress} icon="arrow-back" header />
           )}
           right={(
             <Button transparent onPress={this.onSavePress}>

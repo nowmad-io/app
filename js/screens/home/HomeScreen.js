@@ -19,13 +19,14 @@ class HomeScreen extends React.PureComponent {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
     places: PropTypes.object,
+    geolocation: PropTypes.object,
   }
 
   constructor(props) {
     super(props);
 
     this.state = {
-      panY: new Animated.Value(-carousel.level2),
+      panY: new Animated.Value(-carousel.height),
     };
 
     this._map = React.createRef();
@@ -70,13 +71,27 @@ class HomeScreen extends React.PureComponent {
     this.props.dispatch(filtersChange({}));
   };
 
+  onSearchBarRef = (ref) => {
+    this._searchBar.current = ref.getWrappedInstance();
+  }
+
+  onAddLocationPress = () => {
+    if (this.props.geolocation.coords) {
+      this._map.current.animateToCoordinate(this.props.geolocation.coords, 1000);
+      setTimeout(
+        () => this.searchNearby({ coordinate: this.props.geolocation.coords }),
+        500,
+      );
+    }
+  }
+
   render() {
     const { navigation } = this.props;
     const { panY } = this.state;
 
     return (
       <SearchBar
-        ref={this._searchBar}
+        ref={this.onSearchBarRef}
         navigation={navigation}
         onClear={this.onClear}
         onGPlacePress={this.onGPlacePress}
@@ -87,7 +102,11 @@ class HomeScreen extends React.PureComponent {
           searchNearby={this.searchNearby}
           onPoiPress={this.onGplace}
         />
-        <Carousel panY={panY} navigation={navigation} />
+        <Carousel
+          panY={panY}
+          navigation={navigation}
+          onAddLocationPress={this.onAddLocationPress}
+        />
       </SearchBar>
     );
   }
@@ -96,6 +115,7 @@ class HomeScreen extends React.PureComponent {
 
 const makeMapStateToProps = state => ({
   places: state.entities.places,
+  geolocation: state.home.geolocation,
 });
 
 export default connect(makeMapStateToProps)(HomeScreen);

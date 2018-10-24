@@ -47,6 +47,10 @@ function uploadPicture({ uri, ...picture }) {
 function* uploadPicturesFlow(action) {
   const { uid, pictures } = action;
 
+  if (!_.size(pictures)) {
+    return;
+  }
+
   const uploadedPictures = yield all(_.map(
     pictures,
     picture => call(uploadPicture, picture),
@@ -64,9 +68,9 @@ const fetchUserReviewsFlow = (uid, own) => (
 
     try {
       while (true) {
-        const { removed, ...review } = yield take(channel);
+        const { removed, updated, ...review } = yield take(channel);
 
-        yield put(fetchReviewSuccess(review, removed, own && uid));
+        yield put(fetchReviewSuccess(review, updated, removed, own && uid));
       }
     } finally {
       if (yield cancelled()) {

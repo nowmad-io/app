@@ -5,6 +5,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 
+import { registerSuperProperties } from '../../libs/mixpanel';
+
 import Content from '../../components/Content';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
@@ -26,6 +28,7 @@ class RegisterScreen extends Component {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
     token: PropTypes.string,
+    me: PropTypes.object,
     isConnected: PropTypes.bool,
   };
 
@@ -46,6 +49,7 @@ class RegisterScreen extends Component {
     this._passwordField = React.createRef();
 
     if (props.logged) {
+      registerSuperProperties(props.me);
       props.navigation.navigate('App');
     }
   }
@@ -204,6 +208,7 @@ class RegisterScreen extends Component {
 
 const mapStateToProps = state => ({
   logged: state.auth.logged,
+  me: state.auth.me,
   isConnected: true,
 });
 

@@ -13,12 +13,13 @@ import EmptyEntry from '../../components/EmptyEntry';
 import { selectPlace } from '../../actions/home';
 import { selectVisiblePlaces } from '../../reducers/home';
 
-import { sizes } from '../../constants/parameters';
+import { sizes, carousel } from '../../constants/parameters';
 
 class CarouselScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
+    onAddLocationPress: PropTypes.func,
     visiblePlaces: PropTypes.array,
     selectedPlace: PropTypes.string,
     gPlace: PropTypes.object,
@@ -82,7 +83,7 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
 
   render() {
     const {
-      navigation, panY, visiblePlaces, gPlace,
+      navigation, panY, visiblePlaces, gPlace, onAddLocationPress,
     } = this.props;
 
     return (
@@ -94,14 +95,14 @@ https://play.google.com/store/apps/details?id=com.nowmad`,
         panY={panY}
         onIndexChange={this.onIndexChange}
         onComponentDidUpdate={this.onCarouselDidUpdate}
-        snapSpacingX={entryWidth}
+        snapSpacingX={carousel.entryWidth}
       >
         {!visiblePlaces.length && !gPlace && (
           <View
             style={styles.entryWrapper}
           >
             <EmptyEntry
-              onAddLocationPress={this.onAddLocationPress}
+              onAddLocationPress={onAddLocationPress}
               onSharePress={this.onSharePress}
             />
           </View>
@@ -133,25 +134,15 @@ const makeMapStateToProps = () => {
 
 export default connect(makeMapStateToProps)(CarouselScreen);
 
-const entryMargin = 8;
-const entryWidth = sizes.width - (entryMargin * 2);
-
 const styles = StyleSheet.create({
   carousel: {
     position: 'absolute',
     top: sizes.height,
     alignItems: 'center',
-    paddingLeft: 8,
-  },
-  buttonWrapper: {
-    position: 'relative',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    padding: 14,
-    width: sizes.width,
+    paddingLeft: (sizes.width - carousel.entryWidth) / 2,
   },
   entryWrapper: {
-    width: entryWidth,
-    paddingHorizontal: (entryMargin / 2),
+    width: carousel.entryWidth,
+    paddingHorizontal: carousel.entryMargin,
   },
 });

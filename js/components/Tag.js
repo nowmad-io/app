@@ -44,17 +44,17 @@ const styles = StyleSheet.create({
   tags: {
     borderColor: colors.primary,
     borderWidth: 1,
-    borderRadius: 28,
     backgroundColor: colors.white,
-    paddingVertical: 3,
-    paddingHorizontal: 9,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
     marginRight: 8,
   },
   selected: {
     backgroundColor: colors.primary,
   },
   text: {
-    fontSize: 10,
+    fontSize: 12,
+    lineHeight: 16,
     color: colors.black,
   },
   textSelected: {

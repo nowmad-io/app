@@ -1,75 +1,113 @@
 import _ from 'lodash';
 
 import { LOGOUT } from '../constants/auth';
-import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
+import {
+  FETCH_REVIEW_SUCCESS,
+} from '../constants/entities';
 
 export const getPlace = (state, uid) => state.entities.places[uid];
 export const getPlaces = state => state.entities.places;
 export const getReviews = state => state.entities.reviews;
 export const getReview = (state, uid) => state.entities.reviews[uid];
 
-const initialState = {
-  reviews: {},
-  places: {},
+const initialPlace = {
+  own: null,
+  reviews: [],
+  pictures: [],
+  categories: [],
+  friends: [],
+  shortDescription: '',
+  information: '',
+  status: '',
 };
 
-const updatePlaces = (
-  places,
+const addToPlace = (
+  prevPlace = initialPlace,
   {
     uid: reviewUid,
     createdBy,
     place,
     shortDescription,
+    information,
     status,
     ...review
   },
-  removed,
   own,
 ) => ({
-  ...places,
-  [place.uid]: {
-    ...(places[place.uid] || {}),
-    ...place,
-    reviews: !removed ? _.uniqBy([
-      { uid: reviewUid, createdBy },
-      ...(places[place.uid] && places[place.uid].reviews || []),
-    ], 'uid') : _.filter(places[place.uid].reviews, { uid: reviewUid }),
-    own: own && reviewUid || (places[place.uid] || {}).own,
-    pictures: _.uniqBy((
-      own
-        ? [
-          ...(_.values(review.pictures) || []),
-          ...(places[place.uid] && places[place.uid].pictures || []),
-        ] : [
-          ...(places[place.uid] && places[place.uid].pictures || []),
-          ...(_.values(review.pictures) || []),
-        ]
-    ), 'uri'),
-    friends: _.uniq(own
-      ? [own, ...(places[place.uid] && places[place.uid].friends || [])]
-      : [...(places[place.uid] && places[place.uid].friends || []), createdBy]),
-    categories: _.uniq(own
+  ...prevPlace,
+  ...place,
+  own: own ? reviewUid : prevPlace.own,
+  reviews: _.uniqBy([
+    { uid: reviewUid, createdBy },
+    ...prevPlace.reviews,
+  ], 'uid'),
+  pictures: _.uniqBy((
+    own
       ? [
-        ...(_.keys(review.categories) || []),
-        ...(places[place.uid] && places[place.uid].categories || []),
+        ...(_.values(review.pictures) || []),
+        ...prevPlace.pictures,
       ] : [
-        ...(places[place.uid] && places[place.uid].categories || []),
-        ...(_.keys(review.categories) || []),
-      ]),
-    shortDescription: (!(places[place.uid] || {}).own || own) ? shortDescription : (places[place.uid] && places[place.uid].shortDescription || ''),
-    status: (!(places[place.uid] || {}).own || own) ? status : (places[place.uid] && places[place.uid].status || ''),
-  },
+        ...prevPlace.pictures,
+        ...(_.values(review.pictures) || []),
+      ]
+  ), 'uri'),
+  friends: _.uniq(own
+    ? [createdBy, ...prevPlace.friends]
+    : [...prevPlace.friends, createdBy]),
+  categories: _.uniq([
+    ..._.keys(review.categories),
+    ...prevPlace.categories,
+  ]),
+  shortDescription: (!prevPlace.own || own) ? shortDescription : prevPlace.shortDescription,
+  information: (!prevPlace.own || own) ? information : prevPlace.information,
+  status: (!prevPlace.own || own) ? status : prevPlace.status,
 });
+
+const initialState = {
+  reviews: {},
+  places: {},
+};
 
 const entitiesReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_REVIEW_SUCCESS: {
       const { [Object.keys(action.review)[0]]: review } = action.review;
+      const { removed, updated } = action;
+      let newPlaces;
+
+      if (removed || updated || state.reviews[review.uid]) {
+        const place = state.places[review.place.uid];
+        const reviews = [
+          ..._.filter(place.reviews, ({ uid }) => uid !== review.uid),
+          ...(removed ? [] : [review]),
+        ];
+
+        const updatedPlace = _.reduce(
+          reviews,
+          (result, { uid }) => addToPlace(
+            result, uid !== review.uid ? state.reviews[uid] : review, place.own === uid,
+          ),
+          initialPlace,
+        );
+
+        newPlaces = (!removed || _.size(reviews))
+          ? {
+            ...state.places,
+            [review.place.uid]: (
+              removed ? updatedPlace : addToPlace(updatedPlace, review, action.own)
+            ),
+          } : _.omit(state.places, review.place.uid);
+      } else {
+        newPlaces = {
+          ...state.places,
+          [review.place.uid]: addToPlace(state.places[review.place.uid], review, action.own),
+        };
+      }
 
       return {
         ...state,
-        places: updatePlaces(state.places, review, action.removed, action.own),
-        reviews: !action.removed ? {
+        places: newPlaces,
+        reviews: !removed ? {
           ...state.reviews,
           [review.uid]: review,
         } : _.omit(state.review, review.uid),

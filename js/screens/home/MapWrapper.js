@@ -22,7 +22,7 @@ import { carousel, sizes } from '../../constants/parameters';
 
 const INITIAL_PADDING = {
   top: sizes.headerHeight + sizes.searchBarPadding,
-  bottom: carousel.level2,
+  bottom: carousel.height,
 };
 
 class MapWrapper extends React.Component {
@@ -62,7 +62,7 @@ class MapWrapper extends React.Component {
       }, 1000);
     }
 
-    if (filters.friend && places.length !== this.props.places.length) {
+    if (filters.friend && places.length && places.length !== this.props.places.length) {
       this._map.current.getRef().fitToCoordinates(places);
     }
 

@@ -44,7 +44,7 @@ class PlaceDetailsScreen extends Component {
         <Header left={<Button transparent onPress={this.onBackPress} icon="arrow-back" header />} />
         <ScrollView contentContainerStyle={styles.scrollView}>
           {reviews.map(({
-            uid, own, status, shortDescription, pictures, categories, createdBy,
+            uid, own, status, shortDescription, pictures, categories, createdBy, information,
           }) => (
             <View
               key={uid}
@@ -55,6 +55,7 @@ class PlaceDetailsScreen extends Component {
                 categories={categories}
                 createdBy={createdBy}
                 shortDescription={shortDescription}
+                information={information}
                 status={status}
                 pictures={pictures || []}
                 onPress={this.goToDetails(uid)}

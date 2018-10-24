@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, View, ScrollView, BackHandler,
+  StyleSheet, View, ScrollView, BackHandler, TouchableHighlight,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { DrawerActions } from 'react-navigation';
 import _ from 'lodash';
+
+import { filtersChange } from '../actions/home';
 
 import Header from '../components/Header';
 import Button from '../components/Button';
@@ -19,6 +22,7 @@ class FriendsScreen extends Component {
   }
 
   static propTypes = {
+    dispatch: PropTypes.func,
     navigation: PropTypes.object,
     friends: PropTypes.object,
   }
@@ -36,6 +40,12 @@ class FriendsScreen extends Component {
     return true;
   }
 
+  onFriendPress = friend => () => {
+    this.props.dispatch(filtersChange({ friend }));
+    this.props.navigation.dispatch(DrawerActions.closeDrawer());
+    this.onBackPress();
+  }
+
   render() {
     const { friends } = this.props;
 
@@ -51,19 +61,22 @@ class FriendsScreen extends Component {
         />
         <ScrollView style={styles.scrollView}>
           {_.map(friends, friend => (
-            <View
+            <TouchableHighlight
               key={friend.uid}
-              style={styles.row}
+              underlayColor={colors.primaryShadowLight}
+              onPress={this.onFriendPress(friend)}
             >
-              <Avatar
-                uri={friend.photoURL}
-                text={FriendsScreen.initials(friend)}
-                size={36}
-              />
-              <Text style={styles.friendText}>
-                {`${friend.firstName} ${friend.lastName}`}
-              </Text>
-            </View>
+              <View style={[styles.row, styles.friendRow]}>
+                <Avatar
+                  uri={friend.photoURL}
+                  text={FriendsScreen.initials(friend)}
+                  size={36}
+                />
+                <Text style={styles.friendText}>
+                  {`${friend.firstName} ${friend.lastName}`}
+                </Text>
+              </View>
+            </TouchableHighlight>
           ))}
         </ScrollView>
       </View>
@@ -82,17 +95,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   headerText: {
     marginLeft: 4,
     ...fonts.medium,
     color: colors.white,
   },
   scrollView: {
-    padding: 16,
+    paddingVertical: 8,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  friendRow: {
+    paddingHorizontal: 16,
   },
   friendText: {
     marginLeft: 10,

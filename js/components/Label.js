@@ -4,22 +4,26 @@ import { View, StyleSheet } from 'react-native';
 
 import Text from './Text';
 
-import { colors } from '../constants/parameters';
+import { colors, fonts } from '../constants/parameters';
 
 export default class Label extends PureComponent {
   static propTypes = {
+    style: PropTypes.any,
     text: PropTypes.string,
     required: PropTypes.bool,
     subtitle: PropTypes.bool,
   };
 
   render() {
-    const { text, subtitle, required } = this.props;
+    const {
+      style, text, subtitle, required,
+    } = this.props;
 
     return (
       <View style={[
         styles.labelWrapper,
         subtitle && styles.labelWrapperSubtitle,
+        style,
       ]}
       >
         <Text style={[
@@ -52,7 +56,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     color: colors.black,
-    fontWeight: '500',
+    ...fonts.medium,
   },
   labelSubtitle: {
     fontSize: 10,
