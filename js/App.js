@@ -42,7 +42,7 @@ Firebase.initialize({
 
 const { persistor, store } = configureStore();
 
-class App extends Component {
+export default class App extends Component {
   componentWillMount() {
     OneSignal.init(Config.ONESIGNAL_APPID);
     OneSignal.inFocusDisplaying(2);
@@ -62,8 +62,3 @@ class App extends Component {
     );
   }
 }
-
-export {
-  persistor,
-  App,
-};

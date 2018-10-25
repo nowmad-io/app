@@ -6,6 +6,7 @@ import {
   FETCH_REQUESTS_SUCCESS,
 } from '../constants/friends';
 import { LOGOUT } from '../constants/auth';
+import { FLUSH } from '../constants/utils';
 
 export const getFriends = state => state.friends.all;
 const getIncomings = state => state.friends.incomings;
@@ -40,6 +41,7 @@ const friendsReducer = (state = initialState, action) => {
         outgoings: !removed ? (outgoings || state.outgoings) : {},
       };
     }
+    case FLUSH:
     case LOGOUT:
       return initialState;
     default:

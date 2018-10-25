@@ -50,7 +50,9 @@ class HomeScreen extends React.PureComponent {
   onNotificationOpened = () => {
     Keyboard.dismiss();
     this.props.navigation.openDrawer();
-    this._searchBar.current.blur();
+    if (this._searchBar.current) {
+      this._searchBar.current.blur();
+    }
   }
 
   searchNearby = ({ coordinate: { latitude, longitude } }) => this._searchBar.current.searchNearby(`${latitude}, ${longitude}`);
