@@ -45,6 +45,10 @@ function updateAuthProfile({ firstName, lastName, ...profileToUpdate }) {
     .then(() => profile);
 }
 
+export function apiForgotPassword(email) {
+  return Firebase.auth().sendPasswordResetEmail(email);
+}
+
 export function apiUpdateProfile(profile) {
   return updateAuthProfile(profile)
     .then(myProfile => Firebase.users.child(Firebase.userUID()).update(myProfile)

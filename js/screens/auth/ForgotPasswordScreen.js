@@ -11,7 +11,7 @@ import FormInput from '../../components/FormInput';
 import Spinner from '../../components/Spinner';
 import Modal from '../../components/Modal';
 
-import { apiLogin, updateProfileSuccess } from '../../actions/auth';
+import { apiForgotPassword } from '../../actions/auth';
 
 import getModalError from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
@@ -31,62 +31,43 @@ export default class LoginScreen extends Component {
 
     this.state = {
       email: params && params.email || '',
-      password: '',
       loading: false,
+      success: false,
       error: null,
     };
-
-    this._passwordField = React.createRef();
   }
 
-  loginPress = () => {
-    const { email, password } = this.state;
-    const { navigation, dispatch } = this.props;
+  onResetPress = () => {
+    const { email } = this.state;
 
     Keyboard.dismiss();
     this.setState({ loading: true });
 
-    apiLogin(email, password)
-      .then((user) => {
-        dispatch(updateProfileSuccess(user));
-        navigation.navigate('App');
-      }).catch(({ code, message }) => {
-        this.setState({
-          loading: false,
-          error: getModalError(code, message),
-        });
-      });
+    apiForgotPassword(email)
+      .then(() => this.setState({
+        loading: false,
+        success: true,
+      })).catch(({ code, message }) => this.setState({
+        loading: false,
+        error: getModalError(code, message),
+      }));
   }
 
-  registerPress = () => {
-    const { email } = this.state;
-
-    this.setState(
-      { error: null },
-      () => {
-        this.props.navigation.state.params.setEmail(email);
-        this.props.navigation.goBack();
-      },
-    );
-  }
-
-  onShowPasswordPress = () => {
-    this.closeModal();
-    this._passwordField.current.onShowPasswordPress();
-  };
-
-  onForgotPassword = () => this.props.navigation.navigate('ForgotPasswordScreen', {
-    email: this.state.email,
-  });
+  onBackPress = () => this.props.navigation.goBack();
 
   closeModal = () => this.setState({ error: null });
 
+  onSuccessClose = () => {
+    this.setState({ success: false });
+    this.onBackPress();
+  };
+
   render() {
     const {
-      email, password, loading, error,
+      email, loading, error, success,
     } = this.state;
 
-    const valid = email && password;
+    const valid = !!email;
 
     return (
       <Content>
@@ -118,41 +99,21 @@ export default class LoginScreen extends Component {
               placeholder="Email"
               onChangeText={text => this.setState({ email: text })}
             />
-            <FormInput
-              ref={this._passwordField}
-              password
-              style={styles.formField}
-              inputStyle={styles.formFieldInput}
-              showPasswordStyle={styles.showPasswordStyle}
-              underlineColor={colors.white}
-              selectionColor={colors.white}
-              placeholderColor={colors.primaryLight}
-              defaultValue={password}
-              autoCapitalize="none"
-              placeholder="Password"
-              onChangeText={text => this.setState({ password: text })}
-            />
-            <Text
-              style={styles.forgotPassword}
-              onPress={this.onForgotPassword}
-            >
-              Forgot password ?
-            </Text>
           </View>
 
           <View style={styles.actionsWrapper}>
             <Button
-              onPress={this.registerPress}
+              light
+              disabled={!valid}
+              onPress={this.onResetPress}
             >
-              <Text>Create an account</Text>
+              <Text style={styles.mainText}>Send reset link</Text>
             </Button>
             <Button
-              disabled={!valid}
-              light
-              style={styles.loginButton}
-              onPress={this.loginPress}
+              style={styles.backButton}
+              onPress={this.onBackPress}
             >
-              <Text style={styles.mainText}>Log in</Text>
+              <Text>Back</Text>
             </Button>
           </View>
           <Spinner overlay visible={loading} />
@@ -162,7 +123,14 @@ export default class LoginScreen extends Component {
           visible={!!error}
           onRequestClose={this.closeModal}
           onPrimaryAction={this.closeModal}
-          onSecondaryAction={this.onShowPasswordPress}
+        />
+        <Modal
+          title="Reset link sent !"
+          information={`A link to reset your password has been sent to ${this.state.email}.`}
+          primaryAction="Ok"
+          visible={success}
+          onRequestClose={this.onSuccessClose}
+          onPrimaryAction={this.onSuccessClose}
         />
       </Content>
     );
@@ -222,14 +190,7 @@ const styles = StyleSheet.create({
   mainText: {
     color: colors.black,
   },
-  loginButton: {
+  backButton: {
     marginTop: 10,
-  },
-  forgotPassword: {
-    paddingVertical: 4,
-    alignSelf: 'flex-end',
-    color: colors.white,
-    fontSize: 12,
-    textDecorationLine: 'underline',
   },
 });

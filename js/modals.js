@@ -1,6 +1,6 @@
 const defaultMessage = 'An error occurred. Please Try again or contact us at contact@nowmad.io !';
 
-const getModalError = (code, message = defaultMessage) => {
+const getModalError = (code, message = defaultMessage, se) => {
   switch (code) {
     case 'auth/network-request-failed':
       return {
@@ -8,7 +8,6 @@ const getModalError = (code, message = defaultMessage) => {
         information: 'Please check your internet connection or try again later.',
         primaryAction: 'Ok',
       };
-    case 'auth/user-not-found':
     case 'auth/wrong-password':
       return {
         title: 'Log-in failed',
@@ -22,6 +21,12 @@ const getModalError = (code, message = defaultMessage) => {
         information: 'Sorry, an account already exists with this email. Choose an other email or try to Log-in.',
         primaryAction: 'Ok',
         secondaryAction: 'Log-in',
+      };
+    case 'auth/user-not-found':
+      return {
+        title: 'Action failed',
+        information: 'No user exists with this email',
+        primaryAction: 'Ok',
       };
     default:
       return {
