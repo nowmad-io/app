@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { YellowBox } from 'react-native';
+import { StatusBar, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Config from 'react-native-config';
@@ -15,6 +15,8 @@ import MainNavigator from './navigation/MainNavigator';
 import SplashScreen from './screens/SplashScreen';
 
 import configureStore from './configureStore';
+
+import { colors } from './constants/parameters';
 
 YellowBox.ignoreWarnings([
   'Remote debugger',
@@ -56,6 +58,7 @@ export default class App extends Component {
           loading={<SplashScreen />}
           onBeforeLift={apiRestoreSession}
         >
+          <StatusBar backgroundColor={colors.primary} />
           <MainNavigator ref={this._navigation} />
         </PersistGate>
       </Provider>
