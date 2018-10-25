@@ -89,6 +89,7 @@ export function placeDetails(placeId, poiName = null) {
         name, geometry: { location }, photos, vicinity, ...place
       },
     }) => ({
+      ...place,
       uid: getUid(location),
       placeId,
       name: poiName || name || '',
@@ -97,6 +98,5 @@ export function placeDetails(placeId, poiName = null) {
       pictures: photos && photos.slice(0, 2).map(photoUrl),
       google: true,
       vicinity: vicinity || `${location.lat}, ${location.lng}`,
-      ...place,
     }));
 }
