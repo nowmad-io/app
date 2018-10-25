@@ -23,6 +23,7 @@ export default class List extends PureComponent {
     thumbnail: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string,
+      PropTypes.object,
     ]),
     thumbnailStyle: PropTypes.any,
     disabled: PropTypes.bool,
