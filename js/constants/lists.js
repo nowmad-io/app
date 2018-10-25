@@ -9,6 +9,7 @@ export const CATEGORIES = [
   'Nature shows',
   'Culture',
   'City',
+  'Food',
 ];
 
 export const NOTIFICATIONS = {

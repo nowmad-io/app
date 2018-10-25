@@ -31,19 +31,9 @@ import { pushReview, uploadPictures } from '../actions/entities';
 import { selectMarkers, selectReview } from '../reducers/home';
 
 import { colors, fonts, sizes } from '../constants/parameters';
+import { CATEGORIES, STATUS } from '../constants/lists';
 
 const MAX_LENGTH_PICTURES = 5;
-const STATUS = [
-  'Travelling here',
-  'Living here',
-  'Local',
-];
-const CATEGORIES = [
-  'Adventure',
-  'Nature shows',
-  'Culture',
-  'City',
-];
 
 class AddReviewScreen extends Component {
   static propTypes = {
