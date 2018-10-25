@@ -31,23 +31,24 @@ export const poiToPlace = ({ placeId, name, coordinate }) => ({
   google: true,
 });
 
-const autocompleteToPlace = autocomplete => (!autocomplete
-  ? []
-  : autocomplete.predictions.map(({ place_id: placeId, description }) => ({
-    placeId,
-    name: description,
-  })));
+const autocompleteToPlace = ({ place_id: placeId, description }) => ({
+  placeId,
+  name: description,
+});
 
-const nearByToPlace = nearby => (!nearby
-  ? []
-  : nearby.results.map(({ place_id: placeId, name, geometry: { location } }) => ({
-    uid: getUid(location),
-    placeId,
-    name,
-    latitude: location.lat,
-    longitude: location.lng,
-    google: true,
-  })));
+const googleToPlace = ({
+  place_id: placeId, name, poiName, geometry: { location }, photos, vicinity, ...place
+}) => ({
+  ...place,
+  uid: getUid(location),
+  placeId,
+  name: poiName || name || '',
+  latitude: location.lat,
+  longitude: location.lng,
+  pictures: photos && photos.slice(0, 2).map(photoUrl),
+  google: true,
+  vicinity: vicinity || `${location.lat}, ${location.lng}`,
+});
 
 export function peopleSearch(query) {
   return Api.get(`search?user=${query}`)
@@ -61,7 +62,10 @@ export function placesSearch(query) {
   const coord = COORD_REGEX.exec(query);
   let url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
   let params = `input=${query}`;
-  let parser = autocompleteToPlace;
+  let parser = autocomplete => _.map(
+    !autocomplete ? [] : autocomplete.predictions,
+    autocompleteToPlace,
+  );
 
   if (coord && coord.length >= 3) {
     const location = `location=${coord[1]},${coord[2]}`;
@@ -70,33 +74,22 @@ export function placesSearch(query) {
 
     url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
     params = `${location}&${rankby}&${type}`;
-    parser = nearByToPlace;
+    parser = nearby => _.map(
+      !nearby ? [] : nearby.results,
+      googleToPlace,
+    );
   }
 
   return Api.get(`${url}?${key}&${params}`)
     .then(parser);
 }
 
-export function placeDetails(placeId, poiName = null) {
+export function placeDetails(id, poiName = null) {
   const url = 'https://maps.googleapis.com/maps/api/place/details/json';
   const key = `key=${Config.PLACES_API_KEY}`;
-  const placeid = `placeid=${placeId}`;
+  const placeid = `placeid=${id}`;
   const fields = 'fields=name,vicinity,geometry,photos';
 
   return Api.get(`${url}?${key}&${placeid}&${fields}`)
-    .then(({
-      result: {
-        name, geometry: { location }, photos, vicinity, ...place
-      },
-    }) => ({
-      uid: getUid(location),
-      placeId,
-      name: poiName || name || '',
-      latitude: location.lat,
-      longitude: location.lng,
-      pictures: photos && photos.slice(0, 2).map(photoUrl),
-      google: true,
-      vicinity: vicinity || `${location.lat}, ${location.lng}`,
-      ...place,
-    }));
+    .then(({ result }) => googleToPlace({ poiName, ...result }));
 }

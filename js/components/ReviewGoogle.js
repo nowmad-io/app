@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   header_right: {
-    marginLeft: 12,
+    flex: 1,
+    paddingLeft: 12,
     justifyContent: 'space-between',
   },
   user_text: {
