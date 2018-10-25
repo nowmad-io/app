@@ -73,7 +73,7 @@ const entitiesReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_REVIEW_SUCCESS: {
       const { [Object.keys(action.review)[0]]: review } = action.review;
-      const { removed, updated } = action;
+      const { removed, updated, own } = action;
       let newPlaces;
 
       if (removed || updated || state.reviews[review.uid]) {
@@ -86,7 +86,7 @@ const entitiesReducer = (state = initialState, action) => {
         const updatedPlace = _.reduce(
           reviews,
           (result, { uid }) => addToPlace(
-            result, uid !== review.uid ? state.reviews[uid] : review, place.own === uid,
+            result, uid !== review.uid ? state.reviews[uid] : review, own === uid,
           ),
           initialPlace,
         );
@@ -95,13 +95,13 @@ const entitiesReducer = (state = initialState, action) => {
           ? {
             ...state.places,
             [review.place.uid]: (
-              removed ? updatedPlace : addToPlace(updatedPlace, review, action.own)
+              removed ? updatedPlace : addToPlace(updatedPlace, review, own)
             ),
           } : _.omit(state.places, review.place.uid);
       } else {
         newPlaces = {
           ...state.places,
-          [review.place.uid]: addToPlace(state.places[review.place.uid], review, action.own),
+          [review.place.uid]: addToPlace(state.places[review.place.uid], review, own),
         };
       }
 

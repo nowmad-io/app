@@ -18,7 +18,7 @@ const photoUrl = ({ photo_reference: ref }) => {
   };
 };
 
-const getUid = ({
+export const getUid = ({
   latitude, longitude, lat, lng,
 }) => `${`${latitude || lat}`.replace('.', ',')}_${`${longitude || lng}`.replace('.', ',')}`;
 

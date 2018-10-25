@@ -25,23 +25,15 @@ import Icon from '../components/Icon';
 import Map from '../components/Map';
 import Marker from '../components/Marker';
 
+import { getUid } from '../actions/search';
+import { selectPlace } from '../actions/home';
 import { pushReview, uploadPictures } from '../actions/entities';
 import { selectMarkers, selectReview } from '../reducers/home';
 
 import { colors, fonts, sizes } from '../constants/parameters';
+import { CATEGORIES, STATUS } from '../constants/lists';
 
 const MAX_LENGTH_PICTURES = 5;
-const STATUS = [
-  'Travelling here',
-  'Living here',
-  'Local',
-];
-const CATEGORIES = [
-  'Adventure',
-  'Nature shows',
-  'Culture',
-  'City',
-];
 
 class AddReviewScreen extends Component {
   static propTypes = {
@@ -128,7 +120,7 @@ class AddReviewScreen extends Component {
       link1,
       link2,
       place: {
-        uid: placeUid,
+        uid: placeUid || getUid({ latitude, longitude }),
         latitude,
         longitude,
         name,
@@ -138,6 +130,7 @@ class AddReviewScreen extends Component {
 
     Keyboard.dismiss();
     pushReview(newReview);
+    this.props.dispatch(selectPlace(newReview.place.uid));
     this.props.dispatch(uploadPictures(newReview.uid, pictures));
 
     if (!reviewUid) {

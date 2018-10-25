@@ -141,7 +141,10 @@ class SearchBar extends Component {
     placeDetails(place.placeId).then(action);
   }
 
-  onCustomPress = place => this.props.navigation.navigate('AddReviewScreen', { place });
+  onCustomPress = (place) => {
+    this.props.navigation.navigate('AddReviewScreen', { place });
+    this.blur();
+  };
 
   searchNearby(coordinatesQuery) {
     this.setState({

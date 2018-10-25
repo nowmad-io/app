@@ -113,7 +113,7 @@ class Tab extends PureComponent {
                 <ListItem
                   key={result.uid}
                   text={`${result.firstName} ${result.lastName}`}
-                  thumbnail={result.photoUrl}
+                  thumbnail={result.photoURL}
                   onPress={friends[result.uid] && this.onFriendPress(result)}
                 >
                   {!friends[result.uid] && !incomings[result.uid] && !outgoings[result.uid] && (

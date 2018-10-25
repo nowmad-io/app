@@ -18,7 +18,7 @@ import {
   apiRegister, updateProfileSuccess,
 } from '../../actions/auth';
 
-import { registerFailed, registerNoNetwork } from '../../modals';
+import getModalError from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
 
 const logo = require('../../../assets/images/logos/logo_white.png');
@@ -29,7 +29,6 @@ class RegisterScreen extends Component {
     navigation: PropTypes.object,
     token: PropTypes.string,
     me: PropTypes.object,
-    isConnected: PropTypes.bool,
   };
 
   constructor(props) {
@@ -58,12 +57,7 @@ class RegisterScreen extends Component {
     const {
       email, password, firstName, lastName,
     } = this.state;
-    const { navigation, dispatch, isConnected } = this.props;
-
-    if (!isConnected) {
-      this.setState({ error: registerNoNetwork });
-      return;
-    }
+    const { navigation, dispatch } = this.props;
 
     Keyboard.dismiss();
     this.setState({ loading: true });
@@ -78,10 +72,10 @@ class RegisterScreen extends Component {
       dispatch(updateProfileSuccess(user));
       navigation.navigate('ProfileScreen');
       this.setState({ loading: false });
-    }).catch(() => {
+    }).catch(({ code, message }) => {
       this.setState({
         loading: false,
-        error: registerFailed,
+        error: getModalError(code, message),
       });
     });
   }
@@ -209,7 +203,6 @@ class RegisterScreen extends Component {
 const mapStateToProps = state => ({
   logged: state.auth.logged,
   me: state.auth.me,
-  isConnected: true,
 });
 
 export default connect(mapStateToProps)(RegisterScreen);

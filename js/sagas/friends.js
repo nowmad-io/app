@@ -11,7 +11,7 @@ import {
   SEND_NOTIFICATION, SEND_REQUEST, SEEN_REQUESTS,
 } from '../constants/friends';
 import { RUN_SAGAS, STOP_SAGAS } from '../constants/utils';
-import { NOTIFICATIONS } from '../lists';
+import { NOTIFICATIONS } from '../constants/lists';
 
 const fetchRequestsFlow = uid => (
   function* _fetchRequestsFlow() {
