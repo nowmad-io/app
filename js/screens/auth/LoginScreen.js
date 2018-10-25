@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, StyleSheet, Keyboard, Image,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Content from '../../components/Content';
 import Text from '../../components/Text';
@@ -18,7 +19,7 @@ import { colors, fonts, sizes } from '../../constants/parameters';
 
 const logo = require('../../../assets/images/logos/logo_white.png');
 
-export default class LoginScreen extends Component {
+class LoginScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
@@ -168,6 +169,8 @@ export default class LoginScreen extends Component {
     );
   }
 }
+
+export default connect()(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {
