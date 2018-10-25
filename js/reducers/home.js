@@ -11,6 +11,7 @@ import {
 } from '../constants/home';
 import { FETCH_REVIEW_SUCCESS } from '../constants/entities';
 import { LOGOUT } from '../constants/auth';
+import { FLUSH } from '../constants/utils';
 
 import {
   getPlace, getPlaces, getReviews,
@@ -201,6 +202,7 @@ const homeReducer = (state = initialState, action) => {
         },
         searchText: action.friend && action.friend.firstName,
       };
+    case FLUSH:
     case LOGOUT:
       return initialState;
     default:

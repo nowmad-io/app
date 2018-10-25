@@ -4,6 +4,7 @@ import { LOGOUT } from '../constants/auth';
 import {
   FETCH_REVIEW_SUCCESS,
 } from '../constants/entities';
+import { FLUSH } from '../constants/utils';
 
 export const getPlace = (state, uid) => state.entities.places[uid];
 export const getPlaces = state => state.entities.places;
@@ -113,6 +114,7 @@ const entitiesReducer = (state = initialState, action) => {
         } : _.omit(state.review, review.uid),
       };
     }
+    case FLUSH:
     case LOGOUT:
       return initialState;
     default:
