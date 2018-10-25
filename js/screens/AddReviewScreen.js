@@ -142,9 +142,9 @@ class AddReviewScreen extends Component {
 
     if (!reviewUid) {
       publishReviewEvent({
-        vicinity: newReview.vicinity,
+        vicinity,
         timeSpent: Math.floor((Date.now() - time) / 1000),
-        categories: newReview.categories,
+        categories: _.join(categories, ', '),
       });
     }
     this.props.navigation.goBack();

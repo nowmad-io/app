@@ -32,9 +32,9 @@ export function loginEvent() {
   Mixpanel.track('Log-in');
 }
 
-export function publishReviewEvent({ country, timeSpent, categories }) {
+export function publishReviewEvent({ vinicity, timeSpent, categories }) {
   Mixpanel.trackWithProperties('Publish Review', {
-    Country: country,
+    vinicity,
     'Time spent till publish': timeSpent,
     categories,
   });
