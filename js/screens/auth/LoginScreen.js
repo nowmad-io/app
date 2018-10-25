@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   View, StyleSheet, Keyboard, Image,
 } from 'react-native';
-import { connect } from 'react-redux';
 
 import Content from '../../components/Content';
 import Text from '../../components/Text';
@@ -14,16 +13,15 @@ import Modal from '../../components/Modal';
 
 import { apiLogin, updateProfileSuccess } from '../../actions/auth';
 
-import { loginFailed, loginNoNetwork } from '../../modals';
+import getModalError from '../../modals';
 import { colors, fonts, sizes } from '../../constants/parameters';
 
 const logo = require('../../../assets/images/logos/logo_white.png');
 
-class LoginScreen extends Component {
+export default class LoginScreen extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     navigation: PropTypes.object,
-    isConnected: PropTypes.bool,
   };
 
   constructor(props) {
@@ -43,12 +41,7 @@ class LoginScreen extends Component {
 
   loginPress = () => {
     const { email, password } = this.state;
-    const { navigation, dispatch, isConnected } = this.props;
-
-    if (!isConnected) {
-      this.setState({ error: loginNoNetwork });
-      return;
-    }
+    const { navigation, dispatch } = this.props;
 
     Keyboard.dismiss();
     this.setState({ loading: true });
@@ -57,10 +50,10 @@ class LoginScreen extends Component {
       .then((user) => {
         dispatch(updateProfileSuccess(user));
         navigation.navigate('App');
-      }).catch(() => {
+      }).catch(({ code, message }) => {
         this.setState({
           loading: false,
-          error: loginFailed,
+          error: getModalError(code, message),
         });
       });
   }
@@ -76,6 +69,11 @@ class LoginScreen extends Component {
       },
     );
   }
+
+  onShowPasswordPress = () => {
+    this.closeModal();
+    this._passwordField.current.onShowPasswordPress();
+  };
 
   closeModal = () => this.setState({ error: null });
 
@@ -154,18 +152,12 @@ class LoginScreen extends Component {
           visible={!!error}
           onRequestClose={this.closeModal}
           onPrimaryAction={this.closeModal}
-          onSecondaryAction={this.registerPress}
+          onSecondaryAction={this.onShowPasswordPress}
         />
       </Content>
     );
   }
 }
-
-const mapStateToProps = () => ({
-  isConnected: true,
-});
-
-export default connect(mapStateToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {
