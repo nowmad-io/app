@@ -58,7 +58,7 @@ export default class App extends Component {
           loading={<SplashScreen />}
           onBeforeLift={apiRestoreSession}
         >
-          <StatusBar backgroundColor={colors.primary} />
+          <StatusBar backgroundColor={colors.primaryDark} />
           <MainNavigator ref={this._navigation} />
         </PersistGate>
       </Provider>
