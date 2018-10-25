@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet, View, TouchableOpacity, Image,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import _ from 'lodash';
 
@@ -34,7 +36,7 @@ export default class List extends PureComponent {
     const {
       children, onPress, text, secondaryText, thumbnail, disabled, thumbnailStyle,
     } = this.props;
-
+    const ImageComponent = _.isNumber(thumbnail) ? Image : FastImage;
     return (
       <TouchableOpacity
         activeOpacity={onPress ? 0.8 : 1}
@@ -42,9 +44,8 @@ export default class List extends PureComponent {
         style={styles.container}
       >
         { thumbnail && (
-          <FastImage
+          <ImageComponent
             source={!_.isNumber(thumbnail) ? { uri: thumbnail } : thumbnail}
-            fallback={_.isNumber(thumbnail)}
             style={[
               styles.image,
               disabled && styles.image_disabled,
