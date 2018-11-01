@@ -86,7 +86,9 @@ const entitiesReducer = (state = initialState, action) => {
         const updatedPlace = _.reduce(
           reviews,
           (result, { uid }) => addToPlace(
-            result, uid !== review.uid ? state.reviews[uid] : review, own === uid,
+            result,
+            uid !== review.uid ? state.reviews[uid] : review,
+            uid !== review.uid ? uid === place.own : own,
           ),
           initialPlace,
         );
