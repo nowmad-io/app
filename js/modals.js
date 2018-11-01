@@ -1,6 +1,6 @@
 const defaultMessage = 'An error occurred. Please Try again or contact us at contact@nowmad.io !';
 
-const getModalError = (code, message = defaultMessage, se) => {
+const getModalError = (code, message = defaultMessage) => {
   switch (code) {
     case 'auth/network-request-failed':
       return {
