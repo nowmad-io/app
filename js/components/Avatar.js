@@ -48,23 +48,7 @@ export default class Avatar extends PureComponent {
           style,
         ]}
       >
-        {uri ? (marker ? (
-          <Svg width={size} height={size}>
-            <Image
-              href={{ uri }}
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMidYMid slice"
-            />
-          </Svg>
-        ) : (
-          <FastImage
-            source={{ uri }}
-            style={styles.image}
-            resizeMode="cover"
-            resizeMethode="resize"
-          />
-        )) : !icon ? (
+        {!icon ? (
           <Text
             style={[
               styles.text,
@@ -83,6 +67,27 @@ export default class Avatar extends PureComponent {
               textStyle,
             ]}
           />
+        )}
+        { uri && (
+          <View style={styles.imageWrapper}>
+            {(marker ? (
+              <Svg width={size} height={size}>
+                <Image
+                  href={{ uri }}
+                  width="100%"
+                  height="100%"
+                  preserveAspectRatio="xMidYMid slice"
+                />
+              </Svg>
+            ) : (
+              <FastImage
+                source={{ uri }}
+                style={styles.image}
+                resizeMode="cover"
+                resizeMethode="resize"
+              />
+            ))}
+          </View>
         )}
       </View>
     );
@@ -106,6 +111,13 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 18,
     lineHeight: 26,
+  },
+  imageWrapper: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   image: {
     width: '100%',
